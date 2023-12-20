@@ -1,0 +1,123 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-5 text-center">
+		<div class="card">
+			<h5 class="card-header white-text py-4" style="background-color: #0059AB;">
+				<strong>Ubah Akun Panitia Kesekretariatan</strong>
+			</h5>
+			<input type="text" class="form-control" MaxLength="30" placeholder="NIM" name="ksk_nim" id="ksk_nim" value="@ViewBag.ksk_nim" hidden>
+			<input type="text" class="form-control" MaxLength="30" placeholder="Gender" name="ksk_gender" id="ksk_gender" hidden>
+			<div class="card-body px-lg-5 pt-0 my-1">
+				<div class="md-form">
+					<input type="text" class="form-control" MaxLength="30" placeholder="Nama Lengkap" name="ksk_namalengkap" id="ksk_namalengkap">
+				</div>
+				<div class="md-form-select mb-4">
+					<select class="form-control" name="ksk_programstudi" id="ksk_programstudi">
+						<option selected disabled>Pilih Program Studi</option>
+						<option value="Teknologi Produksi dan Proses Manufaktur">Teknologi Produksi dan Proses Manufaktur</option>
+						<option value="Pembuatan Peralatan dan Perkakas Produksi">Pembuatan Peralatan dan Perkakas Produksi</option>
+						<option value="Manajemen Informatika">Manajemen Informatika</option>
+						<option value="Teknologi Konstruksi Bangunan Gedung">Teknologi Konstruksi Bangunan Gedung</option>
+						<option value="Mekatronika">Mekatronika</option>
+						<option value="Mesin Otomotif">Mesin Otomotif</option>
+						<option value="Teknologi Rekayasa Pemeliharaan Alat Berat">Teknologi Rekayasa Pemeliharaan Alat Berat</option>
+						<option value="Teknologi Rekayasa Logistik">Teknologi Rekayasa Logistik</option>
+					</select>
+				</div>
+				<div class="md-form-select mb-4">
+					<select class="form-control" name="ksk_role" id="ksk_role">
+						<option selected disabled>Pilih Role</option>
+						<option value="Panitia Kesekretariatan">Panitia Kesekretariatan</option>
+						<option value="Fasilitator">Fasilitator</option>
+					</select>
+				</div>
+				<div class="md-form">
+					<input type="password" class="form-control" placeholder="Kata Sandi" name="ksk_password" id="ksk_password">
+				</div>
+				<button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="update(event)">Ubah</button>
+				<p>
+					Sudah Memiliki Akun? <a asp-controller="kskpkkmb" asp-action="Loginksk" class="font-weight-bold">Klik Disini</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	loadData();
+
+	function loadData() {
+		var ksk_nim = document.getElementById("ksk_nim")
+		var ksk_namalengkap = document.getElementById("ksk_namalengkap")
+		var ksk_gender = document.getElementById("ksk_gender")
+		var ksk_programstudi = document.getElementById("ksk_programstudi")
+		var ksk_password = document.getElementById("ksk_password")
+		var ksk_role = document.getElementById("ksk_role")
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "dataksk?ksk_nim=" + ksk_nim.value
+		var method = "GET"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				ksk_nim.value = item.ksk_nim
+				ksk_namalengkap.value = item.ksk_namalengkap
+				ksk_gender.value = item.ksk_gender
+				ksk_programstudi.value = item.ksk_programstudi
+				ksk_password.value = item.ksk_password
+				ksk_role.value = item.ksk_role
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+
+	function update(event) {
+		event.preventDefault();
+
+		var ksk_nim = document.getElementById("ksk_nim").value
+		var ksk_namalengkap = document.getElementById("ksk_namalengkap").value
+		var ksk_gender = document.getElementById("ksk_gender").value
+		var ksk_programstudi = document.getElementById("ksk_programstudi").value
+		var ksk_password = document.getElementById("ksk_password").value
+		var ksk_role = document.getElementById("ksk_role").value
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "ubahksk"
+		var method = "PUT"
+		var input = {
+			ksk_nim: ksk_nim,
+			ksk_namalengkap: ksk_namalengkap,
+			ksk_gender: ksk_gender,
+			ksk_programstudi: ksk_programstudi,
+			ksk_password: ksk_password,
+			ksk_role: ksk_role,
+		}
+		var data = JSON.stringify(input)
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				alert("Data Berhasil Diupdate")
+				window.location.href = '/panitiakesekretariatan/index';
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+</script>

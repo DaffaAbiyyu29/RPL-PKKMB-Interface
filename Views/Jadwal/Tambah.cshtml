@@ -1,0 +1,156 @@
+﻿\@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Tambah Jadwal</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md-6">
+						<!-- First Column -->
+						<div class="input-group has-validation mb-4 tanggal">
+							<div class="form-floating is-invalid">
+								<input type="date" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
+								<label for="validateField">Tanggal Kegiatan</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Tanggal Kegiatan.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 waktumulai">
+							<div class="form-floating is-invalid">
+								<input type="time" class="form-control is-invalid" id="waktumulai" name="waktumulai" data-target="validateField" placeholder="">
+								<label for="validateField">Waktu Mulai</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Mulainya Kegiatan.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 waktuakhir">
+							<div class="form-floating is-invalid">
+								<input type="time" class="form-control is-invalid" id="waktuakhir" name="waktuakhir" data-target="validateField" placeholder="">
+								<label for="validateField">Waktu Berakhir</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Berakhirnya Kegiatan.</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- Second Column -->
+						
+						<div class="input-group has-validation mb-4 kegiatan">
+							<div class="form-floating is-invalid">
+								<textarea class="form-control is-invalid" placeholder="" id="kegiatan" data-target="validateField" name="kegiatan" style="height: 100px"></textarea>
+								<label for="validateField">Kegiatan</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Kegiatan.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 tempat">
+							<div class="form-floating is-invalid">
+								<textarea class="form-control is-invalid" placeholder="" id="tempat" data-target="validateField" name="tempat" style="height: 100px"></textarea>
+								<label for="validateField">Tempat</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Tempat.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahJadwal(event)">Simpan</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	function tambahJadwal(event) {
+		event.preventDefault();
+
+		var tanggal = document.getElementsByName("tanggal")[0].value;
+		var waktumulai = document.getElementsByName("waktumulai")[0].value;
+		var waktuakhir = document.getElementsByName("waktuakhir")[0].value;
+		var tempat = document.getElementsByName("tempat")[0].value;
+		var kegiatan = document.getElementsByName("kegiatan")[0].value;
+
+		// Adjust the URL, method, and data based on the selected account type
+		if (tanggal.trim() === '' || waktumulai.trim() === '' || waktuakhir.trim() === '' || tempat.trim() === '' || kegiatan.trim() === '') {
+			console.log(tanggal, waktuakhir)
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Lengkapi Semua Fields",
+				showConfirmButton: false,
+				timer: 2000
+			});
+			return;
+		}
+
+		url = "https://localhost:7087/InsertJadwal";
+		method = "POST";
+		data = {
+			jdl_idjadwal: "",
+			jdl_tglpelaksanaan: tanggal,
+			jdl_waktupelaksanaan: waktumulai + " - " + waktuakhir,
+			jdl_agenda: kegiatan,
+			jdl_tempat: tempat,
+			jdl_status: "Aktif",
+		};
+
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Pembuatan Jadwal Berhasil",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = './';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>
+
+<script>
+	// Mengambil semua elemen dengan nama ID "validateField"
+	var inputFields = document.querySelectorAll('[data-target="validateField"]');
+	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
+
+	// Menambahkan event listener untuk setiap elemen input
+	inputFields.forEach(function (inputField) {
+		inputField.addEventListener('input', function () {
+			if (inputField.value.trim() !== '') {
+				inputField.classList.remove('is-invalid');
+
+			} else {
+				inputField.classList.add('is-invalid');
+
+			}
+		});
+
+		inputField.addEventListener('focus', function () {
+			if (inputField.value.trim() === '') {
+
+			}
+		});
+
+		inputField.addEventListener('blur', function () {
+			if (inputField.value.trim() !== '') {
+
+			}
+		});
+	});
+</script>

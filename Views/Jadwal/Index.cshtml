@@ -1,0 +1,285 @@
+﻿@{
+}
+
+
+<div class="row">
+	<div class="col-lg-4">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="jadwal" asp-action="TambahJadwal">Tambah Data</a>
+		</div>
+	</div>
+	<div class="col-lg-4 float-end mb-3">
+	</div>
+	<div class="col-lg-4 float-end mb-3">
+		<div class="form-floating">
+			<select class="form-select" id="floatingSelect" name="hari" aria-label="">
+				<option selected disabled>Pilih Hari</option>
+				<option value="Senin">Senin</option>
+				<option value="Selasa">Selasa</option>
+				<option value="Rabu">Rabu</option>
+				<option value="Kamis">Kamis</option>
+				<option value="Jumat">Jumat</option>
+				<option value="Semua">Semua Hari</option>
+			</select>
+			<label for="floatingSelect">Hari</label>
+		</div>
+	</div>
+</div>
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg mb-4 semua">
+		<div class="card">
+			<div class="card-header">
+				Jadwal PKKMB
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Waktu</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Tempat</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbodysemua"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg mb-4 senin">
+		<div class="card">
+			<div class="card-header">
+				Hari ke-1 : Senin
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Waktu</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Tempat</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbodysenin"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg mb-4 selasa">
+		<div class="card">
+			<div class="card-header">
+				Hari ke-2 : Selasa
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Waktu</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Tempat</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyselasa"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg mb-4 rabu">
+		<div class="card">
+			<div class="card-header">
+				Hari ke-3 : Rabu
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Waktu</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Tempat</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyrabu"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg mb-4 kamis">
+		<div class="card">
+			<div class="card-header">
+				Hari ke-4 : Kamis
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Waktu</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Tempat</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbodykamis"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg mb-4 jumat">
+		<div class="card">
+			<div class="card-header">
+				Hari ke-5 : Jumat
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Waktu</th>
+							<th scope="col">Kegiatan</th>
+							<th scope="col">Tempat</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyjumat"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$('.senin').hide();
+	$('.selasa').hide();
+	$('.rabu').hide();
+	$('.kamis').hide();
+	$('.jumat').hide();
+	$('.semua').show();
+	var tabel = '';
+
+	$(document).ready(function () {
+		$('[name="hari"]').change(function () {
+			var selectedHari = $(this).val();
+
+			// Sembunyikan semua tabel terlebih dahulu
+			$('.semua, .senin, .selasa, .rabu, .kamis, .jumat').hide();
+
+			// Tampilkan tabel yang sesuai dengan pilihan hari
+			if (selectedHari === 'Senin') {
+				$('.senin').show();
+			} else if (selectedHari === 'Selasa') {
+				$('.selasa').show();
+			} else if (selectedHari === 'Rabu') {
+				$('.rabu').show();
+			} else if (selectedHari === 'Kamis') {
+				$('.kamis').show();
+			} else if (selectedHari === 'Jumat') {
+				$('.jumat').show();
+			} else if (selectedHari === 'Semua') {
+				$('.semua').show();
+			}
+
+			// Memuat data baru sesuai dengan hari yang dipilih
+			loadTable(selectedHari);
+		});
+	});
+
+
+	new DataTable('#datatable');
+	loadTable();
+
+	function loadTable(selectedHari) {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllJadwal";
+		var method = "GET";
+
+		// Clear previous content before appending new rows
+		$('#tbodysenin, #tbodyselasa, #tbodyrabu, #tbodykamis, #tbodyjumat, #tbodysemua').empty();
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data;
+				var counter = 1;
+
+				list.forEach(function (item) {
+					// Parse the date string and format it
+					var jadwalDate = new Date(item.jdl_tglpelaksanaan);
+					var formattedDate = getFormattedDate(jadwalDate);
+					var hari = extractDayOfWeek(formattedDate);
+
+					var tabel = '#tbodysemua';
+
+					// Determine the table to append based on the selectedHari
+					if (selectedHari === 'Senin' && hari === 'Senin') {
+						tabel = '#tbodysenin';
+					} else if (selectedHari === 'Selasa' && hari === 'Selasa') {
+						tabel = '#tbodyselasa';
+					} else if (selectedHari === 'Rabu' && hari === 'Rabu') {
+						tabel = '#tbodyrabu';
+					} else if (selectedHari === 'Kamis' && hari === 'Kamis') {
+						tabel = '#tbodykamis';
+					} else if (selectedHari === 'Jumat' && hari === 'Jumat') {
+						tabel = '#tbodyjumat';
+					} else if (selectedHari === 'Semua') {
+						// Always append to "Semua" table
+						tabel = '#tbodysemua';
+					}
+
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' +
+						'<td>' + formattedDate + '</td>' +
+						'<td>' + item.jdl_waktupelaksanaan + '</td>' +
+						'<td>' + item.jdl_agenda + '</td>' +
+						'<td>' + item.jdl_tempat + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/Jadwal/Ubah/' + item.jdl_idjadwal + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						'</td>' +
+						'</tr>';
+
+					console.log(hari, tabel)
+					$(tabel).append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+			},
+		});
+	}
+
+	// Function to format date as "hari, tanggal bulan tahun"
+	function getFormattedDate(date) {
+		var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+		var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+		var formattedDate = days[date.getDay()] + ', ' +
+			date.getDate() + ' ' +
+			months[date.getMonth()] + ' ' +
+			date.getFullYear();
+
+		return formattedDate;
+	}
+
+	// Function to extract the day of the week
+	function extractDayOfWeek(dateString) {
+		var dayPart = dateString.split(',')[0];
+
+		var trimmedDay = dayPart.trim();
+
+		return trimmedDay;
+	}
+
+</script>

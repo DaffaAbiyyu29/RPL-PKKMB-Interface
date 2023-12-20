@@ -1,0 +1,151 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row justify-content-center mb-5">
+    <div class="col-lg mb-4">
+        <p>
+            <h2 class="text-center"><span style="color:#0059ab;">Kesekretariatan</span> / Informasi / Jam Plus</h2>
+        </p>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-5">
+    <div class="col-lg-8">
+        <div class="card">
+            <h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+                <strong>Tambah Jam Plus</strong>
+            </h5>
+            <div class="card-body px-lg-5 pt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- First Column -->
+                        <div class="form-floating mb-4 nama">
+                            <input type="text" class="form-control" maxlength="10" id="nls_idnilaisikap" name="nls_idnilaisikap" value="@ViewBag.nls_idnilaisikap" placeholder="" hidden>
+                            <input type="text" class="form-control" maxlength="100" id="nama" name="nama" placeholder="" readonly>
+                            <label for="nama">Nama</label>
+                        </div>
+                        <div class="form-floating mb-4 namakelompok">
+                            <input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" placeholder="" readonly>
+                            <label for="floatingInputGrid">Kelompok</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Second Column -->
+                        <div class="form-floating mb-4 tanggal">
+                            <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="">
+                            <label for="floatingInputGrid">Hari / Tanggal</label>
+                        </div>
+
+                        <div class="form-floating mb-4 nilaisikap">
+                            <input type="text" class="form-control" id="jamplus" name="jamplus" placeholder="">
+                            <label for="floatingInputGrid">Jam Plus</label>
+                            <select class="form-select" id="nilaisikap" name="nilaisikap" aria-label="" hidden>
+                                <option selected disabled hidden>Pilih Kategori Nilai</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                            <label for="floatingSelect" hidden>Kategori Nilai</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambah(event)">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    loadDataJam();
+
+    function loadDataJam() {
+        var nls_idnilaisikap = document.getElementById("nls_idnilaisikap")
+        var nama = document.getElementById("nama")
+        var namakelompok = document.getElementById("namakelompok")
+        var tanggal = document.getElementById("tanggal")
+        var nilaisikap = document.getElementById("nilaisikap")
+        var jamplus = document.getElementById("jamplus")
+
+        var hostname = "https://localhost:44373/"
+        var url = hostname + "GetNilaiSikap?nls_idnilaisikap=" + nls_idnilaisikap.value
+        var method = "GET"
+
+        $.ajax({
+            url: url,
+            method: method,
+            contentType: "application/json",
+            success: function (data) {
+                var tanggalOption = tanggal.value;
+                var item = data.data;
+                nls_idnilaisikap.value = item.nls_idnilaisikap;
+                nama.value = item.nls_nopendaftaran;
+                namakelompok.value = item.nls_nopendaftaran;
+                tanggal.value = item.nls_tanggal;
+                nilaisikap.value = item.nls_sikap;
+                jamplus.value = item.nls_jamplus
+
+            },
+
+        });
+    }
+    function tambah(event) {
+        event.preventDefault();
+
+        var nls_idnilaisikap = document.getElementById("nls_idnilaisikap").value;
+        var nls_nopendaftaran = document.getElementById("nama").value;
+        var nls_tanggal = document.getElementById("tanggal").value;
+        var nilaisikap = document.getElementById("nilaisikap").value;  // Mengambil nilai sikap
+        var nls_jamplus = document.getElementById("jamplus").value;
+
+        var hostname = "https://localhost:44373";
+        var url = hostname + "/UpdateNilaiSikap";
+        var method = "PUT";
+        var input = {
+            nls_idnilaisikap: nls_idnilaisikap,
+            nls_nopendaftaran: nls_nopendaftaran,
+            nls_nim: "KSK001",
+            nls_sikap: nilaisikap,  // Menggunakan nilai sikap
+            nls_tanggal: nls_tanggal,
+            nls_jamplus: nls_jamplus,
+            nls_jamminus: 0,
+            nls_status: "Aktif"
+        };
+
+        var data = JSON.stringify(input);
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: data,
+            contentType: "application/json",
+            success: function (data) {
+                console.log('Data from server:', data);
+                if (data.status === 200) {
+                    alert("Data berhasil diupdate");
+                    window.location.href = '/jamplus/index';
+                } else {
+                    console.log('Update failed. Server response:', data);
+                    alert("Gagal mengupdate data. Periksa konsol log untuk informasi lebih lanjut.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error updating data:', error);
+                console.log(xhr.responseJSON);
+                console.log(status);
+            }
+        });
+    }
+
+</script>
+<script>
+    function validateNumberInput(inputElement) {
+        // Mengganti input hanya dengan karakter angka
+        inputElement.value = inputElement.value.replace(/\D/g, '');
+
+        // Menampilkan pesan kesalahan jika karakter selain angka dimasukkan
+        var validationMessage = inputElement.parentElement.querySelector('[data-target="validateLabel"]');
+    }
+</script>

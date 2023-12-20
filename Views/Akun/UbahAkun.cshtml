@@ -1,0 +1,272 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Ubah Akun</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				@*<div class="mb-4">
+				<p class="text-center">
+				Untuk mendaftarkan akun, anda perlu menentukan
+				</p>
+				</div>*@
+
+				<div class="row">
+					<div class="col-md-6">
+						<!-- First Column -->
+
+						<div class="form-floating mb-4 namalengkap">
+							<input type="text" class="form-control" maxlength="10" id="username" name="username" value="@ViewBag.username" hidden>
+							<input type="text" class="form-control" maxlength="10" id="namalengkap" name="namalengkap" placeholder="">
+							<label for="floatingInputGrid">Nama Lengkap</label>
+						</div>
+
+						<div class="form-floating mb-4 jeniskelamin">
+							<select class="form-select" id="jeniskelamin" name="jeniskelamin" aria-label="">
+								<option selected>Pilih Jenis Kelamin</option>
+								<option value="Laki-laki">Laki-laki</option>
+								<option value="Perempuan">Perempuan</option>
+							</select>
+							<label for="floatingSelect">Jenis Kelamin</label>
+						</div>
+
+						<div class="form-floating mb-4 programstudi">
+							<select class="form-select" id="programstudi" name="programstudi" aria-label="">
+								<option selected disabled>Pilih Program Studi</option>
+								<option value="Teknik Produksi dan Proses Manufaktur">Teknik Produksi dan Proses Manufaktur</option>
+								<option value="Pembuatan Peralatan dan Perkakas Produksi">Pembuatan Peralatan dan Perkakas Produksi</option>
+								<option value="Manajemen Informatika">Manajemen Informatika</option>
+								<option value="Teknologi Konstruksi Bangunan Gedung">Teknologi Konstruksi Bangunan Gedung</option>
+								<option value="Mekatronika">Mekatronika</option>
+								<option value="Mesin Otomotif">Mesin Otomotif</option>
+								<option value="Teknologi Rekayasa Pemeliharaan Alat Berat">Teknologi Rekayasa Pemeliharaan Alat Berat</option>
+								<option value="Teknologi Rekayasa Logistik">Teknologi Rekayasa Logistik</option>
+							</select>
+							<label for="floatingSelect">Program Studi</label>
+						</div>
+						<div class="form-floating mb-4 alamat">
+							<textarea class="form-control" placeholder="" id="alamat" name="alamat" style="height: 100px"></textarea>
+							<label for="floatingTextarea2">Alamat</label>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- Second Column -->
+						<div class="form-floating mb-4 notelepon">
+							<input type="number" class="form-control" maxlength="13" id="notelepon" name="notelepon" placeholder="">
+							<label for="floatingInputGrid">No Telepon</label>
+						</div>
+
+						<div class="form-floating mb-4 email">
+							<input type="email" class="form-control" maxlength="50" id="email" name="email" placeholder="">
+							<label for="floatingInputGrid">Email</label>
+						</div>
+
+						<div class="form-floating mb-4 kategori">
+							<select class="form-select" id="kategori" name="kategori" aria-label="">
+								<option selected disabled>Pilih Kategori Mahasiswa</option>
+								<option value="Beasiswa">Beasiswa</option>
+								<option value="Regular">Regular</option>
+							</select>
+							<label for="floatingSelect">Kategori Mahasiswa</label>
+						</div>
+
+						<div class="form-floating mb-4 role">
+							<select class="form-select" id="role" name="role" aria-label="">
+								<option selected disabled>Pilih Role</option>
+								<option value="KSK">KSK</option>
+								<option value="Fasilitator">Fasilitator</option>
+							</select>
+							<label for="floatingSelect">Role Panitia Kesekretariatan</label>
+						</div>
+
+						<div class="form-floating mb-4 katasandi">
+							<input type="password" class="form-control" maxlength="30" id="katasandi" name="katasandi" placeholder="" hidden>
+							<label for="floatingInputGrid" hidden>Kata Sandi</label>
+						</div>
+
+						<div class="form-floating mb-4 status">
+							<input type="text" class="form-control" maxlength="50" id="status" name="status" placeholder="">
+							<label for="floatingInputGrid">Status</label>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="update(event)">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	loadDataMhs();
+	loadDataKsk();
+	var redirectPath = ""
+
+	function loadDataMhs() {
+		var username = document.getElementById("username")
+		var namalengkap = document.getElementById("namalengkap")
+		var jeniskelamin = document.getElementById("jeniskelamin")
+		var programstudi = document.getElementById("programstudi")
+		var alamat = document.getElementById("alamat")
+		var notelepon = document.getElementById("notelepon")
+		var email = document.getElementById("email")
+		var kategori = document.getElementById("kategori")
+		var role = document.getElementById("role")
+		var katasandi = document.getElementById("katasandi")
+		var status = document.getElementById("status")
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + username.value
+		var method = "GET"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				username.value = item.mhs_nopendaftaran
+				namalengkap.value = item.mhs_namalengkap
+				jeniskelamin.value = item.mhs_gender
+				programstudi.value = item.mhs_programstudi
+				alamat.value = item.mhs_alamat
+				notelepon.value = item.mhs_notelepon
+				email.value = item.mhs_email
+				kategori.value = item.mhs_kategori
+				katasandi.value = item.mhs_password
+				status.value = item.mhs_status
+				redirectPath = "/mahasiswabaru/index"
+				$('.role').hide();
+			},
+		});
+	}
+
+	function loadDataKsk() {
+		var username = document.getElementById("username")
+		var namalengkap = document.getElementById("namalengkap")
+		var jeniskelamin = document.getElementById("jeniskelamin")
+		var programstudi = document.getElementById("programstudi")
+		var alamat = document.getElementById("alamat")
+		var notelepon = document.getElementById("notelepon")
+		var email = document.getElementById("email")
+		var kategori = document.getElementById("kategori")
+		var role = document.getElementById("role")
+		var katasandi = document.getElementById("katasandi")
+		var status = document.getElementById("status")
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "dataksk?ksk_nim=" + username.value
+		var method = "GET"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				username.value = item.ksk_nim
+				namalengkap.value = item.ksk_nama
+				jeniskelamin.value = item.ksk_jeniskelamin
+				programstudi.value = item.ksk_programstudi
+				alamat.value = item.ksk_alamat
+				notelepon.value = item.ksk_notelepon
+				email.value = item.ksk_email
+				role.value = item.ksk_role
+				katasandi.value = item.ksk_password
+				status.value = item.ksk_status
+				redirectPath = "/panitiakesekretariatan/index"
+				$('.kategori').hide();
+			},
+		});
+	}
+
+	function update(event) {
+		event.preventDefault();
+
+		var username = document.getElementById("username").value;
+		var namalengkap = document.getElementById("namalengkap").value;
+		var jeniskelamin = document.getElementById("jeniskelamin").value;
+		var programstudi = document.getElementById("programstudi").value;
+		var alamat = document.getElementById("alamat").value;
+		var notelepon = document.getElementById("notelepon").value;
+		var email = document.getElementById("email").value;
+		var kategori = document.getElementById("kategori").value;
+		var role = document.getElementById("role").value;
+		var katasandi = document.getElementById("katasandi").value;
+		var status = document.getElementById("status").value;
+
+		var hostname = "https://localhost:7087/";
+		var url = "";
+		var method = "";
+		var input = {};
+
+		if ($('.kategori').is(':hidden')) {
+			url = hostname + "ubahksk";
+			method = "PUT";
+			input = {
+				ksk_nim: username,
+				ksk_nama: namalengkap,
+				ksk_jeniskelamin: jeniskelamin,
+				ksk_programstudi: programstudi,
+				ksk_alamat: alamat,
+				ksk_notelepon: notelepon,
+				ksk_email: email,
+				ksk_password: katasandi,
+				ksk_role: role,
+				ksk_status: status,
+			};
+		} else if ($('.role').is(':hidden')) {
+			url = hostname + "ubahmahasiswa";
+			method = "PUT";
+			input = {
+				mhs_nopendaftaran: username,
+				mhs_namalengkap: namalengkap,
+				mhs_gender: jeniskelamin,
+				mhs_programstudi: programstudi,
+				mhs_alamat: alamat,
+				mhs_notelepon: notelepon,
+				mhs_email: email,
+				mhs_password: katasandi,
+				mhs_kategori: kategori,
+				mhs_status: status,
+				mhs_idkelompok: "",
+				mhs_idpkkmb: "",
+				mhs_statuskelulusan: "",
+				mhs_saran: "",
+				mhs_kritik: "",
+				mhs_insight: "",
+				mhs_tglkirimevaluasi: "",
+			};
+		}
+
+		var data = JSON.stringify(input);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Akun Berhasil Diubah",
+					showConfirmButton: false,
+					timer: 2000,
+				}).then(() => {
+					window.location.href = redirectPath;
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>

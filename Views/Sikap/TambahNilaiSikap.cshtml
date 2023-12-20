@@ -1,0 +1,148 @@
+﻿@{
+}
+<div class="row justify-content-center mb-5">
+	<div class="col-lg mb-4">
+		<p>
+			<h2 class="text-center"><span style="color:#0059ab;">Kesekretariatan</span> / Informasi / Sikap</h2>
+		</p>
+	</div>
+</div>
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Tambah Nilai Sikap</strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-0">
+				<div class="row">
+					<div class="col-md-6">
+						<!-- First Column -->
+						<div class="form-floating mb-4 nama">
+							<input type="text" class="form-control" maxlength="10" id="nls_idnilaisikap" name="nls_idnilaisikap" placeholder="" hidden>
+							<select class="form-control" id="nama" name="nama" required></select>
+							<label for="nama">Nama</label>
+						</div>
+						<div class="form-floating mb-4 namakelompok">
+							<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" placeholder="" readonly>
+							<label for="floatingInputGrid">Kelompok</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<!-- Second Column -->
+						<div class="form-floating mb-4 tanggal">
+							<input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="">
+							<label for="floatingInputGrid">Hari / Tanggal</label>
+						</div>
+
+						<div class="form-floating mb-4 nilaisikap">
+							<select class="form-select" id="nilaisikap" name="nilaisikap" aria-label="">
+								<option selected disabled>Pilih Kategori Nilai</option>
+								<option value="A">A</option>
+								<option value="B">B</option>
+								<option value="C">C</option>
+								<option value="D">D</option>
+							</select>
+							<label for="floatingSelect">Kategori Nilai</label>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="simpan()">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function NamaMahasiswa() {
+		var hostname = "https://localhost:44373/";
+		var url = hostname + "getallmahasiswa";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				NamaDropDown(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function NamaDropDown(data) {
+		var dropdown = $('#nama');
+		dropdown.empty();
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.mhs_nopendaftaran).text(item.mhs_namalengkap);
+		});
+		dropdown.append(options);
+		dropdown.on('change', function () {
+			var noPendaftaran = $(this).val();
+			KelompokID(noPendaftaran, data);
+		});
+	}
+
+	function KelompokID(noPendaftaran, data) {
+		console.log('Selected Nopendaftaran:', noPendaftaran);
+
+		var Mhs = data.find(function (item) {
+			return item.mhs_nopendaftaran === noPendaftaran;
+		});
+		console.log('Selected Mahasiswa:', Mhs);
+		if (Mhs) {
+			$('#namakelompok').prop('value', Mhs.mhs_idkelompok);
+		} else {
+			console.log('Mahasiswa not found for nopendaftaran:', noPendaftaran);
+		}
+	}
+	$(document).ready(function () {
+		NamaMahasiswa();
+	});
+
+	function simpan() {
+		var nls_idnilaisikap = document.getElementById("nls_idnilaisikap").value;
+		var nls_nopendaftaran = document.getElementById("nama").value;
+		var nls_sikap = document.getElementById("nilaisikap").value;
+		var nls_tanggal = document.getElementById("tanggal").value;
+
+		var hostname = "https://localhost:44373";
+		var url = hostname + "/InsertNilaiSikap";
+		var method = "POST";
+		var input = {
+			nls_idnilaisikap: nls_idnilaisikap,
+			nls_nopendaftaran: nls_nopendaftaran,
+			nls_nim: "KSK001",
+			nls_sikap: nls_sikap,
+			nls_tanggal: nls_tanggal,
+			nls_jamplus: 0,
+			nls_jamminus: 0,
+			nls_status: "Aktif"
+		};
+
+		var data = JSON.stringify(input);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				console.log('Data from server:', data);
+				if (data.status === 200) {
+					alert("Data berhasil ditambahkan");
+				} else {
+					console.log('Insert failed. Server response:', data);
+					alert("Gagal menyimpan data. Periksa konsol log untuk informasi lebih lanjut.");
+				}
+			},
+			error: function (xhr, status, error) {
+				console.log('Error saving data:', error);
+				console.log(xhr.responseJSON);
+				console.log(status);
+			}
+		});
+	}
+</script>

@@ -1,0 +1,143 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-5 text-center">
+		<div class="card">
+			<h5 class="card-header white-text py-4" style="background-color: #0059AB;">
+				<strong>Ubah Akun Mahasiswa</strong>
+			</h5>
+			<input type="text" class="form-control" MaxLength="30" placeholder="Nomor Pendaftaran" name="mhs_nopendaftaran" id="mhs_nopendaftaran" value="@ViewBag.mhs_nopendaftaran" hidden>
+			<input type="text" class="form-control" MaxLength="30" placeholder="Gender" name="mhs_gender" id="mhs_gender" hidden>
+			<input type="text" class="form-control" MaxLength="30" placeholder="Kategori" name="mhs_kategori" id="mhs_kategori" hidden>
+			<input type="text" class="form-control" MaxLength="30" placeholder="ID Kelompok" name="mhs_idkelompok" id="mhs_idkelompok" hidden>
+			<div class="card-body px-lg-5 pt-0 my-1">
+				<div class="md-form">
+					<input type="text" class="form-control" MaxLength="30" placeholder="Nama Lengkap" name="mhs_namalengkap" id="mhs_namalengkap">
+				</div>
+				<div class="md-form-select mb-4">
+					<select class="form-control" name="mhs_programstudi" id="mhs_programstudi">
+						<option selected disabled>Pilih Program Studi</option>
+						<option value="Teknologi Produksi dan Proses Manufaktur">Teknologi Produksi dan Proses Manufaktur</option>
+						<option value="Pembuatan Peralatan dan Perkakas Produksi">Pembuatan Peralatan dan Perkakas Produksi</option>
+						<option value="Manajemen Informatika">Manajemen Informatika</option>
+						<option value="Teknologi Konstruksi Bangunan Gedung">Teknologi Konstruksi Bangunan Gedung</option>
+						<option value="Mekatronika">Mekatronika</option>
+						<option value="Mesin Otomotif">Mesin Otomotif</option>
+						<option value="Teknologi Rekayasa Pemeliharaan Alat Berat">Teknologi Rekayasa Pemeliharaan Alat Berat</option>
+						<option value="Teknologi Rekayasa Logistik">Teknologi Rekayasa Logistik</option>
+					</select>
+				</div>
+				<div class="md-form">
+					<textarea class="form-control" placeholder="Alamat" name="mhs_alamat" id="mhs_alamat" fdprocessedid="31smj"></textarea>
+				</div>
+				<div class="md-form">
+					<input type="email" class="form-control" MaxLength="30" placeholder="Email" name="mhs_email" id="mhs_email">
+				</div>
+				<div class="md-form">
+					<input type="number" class="form-control" placeholder="Nomor Telepon" name="mhs_notelepon" id="mhs_notelepon">
+				</div>
+				<div class="md-form">
+					<input type="password" class="form-control" placeholder="Kata Sandi" name="mhs_password" id="mhs_password">
+				</div>
+				<button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="update(event)">Ubah</button>
+				<p>
+					Sudah Memiliki Akun? <a asp-controller="mahasiswa" asp-action="LoginMahasiswa" class="font-weight-bold">Klik Disini</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	loadData();
+
+	function loadData() {
+		var mhs_nopendaftaran = document.getElementById("mhs_nopendaftaran")
+		var mhs_namalengkap = document.getElementById("mhs_namalengkap")
+		var mhs_gender = document.getElementById("mhs_gender")
+		var mhs_programstudi = document.getElementById("mhs_programstudi")
+		var mhs_alamat = document.getElementById("mhs_alamat")
+		var mhs_notelepon = document.getElementById("mhs_notelepon")
+		var mhs_email = document.getElementById("mhs_email")
+		var mhs_password = document.getElementById("mhs_password")
+		var mhs_kategori = document.getElementById("mhs_kategori")
+		var mhs_idkelompok = document.getElementById("mhs_idkelompok")
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + mhs_nopendaftaran.value
+		var method = "GET"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				mhs_nopendaftaran.value = item.mhs_nopendaftaran
+				mhs_namalengkap.value = item.mhs_namalengkap
+				mhs_gender.value = item.mhs_gender
+				mhs_programstudi.value = item.mhs_programstudi
+				mhs_alamat.value = item.mhs_alamat
+				mhs_notelepon.value = item.mhs_notelepon
+				mhs_email.value = item.mhs_email
+				mhs_password.value = item.mhs_password
+				mhs_kategori.value = item.mhs_kategori
+				mhs_idkelompok.value = item.mhs_idkelompok
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+
+	function update(event) {
+		event.preventDefault();
+
+		var mhs_nopendaftaran = document.getElementById("mhs_nopendaftaran").value
+		var mhs_namalengkap = document.getElementById("mhs_namalengkap").value
+		var mhs_gender = document.getElementById("mhs_gender").value
+		var mhs_programstudi = document.getElementById("mhs_programstudi").value
+		var mhs_alamat = document.getElementById("mhs_alamat").value
+		var mhs_notelepon = document.getElementById("mhs_notelepon").value
+		var mhs_email = document.getElementById("mhs_email").value
+		var mhs_password = document.getElementById("mhs_password").value
+		var mhs_kategori = document.getElementById("mhs_kategori").value
+		var mhs_idkelompok = document.getElementById("mhs_idkelompok").value
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "ubahmahasiswa"
+		var method = "PUT"
+		var input = {
+			mhs_nopendaftaran: mhs_nopendaftaran,
+			mhs_namalengkap: mhs_namalengkap,
+			mhs_gender: mhs_gender,
+			mhs_programstudi: mhs_programstudi,
+			mhs_alamat: mhs_alamat,
+			mhs_notelepon: mhs_notelepon,
+			mhs_email: mhs_email,
+			mhs_password: mhs_password,
+			mhs_kategori: mhs_kategori,
+			mhs_idkelompok: mhs_idkelompok,
+		}
+		var data = JSON.stringify(input)
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				alert("Data Berhasil Diupdate")
+				window.location.href = '/mahasiswabaru/index';
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+</script>

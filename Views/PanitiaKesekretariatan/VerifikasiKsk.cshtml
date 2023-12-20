@@ -1,0 +1,123 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg">
+		<div class="card">
+			<div class="card-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th class="text-center" scope="col">No</th>
+							<th class="text-center" scope="col">NIM</th>
+							<th scope="col">Nama KSK</th>
+							<th scope="col">Gender</th>
+							<th scope="col">Program Studi</th>
+							<th scope="col">Role</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+				<div class=" float-end" style="margin-top: 40px;">
+					<a class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="verifikasiKSK(event)">Verifikasi</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	new DataTable('#datatable');
+	loadTable();
+
+	var selectedNIMs = [];
+
+	function loadTable() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "TampilKskDraft";
+		var method = "GET";
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data;
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td class="text-center">' + counter + '</td>' +
+						'<td class="text-center">' + item.ksk_nim + '</td>' +
+						'<td>' + item.ksk_nama + '</td>' +
+						'<td>' + item.ksk_jeniskelamin + '</td>' +
+						'<td>' + item.ksk_programstudi + '</td>' +
+						'<td>' + item.ksk_role + '</td>' +
+						'<td>' +
+						'<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-ksk-nim="' + item.ksk_nim + '">' +
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+
+				// Add event listener to checkboxes
+				$('input[type="checkbox"]').change(function () {
+					var kskNim = $(this).data('ksk-nim');
+					if (this.checked) {
+						// Add to the selectedNIMs array if checked
+						selectedNIMs.push(kskNim);
+					} else {
+						// Remove from the selectedNIMs array if unchecked
+						selectedNIMs = selectedNIMs.filter(function (nim) {
+							return nim !== kskNim;
+						});
+					}
+				});
+			},
+		});
+	}
+
+	function verifikasi() {
+		// Display or process the selected NIMs
+		console.log(selectedNIMs);
+		return;
+	}
+
+	function verifikasiKSK(event) {
+		event.preventDefault();
+
+		var hostname = "https://localhost:7087/";
+		url = hostname + "verifikasiKSK";
+		method = "PUT";
+
+		var data = JSON.stringify(selectedNIMs);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Panitia Kesekretariatan Berhasil Diaktifkan.",
+					showConfirmButton: false,
+					timer: 2000,
+				}).then(() => {
+					window.location.href = './';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>

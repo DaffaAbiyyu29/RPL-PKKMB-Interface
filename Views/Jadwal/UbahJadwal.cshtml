@@ -1,0 +1,226 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Ubah Jadwal</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md-6">
+						<!-- First Column -->
+						<div class="input-group has-validation mb-4 tanggal">
+							<div class="form-floating is-invalid">
+								<input type="text" class="form-control is-invalid" id="idjadwal" name="idjadwal" data-target="validateField" placeholder="" value="@ViewBag.jdl_idjadwal" hidden>
+								<input type="date" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
+								<label for="validateField">Tanggal Kegiatan</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Tanggal Kegiatan.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 waktumulai">
+							<div class="form-floating is-invalid">
+								<input type="time" class="form-control is-invalid" id="waktumulai" name="waktumulai" data-target="validateField" placeholder="">
+								<label for="validateField">Waktu Mulai</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Mulainya Kegiatan.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 waktuakhir">
+							<div class="form-floating is-invalid">
+								<input type="time" class="form-control is-invalid" id="waktuakhir" name="waktuakhir" data-target="validateField" placeholder="">
+								<label for="validateField">Waktu Berakhir</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Berakhirnya Kegiatan.</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- Second Column -->
+						<div class="input-group has-validation mb-4 tempat">
+							<div class="form-floating is-invalid">
+								<textarea class="form-control is-invalid" placeholder="" id="tempat" data-target="validateField" name="tempat" style="height: 100px"></textarea>
+								<label for="validateField">Tempat</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Tempat.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 kegiatan">
+							<div class="form-floating is-invalid">
+								<textarea class="form-control is-invalid" placeholder="" id="kegiatan" data-target="validateField" name="kegiatan" style="height: 100px"></textarea>
+								<label for="validateField">Kegiatan</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Kegiatan.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="ubahjadwal(event)">Ubah</button>
+		</div>
+	</div>
+</div>
+
+@*<script>
+	function getRuanganData() {
+		$.ajax({
+			url: "https://localhost:7087/GetAllRuangan",
+			method: "GET",
+			success: function (data) {
+				if (data.status === 200) {
+					var ruanganDropdown = $('#ruanganSelect');
+
+					ruanganDropdown.empty();
+
+					ruanganDropdown.append('<option selected disabled>Pilih Ruangan</option>');
+
+					data.data.forEach(function (ruangan) {
+						ruanganDropdown.append('<option value="' + ruangan.rng_idruangan + '">' + ruangan.rng_namaruangan + '</option>');
+					});
+				} else {
+					console.error("Failed to get ruangan data from the API");
+				}
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+
+	$(document).ready(function () {
+		getRuanganData();
+	});
+</script>*@
+
+<script>
+	loadDataJadwal()
+
+	function formatDate(inputDate) {
+		var date = new Date(inputDate);
+
+		// Dapatkan tahun, bulan, dan tanggal
+		var year = date.getFullYear();
+		var month = ('0' + (date.getMonth() + 1)).slice(-2); // Tambahkan 0 di depan jika bulan < 10
+		var day = ('0' + date.getDate()).slice(-2); // Tambahkan 0 di depan jika tanggal < 10
+
+		// Gabungkan dan kembalikan tanggal yang diformat
+		var formattedDate = year + '-' + month + '-' + day;
+		return formattedDate;
+	}
+
+	function formatWaktu(inputWaktu) {
+		// Pisahkan string menjadi dua bagian menggunakan karakter "-"
+		var waktuParts = inputWaktu.split('-');
+
+		// Hilangkan spasi di sekitar jam awal dan akhir
+		var waktuAwal = waktuParts[0].trim();
+		var waktuAkhir = waktuParts[1].trim();
+
+		return {
+			waktuAwal: waktuAwal,
+			waktuAkhir: waktuAkhir
+		};
+	}
+
+	function loadDataJadwal() {
+		var idjadwal = document.getElementsByName("idjadwal")[0]
+		var tanggal = document.getElementsByName("tanggal")[0]
+		var waktumulai = document.getElementsByName("waktumulai")[0];
+		var waktuakhir = document.getElementsByName("waktuakhir")[0];
+		var tempat = document.getElementsByName("tempat")[0];
+		var kegiatan = document.getElementsByName("kegiatan")[0];
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "GetJadwal?jdl_idjadwal=" + idjadwal.value
+		var method = "GET"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				console.log(formatWaktu(item.jdl_waktupelaksanaan).waktuAkhir)
+				idjadwal.value = item.jdl_idjadwal
+				tanggal.value = formatDate(item.jdl_tglpelaksanaan);
+				waktumulai.value = formatWaktu(item.jdl_waktupelaksanaan).waktuAwal
+				waktuakhir.value = formatWaktu(item.jdl_waktupelaksanaan).waktuAkhir
+				tempat.value = item.jdl_tempat
+				kegiatan.value = item.jdl_agenda
+			},
+		});
+	}
+
+	function ubahjadwal(event) {
+		event.preventDefault();
+
+		var tanggal = document.getElementsByName("tanggal")[0].value
+		var waktumulai = document.getElementsByName("waktumulai")[0].value;
+		var waktuakhir = document.getElementsByName("waktuakhir")[0].value;
+		var tempat = document.getElementsByName("tempat")[0].value;
+		var kegiatan = document.getElementsByName("kegiatan")[0].value;
+
+		url = "https://localhost:7087/UpdateJadwal";
+		method = "PUT";
+		data = {
+			jdl_idjadwal: "",
+			jdl_tglpelaksanaan: tanggal,
+			jdl_waktupelaksanaan: waktumulai + " - " + waktuakhir,
+			jdl_agenda: kegiatan,
+			jdl_tempat: tempat,
+			jdl_status: "Aktif",
+		};
+
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Ubah Jadwal Berhasil",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = './';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var inputFields = document.querySelectorAll('[data-target="validateField"]');
+
+		inputFields.forEach(function (inputField) {
+			inputField.addEventListener('input', function () {
+				validateInput(inputField);
+			});
+
+			inputField.addEventListener('blur', function () {
+				validateInput(inputField);
+			});
+		});
+
+		function validateInput(inputField) {
+			if (inputField.value.trim() !== '') {
+				inputField.classList.remove('is-invalid');
+			} else {
+				inputField.classList.add('is-invalid');
+			}
+		}
+	});
+</script>

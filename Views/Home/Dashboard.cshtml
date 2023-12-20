@@ -1,0 +1,12 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+	// Retrieve the session variable value
+	string peran = HttpContextAccessor.HttpContext.Session.GetString("Peran");
+	string a = HttpContextAccessor.HttpContext.Session.GetString("a");
+}
+
+@peran
+@a
+
+<!-- The rest of your HTML code -->

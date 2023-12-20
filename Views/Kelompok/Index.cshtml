@@ -1,0 +1,69 @@
+﻿@{
+}
+
+<div class="row">
+	<div class="col-lg">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="jadwal" asp-action="TambahJadwal">Tambah Data</a>
+		</div>
+	</div>
+</div>
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg">
+		<div class="card">
+			<div class="card-header">
+				Kelompok
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Nama Kelompok</th>
+							<th scope="col">Fasilitator</th>
+							<th scope="col">Ruangan</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	new DataTable('#datatable');
+	loadTable()
+
+	function loadTable() {
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "GetAllKelompok"
+		var method = "GET"
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' + // Use the counter as a sequence number
+						'<td>' + item.kmk_namakelompok + '</td>' +
+						'<td>' + item.kmk_nim + '</td>' +
+						'<td>' + item.kmk_idruangan + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/Kelompok/Ubah/' + item.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						//'<button class="btn btn-danger" value="' + item.kmk_idkelompok + '" onclick="hapus(this.value)">Delete</button>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+			},
+		});
+	}
+</script>

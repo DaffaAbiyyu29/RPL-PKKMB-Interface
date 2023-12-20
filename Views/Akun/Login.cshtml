@@ -1,0 +1,111 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-5">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Login Akun PKKMB</strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-0">
+				<div class="form-floating mb-4">
+					<input type="text" class="form-control" maxlength="10" id="username" name="username" placeholder="">
+					<label for="floatingInputGrid">Username</label>
+				</div>
+				<div class="form-floating mb-4">
+					<input type="password" class="form-control" maxlength="30" id="katasandi" name="katasandi" placeholder="">
+					<label for="floatingInputGrid">Kata Sandi</label>
+				</div>
+				<div class="d-flex justify-content-around mb-1 my-1">
+					<div>
+						Lupa Kata Sandi? <a asp-controller="akun" asp-action="lupakatasandi" class="font-weight-bold">Klik Disini</a>
+					</div>
+				</div>
+				<div class="d-flex justify-content-around mb-4">
+					<div>
+						Belum Punya Akun? <a asp-controller="akun" asp-action="daftarakun" class="font-weight-bold">Daftar Disini</a>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="login(event)">Login</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function login(event) {
+		event.preventDefault();
+
+		var username = document.getElementById("username").value;
+		var katasandi = document.getElementById("katasandi").value;
+
+		if (username && katasandi) {
+			var hostname = "https://localhost:7087/";
+			var url = hostname + "loginAkun";
+			var method = "POST";
+			var data = {
+				username: username,
+				password: katasandi,
+			};
+
+			$.ajax({
+				url: url,
+				method: method,
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				success: function (data) {
+					if (data.status === 200) {
+						var role = data.role;
+
+						// Display SweetAlert before redirecting
+						Swal.fire({
+							position: "top-end",
+							icon: "success",
+							title: "Login Berhasil Sebagai " + data.role,
+							showConfirmButton: false,
+							timer: 2000
+						}).then(() => {
+							// Redirect based on the user's role
+							if (role == "Mahasiswa") {
+								window.location.href = '/mahasiswabaru/index';
+							} else if (role == "Panitia Kesekretariatan") {
+								window.location.href = '/panitiakesekretariatan/index';
+							} else if (role == "PIC PKKMB") {
+								window.location.href = '/picpkkmb/index';
+							}
+						});
+					} else {
+						// Handle validation errors
+						if (data.errors) {
+							Object.keys(data.errors).forEach(function (key) {
+								alert(key + ": " + data.errors[key][0]);
+							});
+						}
+					}
+				},
+				error: function (xhr, status) {
+					console.error("AJAX request error:", status);
+					console.log("Server response:", xhr.responseJSON);
+					Swal.fire({
+						position: "top-end",
+						icon: "error",
+						title: xhr.responseJSON.messages,
+						showConfirmButton: false,
+						timer: 2000
+					})
+				},
+			});
+		} else {
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Username dan Kata Sandi Harus Diisi!",
+				showConfirmButton: false,
+				timer: 2000
+			})
+			return;
+		}
+	}
+</script>

@@ -1,0 +1,76 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="card">
+	<div class="card-body">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn btn-primary" asp-controller="picpkkmb" asp-action="DaftarAkunPic">Tambah Data</a>
+		</div>
+		<table class="table" id="">
+			<thead>
+				<tr>
+					<th scope="col">No</th>
+					<th scope="col">NPK</th>
+					<th scope="col">Nama PIC</th>
+					<th scope="col">Aksi</th>
+				</tr>
+			</thead>
+			<tbody id="tbody"></tbody>
+		</table>
+	</div>
+</div>
+
+<script>
+	new DataTable('#datatable');
+	loadTable()
+
+	function loadTable() {
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "getallpic"
+		var method = "GET"
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' + // Use the counter as a sequence number
+						'<td>' + item.pic_nokaryawan + '</td>' +
+						'<td>' + item.pic_nama + '</td>' +
+						'<td>' +
+						'<a class="btn btn-secondary" href="/picpkkmb/update/' + item.pic_npk + '">Update</a>' +
+						//'<button class="btn btn-danger" value="' + item.pic_npk + '" onclick="hapus(this.value)">Delete</button>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+				console.log(list)
+			},
+		});
+	}
+
+	function hapus(pic_npk) {
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "hapuspic?pic_npk=" + pic_npk
+		var method = "DELETE"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				alert("Data Berhasil Dihapus")
+				location.reload();
+			},
+		});
+	}
+</script>

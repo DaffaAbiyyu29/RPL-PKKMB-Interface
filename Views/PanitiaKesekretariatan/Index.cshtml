@@ -1,0 +1,66 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg">
+		<div class="card">
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">NIM</th>
+							<th scope="col">Nama KSK</th>
+							<th scope="col">Gender</th>
+							<th scope="col">Program Studi</th>
+							<th scope="col">Role</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	new DataTable('#datatable');
+	loadTable()
+
+	function loadTable() {
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "TampilKskAktif"
+		var method = "GET"
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' + // Use the counter as a sequence number
+						'<td>' + item.ksk_nim + '</td>' +
+						'<td>' + item.ksk_nama + '</td>' +
+						'<td>' + item.ksk_jeniskelamin + '</td>' +
+						'<td>' + item.ksk_programstudi + '</td>' +
+						'<td>' + item.ksk_role + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/Akun/Ubah/' + item.ksk_nim + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						//'<button class="btn btn-danger" value="' + item.ksk_nim + '" onclick="hapus(this.value)">Delete</button>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+			},
+		});
+	}
+</script>
