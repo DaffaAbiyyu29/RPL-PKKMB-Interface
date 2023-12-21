@@ -58,6 +58,12 @@
 				success: function (data) {
 					if (data.status === 200) {
 						var role = data.role;
+						// Setelah mendapatkan token dari respons API
+						var token = data.token;
+
+						// Simpan token ke dalam cookies MVC
+						document.cookie = "token=" + token + ";path=/;secure;SameSite=None";
+
 
 						// Display SweetAlert before redirecting
 						Swal.fire({
@@ -69,11 +75,11 @@
 						}).then(() => {
 							// Redirect based on the user's role
 							if (role == "Mahasiswa") {
-								window.location.href = '/mahasiswabaru/index';
+								window.location.href = '../mahasiswabaru/dashboard';
 							} else if (role == "Panitia Kesekretariatan") {
-								window.location.href = '/panitiakesekretariatan/index';
+								window.location.href = '../panitiakesekretariatan/dashboard';
 							} else if (role == "PIC PKKMB") {
-								window.location.href = '/picpkkmb/index';
+								window.location.href = '../';
 							}
 						});
 					} else {

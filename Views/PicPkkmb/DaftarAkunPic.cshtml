@@ -1,0 +1,163 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Daftar Akun</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="input-group has-validation mb-4 namalengkap">
+					<div class="form-floating is-invalid">
+						<input type="text" class="form-control is-invalid" maxlength="100" id="validateFieldNamalengkap" name="namalengkap" data-target="validateField" placeholder="">
+						<label for="validateFieldNamalengkap">Nama Lengkap</label>
+						<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Lengkap.</div>
+					</div>
+				</div>
+
+				<div class="input-group has-validation mb-4 katasandi">
+					<div class="form-floating is-invalid">
+						<input type="password" class="form-control is-invalid" maxlength="30" id="validateFieldKatasandi" data-target="validateField" name="katasandi" placeholder="">
+						<label for="validateFieldKatasandi">Kata Sandi</label>
+						<div class="invalid-feedback" data-target="validateLabel">* Masukkan Kata Sandi.</div>
+					</div>
+				</div>
+
+				<div class="input-group has-validation mb-4 katasandi2">
+					<div class="form-floating is-invalid">
+						<input type="password" class="form-control is-invalid" maxlength="30" id="validateFieldKatasandi2" data-target="validateField" name="katasandi2" placeholder="">
+						<label for="validateFieldKatasandi2">Ketik Ulang Kata Sandi</label>
+						<div class="invalid-feedback" data-target="validateLabel">* Ketik Ulang Kata Sandi.</div>
+					</div>
+				</div>
+
+				<div class="d-flex justify-content-around mb-1 my-5">
+					<div>
+						Sudah Memiliki Akun? <a asp-controller="akun" asp-action="login" class="font-weight-bold">Login Disini</a>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="daftarakun(event)">Daftar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function validateNumberInput(inputElement) {
+		// Mengganti input hanya dengan karakter angka
+		inputElement.value = inputElement.value.replace(/\D/g, '');
+
+		// Menampilkan pesan kesalahan jika karakter selain angka dimasukkan
+		var validationMessage = inputElement.parentElement.querySelector('[data-target="validateLabel"]');
+	}
+
+	function validateEmailFormat(emailInput) {
+		// Pola regex untuk memeriksa format email
+		var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+		return emailRegex.test(emailInput.value);
+	}
+</script>
+
+<script>
+	function daftarakun(event) {
+		event.preventDefault();
+
+		var selectedTipeAkun = $('[name="tipeakun"]').val();
+
+		var namalengkap = document.getElementsByName("namalengkap")[0].value;
+		var katasandi = document.getElementsByName("katasandi")[0].value;
+		var katasandi2 = document.getElementsByName("katasandi2")[0].value;
+
+		// Adjust the URL, method, and data based on the selected account type
+		var url = "";
+		var method = "";
+		var data = {};
+
+		if (namalengkap.trim() === '' || katasandi.trim() === '' || katasandi2.trim() === '') {
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Lengkapi Semua Fields",
+				showConfirmButton: false,
+				timer: 2000
+			});
+			return;
+		}
+
+		url = "https://localhost:7087/daftarpic";
+		method = "POST";
+		data = {
+			pic_nokaryawan: "",
+			pic_nama: namalengkap,
+			pic_password: katasandi,
+			pic_status: "Aktif",
+		};
+
+		if (katasandi != katasandi2) {
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Kata Sandi Tidak Cocok",
+				showConfirmButton: false,
+				timer: 2000
+			})
+		}
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Pendaftaran Akun Berhasil",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = '..';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>
+
+<script>
+	// Mengambil semua elemen dengan nama ID "validateField"
+	var inputFields = document.querySelectorAll('[data-target="validateField"]');
+	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
+
+	// Menambahkan event listener untuk setiap elemen input
+	inputFields.forEach(function (inputField) {
+		inputField.addEventListener('input', function () {
+			if (inputField.value.trim() !== '') {
+				inputField.classList.remove('is-invalid');
+
+			} else {
+				inputField.classList.add('is-invalid');
+
+			}
+		});
+
+		inputField.addEventListener('focus', function () {
+			if (inputField.value.trim() === '') {
+
+			}
+		});
+
+		inputField.addEventListener('blur', function () {
+			if (inputField.value.trim() !== '') {
+
+			}
+		});
+	});
+</script>

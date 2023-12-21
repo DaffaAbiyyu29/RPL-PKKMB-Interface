@@ -33,6 +33,7 @@ select {
 .footer {
     background-color: #0059AB;
     padding: 15px;
+    width: 100vw;
 }
 
 .socialmedia {
@@ -339,9 +340,9 @@ select {
         overflow: hidden;
     }
 
-    body * {
-        visibility: hidden;
-    }
+        body * {
+            visibility: hidden;
+        }
 
     #section-to-print, #section-to-print * {
         visibility: visible;
@@ -398,6 +399,8 @@ select {
 
 body {
     background-image: url('/assets/Images/background/Element.png');
+    background-size: cover;
+    background-color: darkgrey;
 }
 
 
@@ -437,5 +440,25 @@ body {
 }
 
 
+.section-bg {
+    background-color: #E6F1FF; /* warna latar belakang */
+    background-image: url('[5](http://placekitten.com/600/800)'); /* gambar latar belakang */
+    background-repeat: no-repeat; /* mengatur agar gambar tidak diulang */
+    background-attachment: fixed; /* mengatur agar gambar tetap pada posisi */
+    background-position: 50% 20%; /* mengatur posisi gambar */
+    background-size: cover; /* mengatur agar gambar menutupi seluruh area */
+}
+
+.p {
+    font-size: 2vw;
+}
 
 
+#section {
+    background-color: #BEBEBE;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+    width: 100%;
+    border-radius: 15px;
+}

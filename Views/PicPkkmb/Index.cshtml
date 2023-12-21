@@ -1,25 +1,34 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
 }
 
-<div class="card">
-	<div class="card-body">
+<div class="row">
+	<div class="col-lg-4">
 		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn btn-primary" asp-controller="picpkkmb" asp-action="DaftarAkunPic">Tambah Data</a>
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="picpkkmb" asp-action="DaftarAkunPic">Tambah Data</a>
 		</div>
-		<table class="table" id="">
-			<thead>
-				<tr>
-					<th scope="col">No</th>
-					<th scope="col">NPK</th>
-					<th scope="col">Nama PIC</th>
-					<th scope="col">Aksi</th>
-				</tr>
-			</thead>
-			<tbody id="tbody"></tbody>
-		</table>
+	</div>
+</div>
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg mb-4 semua">
+		<div class="card">
+			<div class="card-header">
+				PIC PKKMB
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">NPK</th>
+							<th scope="col">Nama PIC</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -45,8 +54,7 @@
 						'<td>' + item.pic_nokaryawan + '</td>' +
 						'<td>' + item.pic_nama + '</td>' +
 						'<td>' +
-						'<a class="btn btn-secondary" href="/picpkkmb/update/' + item.pic_npk + '">Update</a>' +
-						//'<button class="btn btn-danger" value="' + item.pic_npk + '" onclick="hapus(this.value)">Delete</button>' +
+						'<a class="btn btn-primary" href="/picpkkmb/update/' + item.pic_nokaryawan + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
 						'</td>' +
 						'</tr>';
 
