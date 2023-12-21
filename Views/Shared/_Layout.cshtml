@@ -314,5 +314,62 @@
 		}
 	</script>
 
+	<script>
+		$(document).ready(function () {
+			// Mendapatkan path dari URL
+			var path = window.location.pathname.toLowerCase();
+
+			// Menyembunyikan semua item menu
+			$('.nav-item').hide();
+			$('.nav-item.login').show();
+			$('.nav-item.logout').hide();
+
+			// Menampilkan item menu sesuai dengan path
+			if (path.includes("/mahasiswabaru")) {
+				$('.nav-item.mahasiswabaru').show();
+				$('.nav-item.login').hide();
+				$('.nav-item.logout').show();
+			} else if (path.includes("/panitiakesekretariatan")) {
+				$('.nav-item.panitiakesekretariatan').show();
+				$('.nav-item.login').hide();
+				$('.nav-item.logout').show();
+			} else if (path.includes("/picpkkmb")) {
+				$('.nav-item.picpkkmb').show();
+				$('.nav-item.login').hide();
+				$('.nav-item.logout').show();
+			} else if (path.includes("/akun")) {
+				// Menampilkan tombol login
+				$('.nav-item.akun').show();
+				$('.nav-item.login').hide();
+			}
+
+			// Tambahkan event handler saat halaman di-scroll
+			$(window).scroll(function () {
+				// Mendapatkan tinggi scroll dari atas halaman
+				var scrollHeight = $(window).scrollTop();
+
+				// Tentukan tinggi dari elemen navigasi
+				var navHeight = $('.navbar').outerHeight();
+
+				// Jika tinggi scroll lebih besar dari atau sama dengan tinggi elemen navigasi
+				if (scrollHeight >= navHeight) {
+					// Terapkan properti CSS position: fixed pada elemen navigasi
+					$('.navbar').css({
+						'position': 'fixed',
+						'top': '0',
+						'width': '100%',
+						'z-index': '1000',
+
+					});
+				} else {
+					// Jika belum mencapai tinggi elemen navigasi, kembalikan ke posisi relatif
+					$('.navbar').css({
+						'position': 'relative'
+					});
+				}
+			});
+		});
+	</script>
+
 </body>
 </html>
