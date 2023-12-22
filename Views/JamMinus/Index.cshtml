@@ -1,66 +1,133 @@
 ﻿@{
 }
 <div class="row">
-	<div class="col-lg">
-	</div>
+    <div class="col-lg">
+    </div>
 </div>
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg">
-		<div class="card">
-			<div class="card-header">
-				Jam Minus
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
-					<thead>
-						<tr>
-							<th scope="col">No</th>
-							<th scope="col">Nama </th>
-							<th scope="col">Kelompok</th>
-							<th scope="col">Hari / Tanggal</th>
-							<th scope="col">Jam Minus</th>
-						</tr>
-					</thead>
-					<tbody id="tbody"></tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+    <div class="col-lg">
+        <div class="card">
+            <div class="card-header">
+                Jam Minus
+            </div>
+            <div class="card-body">
+                <table class="table" id="">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Nama </th>
+                            <th scope="col">Kelompok</th>
+                            <th scope="col">Hari / Tanggal</th>
+                            <th scope="col">Jam Minus</th>
+                            <th scope="col">Deskripsi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-	new DataTable('#datatable');
-	loadTable()
+    $(document).ready(function () {
+        loadData();
+    });
 
-	function loadTable() {
-		var hostname = "https://localhost:44373/"
-		var url = hostname + "GetAllNilaiSikap"
-		var method = "GET"
-		var counter = 1;
+    function loadData() {
+        var hostname = "https://localhost:7087/";
+        var url = hostname + "GetAllNilaiSikap";
+        var method = "GET";
 
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				var list = data.data
-				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' +
-						'<td>' + item.nls_nopendaftaran + '</td>' +
-						'<td>' + item.nls_nopendaftaran + '</td>' +
-						'<td>' + item.nls_tanggal + '</td>' +
-						'<td>' + item.nls_jamminus + '</td>' +
-						'<td>' +
-						'<a class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						'</td>' +
-						'</tr>';
+        $.ajax({
+            url: url,
+            type: method,
+            dataType: "json",
+            success: function (response) {
+                if (response && response.data && Array.isArray(response.data)) {
+                    displayData(response.data);
+                } else {
+                    console.log('Invalid response format or missing data property:', response);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error fetching data:', error);
+                console.log(xhr.responseJSON);
+            }
+        });
+    }
 
-					$('#tbody').append(newRow);
-					counter++;
-				});
-			},
-		});
-	}
+    function displayData(data) {
+        var tbody = $('#tbody');
+        tbody.empty();
+
+        fetchMahasiswaData().then(function (mahasiswaData) {
+            fetchKelompokData().then(function (kelompokData) {
+                var mahasiswaMap = mapMahasiswaData(mahasiswaData);
+                var kelompokMap = mapKelompokData(kelompokData);
+                console.log('Data Kelompok Map:', kelompokMap);
+
+                $.each(data, function (index, item) {
+                    console.log('Item Data:', item);
+                    var row = $('<tr></tr>');
+                    row.append('<td>' + (index + 1) + '</td>');
+                    row.append('<td>' + mahasiswaMap[item.nls_nopendaftaran] + '</td>');
+                    row.append('<td>' + item.nls_nopendaftaran + '</td>');
+                    row.append('<td>' + formatDateForDisplay(item.nls_tanggal) + '</td>');
+                    row.append('<td>' + item.nls_jamminus + '</td>');
+                    row.append('<td>' + item.nls_deskripsi + '</td>');
+                    row.append('<td>' + '<a class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' + '</td>');
+                    tbody.append(row);
+                });
+            });
+        });
+    }
+
+    function formatDateForDisplay(dateString) {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+        return formattedDate;
+    }
+
+    function fetchMahasiswaData() {
+        var hostname = "https://localhost:7087/";
+        var url = hostname + "getallmahasiswa";
+        var method = "GET";
+
+        return $.ajax({
+            url: url,
+            type: method,
+            dataType: "json"
+        });
+    }
+
+    function fetchKelompokData() {
+        var hostname = "https://localhost:7087/";
+        var url = hostname + "GetAllKelompok";
+        var method = "GET";
+
+        return $.ajax({
+            url: url,
+            type: method,
+            dataType: "json"
+        });
+    }
+    function mapMahasiswaData(mahasiswaData) {
+        var mahasiswaMap = {};
+        $.each(mahasiswaData.data, function (index, mahasiswa) {
+            mahasiswaMap[mahasiswa.mhs_nopendaftaran] = mahasiswa.mhs_namalengkap;
+        });
+        return mahasiswaMap;
+    }
+
+    function mapKelompokData(kelompokData) {
+        var kelompokMap = {};
+        $.each(kelompokData.data, function (index, kelompok) {
+            kelompokMap["KEL" + kelompok.kmk_idkelompok] = kelompok.kmk_namakelompok;
+
+        });
+        return kelompokMap;
+    }
 </script>

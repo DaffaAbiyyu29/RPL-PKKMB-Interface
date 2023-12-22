@@ -50,6 +50,10 @@
                             </select>
                             <label for="floatingSelect" hidden>Kategori Nilai</label>
                         </div>
+                        <div class="form-floating mb-4 deskripsi">
+                            <input type="text" class="form-control" id="deskripsi" name="deskripsi" placeholder="">
+                            <label for="floatingInputGrid">Deskripsi</label>
+                        </div>
                     </div>
                 </div>
                 <button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambah(event)">Simpan</button>
@@ -61,6 +65,16 @@
 <script>
     loadDataJam();
 
+    function formatDate(inputDate) {
+        var date = new Date(inputDate);
+
+        var year = date.getFullYear();
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var formattedDate = year + '-' + month + '-' + day;
+        return formattedDate;
+    }
+
     function loadDataJam() {
         var nls_idnilaisikap = document.getElementById("nls_idnilaisikap")
         var nama = document.getElementById("nama")
@@ -68,8 +82,9 @@
         var tanggal = document.getElementById("tanggal")
         var nilaisikap = document.getElementById("nilaisikap")
         var jamplus = document.getElementById("jamplus")
+        var deskripsi = document.getElementById("deskripsi")
 
-        var hostname = "https://localhost:44373/"
+        var hostname = "https://localhost:7087/"
         var url = hostname + "GetNilaiSikap?nls_idnilaisikap=" + nls_idnilaisikap.value
         var method = "GET"
 
@@ -83,9 +98,10 @@
                 nls_idnilaisikap.value = item.nls_idnilaisikap;
                 nama.value = item.nls_nopendaftaran;
                 namakelompok.value = item.nls_nopendaftaran;
-                tanggal.value = item.nls_tanggal;
+                tanggal.value = formatDate(item.nls_tanggal)
                 nilaisikap.value = item.nls_sikap;
-                jamplus.value = item.nls_jamplus
+                jamplus.value = item.nls_jamplus;
+                deskripsi.value = item.nls_deskripsi
 
             },
 
@@ -97,20 +113,22 @@
         var nls_idnilaisikap = document.getElementById("nls_idnilaisikap").value;
         var nls_nopendaftaran = document.getElementById("nama").value;
         var nls_tanggal = document.getElementById("tanggal").value;
-        var nilaisikap = document.getElementById("nilaisikap").value;  // Mengambil nilai sikap
+        var nilaisikap = document.getElementById("nilaisikap").value;
         var nls_jamplus = document.getElementById("jamplus").value;
+        var nls_deskripsi = document.getElementById("deskripsi").value;
 
-        var hostname = "https://localhost:44373";
+        var hostname = "https://localhost:7087";
         var url = hostname + "/UpdateNilaiSikap";
         var method = "PUT";
         var input = {
             nls_idnilaisikap: nls_idnilaisikap,
             nls_nopendaftaran: nls_nopendaftaran,
             nls_nim: "KSK001",
-            nls_sikap: nilaisikap,  // Menggunakan nilai sikap
+            nls_sikap: nilaisikap,
             nls_tanggal: nls_tanggal,
             nls_jamplus: nls_jamplus,
             nls_jamminus: 0,
+            nls_deskripsi: nls_deskripsi,
             nls_status: "Aktif"
         };
 
@@ -139,13 +157,4 @@
         });
     }
 
-</script>
-<script>
-    function validateNumberInput(inputElement) {
-        // Mengganti input hanya dengan karakter angka
-        inputElement.value = inputElement.value.replace(/\D/g, '');
-
-        // Menampilkan pesan kesalahan jika karakter selain angka dimasukkan
-        var validationMessage = inputElement.parentElement.querySelector('[data-target="validateLabel"]');
-    }
 </script>

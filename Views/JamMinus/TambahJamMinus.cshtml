@@ -15,7 +15,7 @@
     <div class="col-lg-8">
         <div class="card">
             <h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
-                <strong>Tambah Jam Plus</strong>
+                <strong>Tambah Jam Minus</strong>
             </h5>
             <div class="card-body px-lg-5 pt-0">
                 <div class="row">
@@ -41,8 +41,6 @@
                         <div class="form-floating mb-4 nilaisikap">
                             <input type="text" class="form-control" id="jamminus" name="jamminus" placeholder="">
                             <label for="floatingInputGrid">Jam Minus</label>
-                            <input type="text" class="form-control" id="jamplus" name="jamplus" placeholder="" hidden>
-                            <label for="floatingInputGrid" hidden>Jam Plus</label>
                             <select class="form-select" id="nilaisikap" name="nilaisikap" aria-label="" hidden>
                                 <option selected disabled hidden>Pilih Kategori Nilai</option>
                                 <option value="A">A</option>
@@ -51,6 +49,10 @@
                                 <option value="D">D</option>
                             </select>
                             <label for="floatingSelect" hidden>Kategori Nilai</label>
+                        </div>
+                        <div class="form-floating mb-4 deskripsi">
+                            <input type="text" class="form-control" id="deskripsi" name="deskripsi" placeholder="">
+                            <label for="floatingInputGrid">Deskripsi</label>
                         </div>
                     </div>
                 </div>
@@ -63,16 +65,26 @@
 <script>
     loadDataJam();
 
+    function formatDate(inputDate) {
+        var date = new Date(inputDate);
+
+        var year = date.getFullYear();
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var formattedDate = year + '-' + month + '-' + day;
+        return formattedDate;
+    }
+
     function loadDataJam() {
         var nls_idnilaisikap = document.getElementById("nls_idnilaisikap")
         var nama = document.getElementById("nama")
         var namakelompok = document.getElementById("namakelompok")
         var tanggal = document.getElementById("tanggal")
         var nilaisikap = document.getElementById("nilaisikap")
-        var jamplus = document.getElementById("jamplus")
         var jamminus = document.getElementById("jamminus")
+        var deskripsi = document.getElementById("deskripsi")
 
-        var hostname = "https://localhost:44373/"
+        var hostname = "https://localhost:7087/"
         var url = hostname + "GetNilaiSikap?nls_idnilaisikap=" + nls_idnilaisikap.value
         var method = "GET"
 
@@ -86,10 +98,10 @@
                 nls_idnilaisikap.value = item.nls_idnilaisikap;
                 nama.value = item.nls_nopendaftaran;
                 namakelompok.value = item.nls_nopendaftaran;
-                tanggal.value = item.nls_tanggal;
+                tanggal.value = formatDate(item.nls_tanggal)
                 nilaisikap.value = item.nls_sikap;
-                jamplus.value = item.nls_jamplus
-                jamminus.value = item.nls_jamminus
+                jamminus.value = item.nls_jamminus;
+                deskripsi.value = item.nls_deskripsi
 
             },
 
@@ -101,21 +113,22 @@
         var nls_idnilaisikap = document.getElementById("nls_idnilaisikap").value;
         var nls_nopendaftaran = document.getElementById("nama").value;
         var nls_tanggal = document.getElementById("tanggal").value;
-        var nilaisikap = document.getElementById("nilaisikap").value;  // Mengambil nilai sikap
-        var nls_jamplus = document.getElementById("jamplus").value;
+        var nilaisikap = document.getElementById("nilaisikap").value;
         var nls_jamminus = document.getElementById("jamminus").value;
+        var nls_deskripsi = document.getElementById("deskripsi").value;
 
-        var hostname = "https://localhost:44373";
+        var hostname = "https://localhost:7087";
         var url = hostname + "/UpdateNilaiSikap";
         var method = "PUT";
         var input = {
             nls_idnilaisikap: nls_idnilaisikap,
             nls_nopendaftaran: nls_nopendaftaran,
             nls_nim: "KSK001",
-            nls_sikap: nilaisikap,  // Menggunakan nilai sikap
+            nls_sikap: nilaisikap,
             nls_tanggal: nls_tanggal,
-            nls_jamplus: nls_jamplus,
+            nls_jamplus: 0,
             nls_jamminus: nls_jamminus,
+            nls_deskripsi: nls_deskripsi,
             nls_status: "Aktif"
         };
 
