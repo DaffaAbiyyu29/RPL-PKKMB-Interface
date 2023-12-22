@@ -1,5 +1,219 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+	Layout = "_Layout";
 }
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Tambah Tugas</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="input-group has-validation mb-4 jenistugas">
+							<div class="form-floating">
+								<input type="text" class="form-control" maxlength="30" id="validateField" name="idtugas" data-target="validateField" placeholder="" value="@ViewBag.tgs_idtugas" hidden>
+								<input type="text" class="form-control" maxlength="30" id="validateField" name="jenistugas" data-target="validateField" placeholder="">
+								<label for="validateField">Jenis Tugas</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Jenis Tugas.</div>
+							</div>
+						</div>
+
+						<div class="row mx-0">
+							<div class="col-md-2 px-0">
+								<div class="input-group has-validation mb-4 tugas">
+									<div class="form-floating">
+										<input type="file" class="form-control" id="fileInput" name="tugas" data-target="validateField" placeholder="">
+										<label for="fileInput">File Tugas</label>
+										<div class="invalid-feedback" data-target="validateLabel">* Pilih File Tugas.</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-10 px-0">
+								<div class="input-group has-validation mb-4 tugas">
+									<div class="form-floating">
+										<input type="text" readonly id="fileName" name="fileName" class="form-control" placeholder="Selected File" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="input-group has-validation mb-4 waktuawal">
+							<div class="form-floating">
+								<input type="date" class="form-control" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="">
+								<label for="validateField">Waktu Pemberian Tugas</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Lengkap.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 deadline">
+							<div class="form-floating">
+								<input type="date" class="form-control" maxlength="100" id="validateField" name="deadline" data-target="validateField" placeholder="">
+								<label for="validateField">Deadline</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Pemberian Tugas.</div>
+							</div>
+						</div>
+					</div>
+					<div class="input-group has-validation mb-4 deskripsi">
+						<div class="form-floating">
+							<textarea class="form-control" placeholder="" id="validateField" data-target="validateField" name="deskripsi" style="height: 100px"></textarea>
+							<label for="validateFieldNamalengkap">Deskripsi</label>
+							<div class="invalid-feedback" data-target="validateLabel">* Masukkan Deskripsi.</div>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="ubahTugas(event)">Tambah</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		loadDataTugas();
+
+		// Tambahkan event listener untuk input file
+		$('#fileInput').on('change', function () {
+			// Perbarui nilai field nama file
+			updateFileName(this);
+		});
+	});
+
+	function formatDate(inputDate) {
+		var date = new Date(inputDate);
+		var year = date.getFullYear();
+		var month = ('0' + (date.getMonth() + 1)).slice(-2);
+		var day = ('0' + date.getDate()).slice(-2);
+		var formattedDate = year + '-' + month + '-' + day;
+		return formattedDate;
+	}
+
+	function loadDataTugas() {
+		var idtugas = document.getElementsByName("idtugas")[0];
+		var jenistugas = document.getElementsByName("jenistugas")[0];
+		var fileInput = document.getElementById("fileInput");
+		var waktuawal = document.getElementsByName("waktuawal")[0];
+		var deadline = document.getElementsByName("deadline")[0];
+		var deskripsi = document.getElementsByName("deskripsi")[0];
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "datatugas?tgs_idtugas=" + idtugas.value;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				console.log(item);
+				idtugas.value = item.tgs_idtugas;
+				jenistugas.value = item.tgs_jenistugas;
+
+				// Display the selected file name
+				document.getElementById("fileName").value = item.tgs_filetugas;
+
+				waktuawal.value = formatDate(item.tgs_tglpemberiantugas);
+				deadline.value = formatDate(item.tgs_deadline);
+				deskripsi.value = item.tgs_deskripsi;
+			},
+			error: function (error) {
+				console.error("Error fetching data:", error);
+			},
+		});
+	}
+
+	function ubahTugas(event) {
+		event.preventDefault();
+
+		var idtugas = document.getElementsByName("idtugas")[0].value
+		var jenistugas = document.getElementsByName("jenistugas")[0].value;
+		var waktuawal = document.getElementsByName("waktuawal")[0].value;
+		var deadline = document.getElementsByName("deadline")[0].value;
+		var deskripsi = document.getElementsByName("deskripsi")[0].value;
+
+		var tugasInput = document.getElementsByName("tugas")[0];
+		var file = tugasInput.files[0];
+
+		if (file == null) {
+			url = "https://localhost:7087/UpdateTugas";
+			method = "PUT";
+			data = {
+				tgs_idtugas: idtugas,
+				tgs_nim: "KSK001",
+				tgs_jenistugas: jenistugas,
+				tgs_filetugas: "",
+				tgs_tglpemberiantugas: waktuawal,
+				tgs_deadline: deadline,
+				tgs_deskripsi: deskripsi,
+				tgs_status: "Aktif",
+			};
+
+			$.ajax({
+				url: url,
+				method: method,
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				success: function (data) {
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: "Berhasil Mengubah Tugas",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = '../';
+					});
+				},
+				error: function (xhr, status) {
+					console.error("AJAX request error:", status);
+					console.log("Server response:", xhr.responseJSON);
+				},
+			});
+		} else {
+			var url = "https://localhost:7087/Tugas/Ubah?tgs_idtugas=" + idtugas + "&tgs_nim=KSK001&tgs_jenistugas=" + jenistugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi + "&tgs_status=Aktif";
+			method = "PUT";
+
+			var data = new FormData();
+			data.append("file", file);
+
+			$.ajax({
+				url: url,
+				method: method,
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: "Berhasil Mengubah Tugas",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = '../';
+					});
+				},
+				error: function (xhr, status) {
+					console.error("AJAX request error:", status);
+					console.log("Server response:", xhr.responseJSON);
+				},
+			});
+		}
+	}
+
+	function updateFileName(input) {
+		var fileNameField = document.getElementById("fileName");
+		if (input.files.length > 0) {
+			// Jika file dipilih, perbarui nilai field nama file
+			fileNameField.value = input.files[0].name;
+		} else {
+			// Jika tidak ada file yang dipilih, atur kembali ke nilai default
+			fileNameField.value = "";
+		}
+	}
+</script>

@@ -13,5 +13,12 @@ namespace PKKMB_Interface.Controllers
 		{
 			return View();
 		}
+
+		[Route("Tugas/UbahTugas/{tgs_idtugas}")]
+		public IActionResult UbahTugas(string tgs_idtugas)
+		{
+			ViewBag.tgs_idtugas = tgs_idtugas;
+			return View();
+		}
 	}
 }

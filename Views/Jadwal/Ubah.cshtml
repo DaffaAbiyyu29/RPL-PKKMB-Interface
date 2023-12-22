@@ -10,7 +10,7 @@
 				<strong>Ubah Jadwal</strong>
 				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
 			</h5>
-			
+
 			<div class="card-body px-lg-5 pt-1">
 				<div class="row">
 					<div class="col-md-6">
@@ -115,7 +115,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data
-				console.log(formatWaktu(item.jdl_waktupelaksanaan).waktuAkhir)
 				idjadwal.value = item.jdl_idjadwal
 				tanggal.value = formatDate(item.jdl_tglpelaksanaan);
 				waktumulai.value = formatWaktu(item.jdl_waktupelaksanaan).waktuAwal
@@ -166,12 +165,6 @@
 			error: function (xhr, status) {
 				console.error("AJAX request error:", status);
 				console.log("Server response:", xhr.responseJSON);
-
-				Swal.fire({
-					icon: "error",
-					title: "Error",
-					text: "Failed to update schedule. Please try again.",
-				});
 			},
 		});
 	}

@@ -55,36 +55,29 @@
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahtugas(event)">Tambah</button>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahTugas(event)">Tambah</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	function tambahtugas(event) {
+	function tambahTugas(event) {
 		event.preventDefault();
 
 		var jenistugas = document.getElementsByName("jenistugas")[0].value;
-		var tugas = document.getElementsByName("tugas")[0].value;
 		var waktuawal = document.getElementsByName("waktuawal")[0].value;
 		var deadline = document.getElementsByName("deadline")[0].value;
 		var deskripsi = document.getElementsByName("deskripsi")[0].value;
 
-		url = "https://localhost:7087/InsertTugas";
-		method = "POST";
-		data = {
-			tgs_idtugas: "",
-			tgs_nim: "KSK001",
-			tgs_jenistugas: jenistugas,
-			tgs_tglpemberiantugas: waktuawal,
-			tgs_filetugas: tugas,
-			tgs_deadline: deadline,
-			tgs_deskripsi: deskripsi,
-			tgs_status: "Aktif",
-		};
+		var tugasInput = document.getElementsByName("tugas")[0];
+		var file = tugasInput.files[0];
 
-		if (jenistugas.trim() === '' || tugas.trim() === '' || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "Tugas/Upload?tgs_nim=KSK001" + "&tgs_jenistugas=" + jenistugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
+		var method = "POST";
+
+		if (jenistugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
 			Swal.fire({
 				position: "top-end",
 				icon: "error",
@@ -95,11 +88,15 @@
 			return;
 		}
 
+		var data = new FormData();
+		data.append("file", file);
+
 		$.ajax({
 			url: url,
 			method: method,
-			data: JSON.stringify(data),
-			contentType: "application/json",
+			data: data,
+			processData: false,
+			contentType: false,
 			success: function (data) {
 				Swal.fire({
 					position: "top-end",
@@ -108,7 +105,7 @@
 					showConfirmButton: false,
 					timer: 2000
 				}).then(() => {
-					window.location.href = './';
+					window.location.href = '../';
 				});
 			},
 			error: function (xhr, status) {

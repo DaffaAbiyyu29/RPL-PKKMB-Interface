@@ -1,4 +1,5 @@
 ﻿@{
+	Layout = "_Layout";
 }
 
 <div class="row">
@@ -16,14 +17,16 @@
 				Tugas Mahasiswa Baru
 			</div>
 			<div class="card-body">
-				<table class="table" id="">
+				<table class="table" id="datatable">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
+							<th scope="col">NIM</th>
 							<th scope="col">Jenis Tugas</th>
 							<th scope="col">Tanggal Pemberian</th>
 							<th scope="col">Tugas</th>
 							<th scope="col">Deadline</th>
+							<th scope="col">Deskripsi</th>
 							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
@@ -35,7 +38,6 @@
 </div>
 
 <script>
-	new DataTable('#datatable');
 	loadTable()
 
 	function formatDateForDisplay(dateString) {
@@ -45,9 +47,9 @@
 	}
 
 	function loadTable() {
-		var hostname = "https://localhost:7087/"
-		var url = hostname + "getalltugas"
-		var method = "GET"
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "getalltugas";
+		var method = "GET";
 		var counter = 1;
 
 		$.ajax({
@@ -55,23 +57,65 @@
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data
+				var list = data.data;
 				list.forEach(function (item) {
+					var filePath = "C:\\RPL\\PKKMB-API\\File_Tugas\\TugasMahasiswa\\" + item.tgs_filetugas;
+					var fileName = item.tgs_filetugas.split('\\').pop();
+
 					var newRow = '<tr>' +
 						'<td>' + counter + '</td>' +
+						'<td>' + item.tgs_nim + '</td>' +
 						'<td>' + item.tgs_jenistugas + '</td>' +
 						'<td>' + formatDateForDisplay(item.tgs_tglpemberiantugas) + '</td>' +
-						'<td>' + item.tgs_filetugas + '</td>' +
+						'<td><a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a></td>' +
 						'<td>' + formatDateForDisplay(item.tgs_deadline) + '</td>' +
+						'<td>' + item.tgs_deskripsi + '</td>' +
 						'<td>' +
-						'<a class="btn btn-primary" href="/tugas/ubahtugas/' + item.tgs_idtugas + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						'<a class="btn btn-primary" href="/Tugas/UbahTugas/' + item.tgs_idtugas + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
 						'</td>' +
 						'</tr>';
 
 					$('#tbody').append(newRow);
 					counter++;
 				});
+
+				$('.download-link').on('click', function (e) {
+					e.preventDefault();
+					var fileName = $(this).data('file');
+					downloadFile(fileName);
+				});
 			},
 		});
 	}
+
+	function downloadFile(fileName) {
+		var url = "https://localhost:7087/Tugas/Download";
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(fileName),
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.blob();
+			})
+			.then(blob => {
+				var url = URL.createObjectURL(blob);
+				var a = document.createElement('a');
+				a.href = url;
+				a.download = fileName;
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			})
+			.catch(error => {
+				console.error('There was a problem with the fetch operation:', error);
+			});
+	}
+
 </script>
