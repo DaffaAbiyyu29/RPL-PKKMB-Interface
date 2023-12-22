@@ -1,6 +1,13 @@
 ﻿@{
 }
 
+<div class="row">
+	<div class="col-lg">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="tugas" asp-action="tambahtugas">Tambah Tugas</a>
+		</div>
+	</div>
+</div>
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg mb-4">
@@ -13,7 +20,6 @@
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">Nama</th>
 							<th scope="col">Jenis Tugas</th>
 							<th scope="col">Tanggal Pemberian</th>
 							<th scope="col">Tugas</th>
@@ -27,3 +33,45 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	new DataTable('#datatable');
+	loadTable()
+
+	function formatDateForDisplay(dateString) {
+		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+		return formattedDate;
+	}
+
+	function loadTable() {
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "getalltugas"
+		var method = "GET"
+		var counter = 1;
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' +
+						'<td>' + item.tgs_jenistugas + '</td>' +
+						'<td>' + formatDateForDisplay(item.tgs_tglpemberiantugas) + '</td>' +
+						'<td>' + item.tgs_filetugas + '</td>' +
+						'<td>' + formatDateForDisplay(item.tgs_deadline) + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/tugas/ubahtugas/' + item.tgs_idtugas + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++;
+				});
+			},
+		});
+	}
+</script>

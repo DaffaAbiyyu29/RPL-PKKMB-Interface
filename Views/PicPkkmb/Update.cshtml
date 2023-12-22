@@ -84,12 +84,26 @@
 			data: data,
 			contentType: "application/json",
 			success: function (data) {
-				alert("Data Berhasil Diupdate")
-				window.location.href = '/picpkkmb/index';
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Update Akun Berhasil",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = '/picpkkmb/index';
+				});
 			},
 			error: function (xhr, status, error) {
+				Swal.fire({
+					position: "top-end",
+					icon: "error",
+					title: xhr.responseJSON.message,
+					showConfirmButton: false,
+					timer: 2000
+				})
 				console.error("AJAX request error:", status, error);
-				console.log("Server response:", xhr.responseText);
+				console.log("Server response:", xhr.responseJSON);
 			},
 		});
 	}

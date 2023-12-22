@@ -21,7 +21,6 @@
 						<tr>
 							<th scope="col">No</th>
 							<th scope="col">Nama </th>
-							<a href="c:\rpl\pkkmb-interface-master\views\sikap\index.cshtml">c:\rpl\pkkmb-interface-master\views\sikap\index.cshtml</a>
 							<th scope="col">Kelompok</th>
 							<th scope="col">Hari / Tanggal</th>
 							<th scope="col">Nilai</th>
@@ -35,11 +34,83 @@
 </div>
 
 <script>
+	var token = getCookie("token"); // Use your method for retrieving the token
+
+	function getCookie(name) {
+		var nameEQ = name + "=";
+		var cookies = document.cookie.split(';');
+
+		for (var i = 0; i < cookies.length; i++) {
+			var cookie = cookies[i].trim();
+			if (cookie.startsWith(nameEQ)) {
+				return cookie.substring(nameEQ.length, cookie.length);
+			}
+		}
+
+		return null; // Return null if the cookie is not found
+	}
+
+	function decodeJwt(token) {
+		const base64Url = token.split('.')[1];
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+
+		return JSON.parse(jsonPayload);
+	}
+
+	function hideAllElements() {
+		// You can add more elements to hide by selecting them using appropriate selectors
+		document.querySelectorAll('.row, .card, .table').forEach(element => {
+			element.style.display = 'none';
+		});
+	}
+
+	function hideContentAndShowAlert() {
+		if (window.location.href != "https://localhost:7240/" && window.location.href != "https://localhost:7240/Akun/Login" && window.location.href != "https://localhost:7240/Akun/DaftarAkun" && window.location.href != "https://localhost:7240/Akun/LupaKataSandi") {
+			$('body').css('background-color', 'white'); // Set background color to black (you can also use 'white')
+			$('body').html('');
+
+			setTimeout(function () {
+				showAlertAndRefresh();
+			}, 1000);
+		}
+	}
+
+	function showAlertAndRefresh() {
+
+		Swal.fire({
+			position: "top-end",
+			icon: "error",
+			title: "Halaman Tidak Tersedia, Kembali ke Menu Awal",
+			showConfirmButton: false,
+			timer: 2000
+		}).then(() => {
+			window.location.href = '../';
+		});
+	}
+
+	try {
+		const decodedPayload = decodeJwt(token);
+	} catch (error) {
+		hideAllElements()
+		hideContentAndShowAlert()
+	}
+</script>
+
+<script>
 	new DataTable('#datatable');
 	loadTable()
 
+	function formatDateForDisplay(dateString) {
+		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+		return formattedDate;
+	}
+
 	function loadTable() {
-		var hostname = "https://localhost:44373/"
+		var hostname = "https://localhost:7087/"
 		var url = hostname + "GetAllNilaiSikap"
 		var method = "GET"
 		var counter = 1;
@@ -55,7 +126,7 @@
 						'<td>' + counter + '</td>' +
 						'<td>' + item.nls_nopendaftaran + '</td>' +
 						'<td>' + item.nls_nopendaftaran + '</td>' +
-						'<td>' + item.nls_tanggal + '</td>' +
+						'<td>' + formatDateForDisplay(item.nls_tanggal) + '</td>' +
 						'<td>' + item.nls_sikap + '</td>' +
 						'<td>' +
 						'<a class="btn btn-primary" href="/sikap/ubahnilaisikap/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
