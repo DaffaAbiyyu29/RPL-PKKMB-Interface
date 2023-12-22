@@ -1,6 +1,13 @@
 ﻿@{
 }
 
+<div class="row">
+	<div class="col-lg">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="ruangan" asp-action="tambahruangan">Tambah Data</a>
+		</div>
+	</div>
+</div>
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg mb-4">
@@ -12,10 +19,10 @@
 				<table class="table" id="">
 					<thead>
 						<tr>
-							<th scope="col">No</th>
-							<th scope="col">Kelompok</th>
-							<th scope="col">Ruangan</th>
-							<th scope="col">Fasilitator</th>
+							<th scope="col">Id Ruangan</th>
+							<th scope="col">Nama Ruangan</th>
+							<th scope="col">Status</th>
+							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -24,3 +31,41 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	new DataTable('#datatable');
+	loadTable()
+
+	function loadTable() {
+		var hostname = "https://localhost:7087/" // Replace with your actual API endpoint
+		var url = hostname + "GetAllRuangan"
+		var method = "GET"
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data; // Assuming the API response is directly an array
+
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + item.rng_idruangan + '</td>' +
+						'<td>' + item.rng_namaruangan + '</td>' +
+						'<td>' + item.rng_status + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/ruangan/ubahruangan/' + item.rng_idruangan + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+			},
+			error: function (error) {
+				console.log('Error fetching data:', error);
+			}
+		});
+	}
+</script>

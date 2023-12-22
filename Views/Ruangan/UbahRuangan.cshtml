@@ -1,0 +1,94 @@
+﻿<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Tambah Tugas</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="input-group has-validation mb-4 rng_namaruangan">
+					<div class="form-floating is-invalid">
+						<input type="text" class="form-control is-invalid" maxlength="30" id="validateField" name="rng_idruangan" data-target="validateField" placeholder="" value="@ViewBag.rng_idruangan" hidden>
+						<input type="text" class="form-control is-invalid" maxlength="30" id="validateField" name="rng_namaruangan" data-target="validateField" placeholder="">
+						<label for="validateField">Ruangan</label>
+						<div class="invalid-feedback" data-target="validateLabel">* Masukkan Ruangan.</div>
+					</div>
+					<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="ubahruangan(event)">Simpan</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	loadDataRuangan();
+
+	function loadDataRuangan() {
+		var idruangan = document.getElementsByName("rng_idruangan")[0]
+		var namaruangan = document.getElementsByName("rng_namaruangan")[0]
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetRuangan?rng_idruangan=" + idruangan.value;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				idruangan.value = item.rng_idruangan;
+				namaruangan.value = item.rng_namaruangan;
+			},
+		});
+	}
+
+	function ubahruangan(event) {
+		event.preventDefault();
+
+		var idruangan = document.getElementsByName("rng_idruangan")[0].value; // Fix: use 'value' instead of 'Value'
+		var namaruangan = document.getElementsByName("rng_namaruangan")[0].value; // Fix: use 'value' instead of 'Value'
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "UpdateRuangan";
+		var method = "PUT";
+		var input = {
+			rng_idruangan: idruangan,
+			rng_namaruangan: namaruangan,
+			rng_status: "Aktif",
+		};
+
+		var data = JSON.stringify(input);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				if (data.status === 200) {
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: "Berhasil Mengubah Ruangan",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = '../';
+					});
+				} else {
+					handleUpdateError(data);
+				}
+			},
+			error: function (xhr, status, error) {
+				handleUpdateError(xhr.responseJSON);
+			}
+		});
+	}
+
+	function handleUpdateError(errorData) {
+		console.log('Update failed. Server response:', errorData);
+		alert("Gagal mengupdate data. Periksa konsol log untuk informasi lebih lanjut.");
+	}
+</script>
