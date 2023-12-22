@@ -1,0 +1,111 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="row justify-content-center mb-5">
+    <div class="col-lg mb-4">
+        <p>
+            <h2 class="text-center"><span style="color:#0059ab;">Kesekretariatan</span> / Informasi / </h2>
+        </p>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-5">
+    <div class="col-lg-8">
+        <div class="card">
+            <h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+                <strong>Tambah Informasi</strong>
+            </h5>
+            <div class="card-body px-lg-5 pt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- First Column -->
+                        <div class="form-floating mb-4 inf_idinformasi">
+                            <!-- You can decide whether to make this field readonly or not based on your requirements -->
+                            <input type="text" class="form-control" id="inf_idinformasi" name="inf_idinformasi" placeholder="">
+                            <label for="inf_idinformasi">ID Informasi</label>
+                        </div>
+
+                        <div class="form-floating mb-4 inf_jenisinformasi">
+                            <input type="text" class="form-control" id="inf_jenisinformasi" name="inf_jenisinformasi" placeholder="">
+                            <label for="inf_jenisinformasi">Jenis Informasi</label>
+                        </div>
+
+                        <div class="form-floating mb-4 inf_namainformasi">
+                            <input type="text" class="form-control" id="inf_namainformasi" name="inf_namainformasi" placeholder="">
+                            <label for="inf_namainformasi">Nama Informasi</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Second Column -->
+                        <div class="form-floating mb-4 inf_tglpublikasi">
+                            <input type="date" class="form-control" id="inf_tglpublikasi" name="inf_tglpublikasi" placeholder="">
+                            <label for="inf_tglpublikasi">Tanggal Publikasi</label>
+                        </div>
+
+                        <div class="form-floating mb-4 inf_deskripsi">
+                            <input type="text" class="form-control" id="inf_deskripsi" name="inf_deskripsi" placeholder="">
+                            <label for="inf_deskripsi">Deskripsi</label>
+                        </div>
+
+                        <div class="form-floating mb-4 inf_status">
+                            <input type="text" class="form-control" id="inf_status" name="inf_status" placeholder="">
+                            <label for="inf_status">Status</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahInformasi(event)">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function tambahInformasi(event) {
+        event.preventDefault();
+
+        var inf_idinformasi = document.getElementById("inf_idinformasi").value;
+        var inf_jenisinformasi = document.getElementById("inf_jenisinformasi").value;
+        var inf_namainformasi = document.getElementById("inf_namainformasi").value;
+        var inf_tglpublikasi = document.getElementById("inf_tglpublikasi").value;
+        var inf_deskripsi = document.getElementById("inf_deskripsi").value;
+        var inf_status = document.getElementById("inf_status").value;
+
+        var hostname = "https://localhost:7087";
+        var url = hostname + "/InsertInformasi";
+        var method = "POST";
+        var input = {
+            inf_idinformasi: inf_idinformasi,
+            inf_jenisinformasi: inf_jenisinformasi,
+            inf_namainformasi: inf_namainformasi,
+            inf_tglpublikasi: inf_tglpublikasi,
+            inf_deskripsi: inf_deskripsi,
+            inf_status: inf_status
+        };
+
+        var data = JSON.stringify(input);
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: data,
+            contentType: "application/json",
+            success: function (data) {
+                console.log('Data from server:', data);
+                if (data.status === 200) {
+                    alert("Data berhasil disimpan");
+                    window.location.href = '/informasi/index'; // Redirect to the page you want
+                } else {
+                    console.log('Insert failed. Server response:', data);
+                    alert("Gagal menyimpan data. Periksa konsol log untuk informasi lebih lanjut.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error inserting data:', error);
+                console.log(xhr.responseJSON);
+                console.log(status);
+            }
+        });
+    }
+</script>

@@ -8,5 +8,10 @@ namespace PKKMB_Interface.Controllers
 		{
 			return View();
 		}
+
+		public IActionResult Dashboard()
+		{
+			return View();
+		}
 	}
 }
