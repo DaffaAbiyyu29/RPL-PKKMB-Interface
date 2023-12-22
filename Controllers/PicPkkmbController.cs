@@ -27,5 +27,11 @@ namespace PKKMB_Interface.Controllers
 		{
 			return View();
 		}
+
+		[Route("picpkkmb/dashboard")]
+		public IActionResult Dashboard()
+		{
+			return View();
+		}
 	}
 }
