@@ -1,5 +1,147 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+	Layout = "_Layout";
 }
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Pengumpulan Tugas</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="input-group has-validation mb-4 jenistugas">
+							<div class="form-floating is-invalid">
+								<input type="text" class="form-control is-invalid" maxlength="30" id="validateField" name="jenistugas" data-target="validateField" placeholder="">
+								<label for="validateField">Jenis Tugas</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Jenis Tugas.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 tugas">
+							<div class="form-floating is-invalid">
+								<input type="file" class="form-control is-invalid" maxlength="100" id="validateField" name="tugas" data-target="validateField" placeholder="">
+								<label for="validateField">File Tugas</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Pilih File Tugas.</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="input-group has-validation mb-4 waktuawal">
+							<div class="form-floating is-invalid">
+								<input type="date" class="form-control is-invalid" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="">
+								<label for="validateField">Waktu Pemberian Tugas</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Lengkap.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 deadline">
+							<div class="form-floating is-invalid">
+								<input type="date" class="form-control is-invalid" maxlength="100" id="validateField" name="deadline" data-target="validateField" placeholder="">
+								<label for="validateField">Deadline</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Pemberian Tugas.</div>
+							</div>
+						</div>
+					</div>
+					<div class="input-group has-validation mb-4 deskripsi">
+						<div class="form-floating is-invalid">
+							<textarea class="form-control is-invalid" placeholder="" id="validateField" data-target="validateField" name="deskripsi" style="height: 100px"></textarea>
+							<label for="validateFieldNamalengkap">Deskripsi</label>
+							<div class="invalid-feedback" data-target="validateLabel">* Masukkan Deskripsi.</div>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahTugas(event)">Tambah</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function tambahTugas(event) {
+		event.preventDefault();
+
+		var jenistugas = document.getElementsByName("jenistugas")[0].value;
+		var waktuawal = document.getElementsByName("waktuawal")[0].value;
+		var deadline = document.getElementsByName("deadline")[0].value;
+		var deskripsi = document.getElementsByName("deskripsi")[0].value;
+
+		var tugasInput = document.getElementsByName("tugas")[0];
+		var file = tugasInput.files[0];
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "Tugas/Upload?tgs_nim=KSK001" + "&tgs_jenistugas=" + jenistugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
+		var method = "POST";
+
+		if (jenistugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Lengkapi Semua Fields",
+				showConfirmButton: false,
+				timer: 2000
+			});
+			return;
+		}
+
+		var data = new FormData();
+		data.append("file", file);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			processData: false,
+			contentType: false,
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Menambahkan Tugas",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = '../';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>
+
+<script>
+	// Mengambil semua elemen dengan nama ID "validateField"
+	var inputFields = document.querySelectorAll('[data-target="validateField"]');
+	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
+
+	// Menambahkan event listener untuk setiap elemen input
+	inputFields.forEach(function (inputField) {
+		inputField.addEventListener('input', function () {
+			if (inputField.value.trim() !== '') {
+				inputField.classList.remove('is-invalid');
+
+			} else {
+				inputField.classList.add('is-invalid');
+
+			}
+		});
+
+		inputField.addEventListener('focus', function () {
+			if (inputField.value.trim() === '') {
+
+			}
+		});
+
+		inputField.addEventListener('blur', function () {
+			if (inputField.value.trim() !== '') {
+
+			}
+		});
+	});
+</script>

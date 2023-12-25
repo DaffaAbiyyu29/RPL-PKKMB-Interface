@@ -1,12 +1,17 @@
+using PKKMB_Interface.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromMinutes(10); //sesuaikan dengan kebutuhan anda
+	options.IdleTimeout = TimeSpan.FromMinutes(10); // adjust as needed
 });
 builder.Services.AddHttpContextAccessor();
+
+// Register ValidateToken service
+builder.Services.AddScoped<ValidateToken>();
 
 var app = builder.Build();
 
