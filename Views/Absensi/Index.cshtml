@@ -1,6 +1,5 @@
 ﻿@{
 }
-//p
 <div class="row justify-content-center mb-5">
 	<div class="col-lg mb-4">
 		<div class="card">
@@ -12,10 +11,13 @@
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">Nama</th>
-							<th scope="col">Kelompok</th>
-							<th scope="col">Hari / Tanggal</th>
+							<th scope="col">ID Absensi</th>
+							<th scope="col">Nim </th>
+							<th scope="col">Nomor Pendaftaran</th>
+							<th scope="col">Tanggal Kehadiran</th>
+							<th scope="col">Status Kehadiran</th>
 							<th scope="col">Keterangan</th>
+							<th scope="col">Status</th>
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -24,3 +26,43 @@
 		</div>
 	</div>
 </div>
+<script>
+	new DataTable('#datatable');
+	loadTable()
+
+	function loadTable() {
+		var hostname = '@ViewBag.url'
+		var url = hostname + "GetAllAbsensi"
+		var method = "GET"
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var list = data.data
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' + // Use the counter as a sequence number
+						'<td>' + item.abs_idabsensi + '</td>' +
+						'<td>' + item.abs_nim + '</td>' +
+						'<td>' + item.abs_nopendaftaran + '</td>' +
+						'<td>' + item.abs_tglkehadiran + '</td>' +
+						'<td>' + item.abs_Statuskehadiran + '</td>' +
+						'<td>' + item.abs_Keterangan + '</td>' +
+						'<td>' + item.abs_Status + '</td>' +
+						'<td>' +
+						'<a class="btn btn-primary" href="/Absensi/Update/' + item.abs_idabsensi + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+						//'<button class="btn btn-danger" value="' + item.abs_idabsensi + '" onclick="hapus(this.value)">Delete</button>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+			},
+		});
+	}
+
+</script>

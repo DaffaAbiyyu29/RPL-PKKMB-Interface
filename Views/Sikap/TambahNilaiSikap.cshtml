@@ -127,7 +127,7 @@
 			url: url,
 			type: method,
 			dataType: "json",
-			success: function (response) {
+			success: Function (response) {
 				if (response && response.data && Array.isArray(response.data)) {
 					var kelompok = response.data.find(function (item) {
 						return item.kmk_idkelompok === idKelompok;
