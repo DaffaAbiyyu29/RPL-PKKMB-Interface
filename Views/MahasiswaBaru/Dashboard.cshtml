@@ -1,81 +1,84 @@
 ﻿<style>
-    .card {
-        background-color: #fff; /* Card background color */
-        border: 2px solid #ddd; /* Card border color */
-        border-radius: 8px; /* Card border radius */
-        padding: 15px; /* Card padding */
-        margin-bottom: 20px; /* Bottom margin between cards */
-    }
+	.card {
+		background-color: #fff; /* Card background color */
+		border: 2px solid #ddd; /* Card border color */
+		border-radius: 8px; /* Card border radius */
+		padding: 15px; /* Card padding */
+		margin-bottom: 20px; /* Bottom margin between cards */
+	}
 
-    .card-title {
-        font-size: 20px; /* Title font size */
-        margin-bottom: 10px; /* Bottom margin for title */
-    }
+	.card-title {
+		font-size: 20px; /* Title font size */
+		margin-bottom: 10px; /* Bottom margin for title */
+	}
 
-    .card-body {
-        font-size: 16px; /* Body text font size */
-    }
+	.card-body {
+		font-size: 16px; /* Body text font size */
+	}
 
-    .card-danger {
-        border-color: #dc3545 !important; /* Red border for unread status */
-    }
+	.card-danger {
+		border-color: #dc3545 !important; /* Red border for unread status */
+	}
 
-    .card-success {
-        border-color: #28a745 !important; /* Green border for read status */
-    }
+	.card-success {
+		border-color: #28a745 !important; /* Green border for read status */
+	}
 </style>
 
+<p>UserToken : @ViewBag.UserToken</p>
+<p>UserId : @ViewBag.UserId</p>
+<p>UserName : @ViewBag.UserName</p>
+<p>UserRole : @ViewBag.UserId</p>
 <div class="card m-5">
-    <div class="card-header mb-1 text-center">
-        <h4 class="font-weight-bold text-primary">Informasi Mahasiswa</h4>
-    </div>
-    <div class="card-body" id="cardContainer"></div>
-    <div class="row">
-       
-    </div>
+	<div class="card-header mb-1 text-center">
+		<h4 class="font-weight-bold text-primary">Informasi Mahasiswa</h4>
+	</div>
+	<div class="card-body" id="cardContainer"></div>
+	<div class="row">
+	</div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        loadCardInformasi();
-    });
+	$(document).ready(function () {
+		loadCardInformasi();
+	});
 
-    function formatDateForDisplay(dateString) {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
-        return formattedDate;
-    }
+	function formatDateForDisplay(dateString) {
+		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+		return formattedDate;
+	}
 
-    function loadCardInformasi() {
-        var hostname = "https://localhost:7087/";
-        var url = hostname + "getallinformasi";
-        var method = "GET";
+	function loadCardInformasi() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "getallinformasi";
+		var method = "GET";
 
-        $.ajax({
-            url: url,
-            method: method,
-            contentType: "application/json",
-            success: function (data) {
-                var cardContainer = $('#cardContainer');
-                var list = data.data;
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var cardContainer = $('#cardContainer');
+				var list = data.data;
 
-                list.forEach(function (item, index) {
-                    var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
-                    var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
+				list.forEach(function (item, index) {
+					var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
+					var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
 
-                    var card = '<div class="card ' + cardStatusClass + '">' +
-                        '<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
-                        '<p class="card-text">' +
-                        'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
-                        'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
-                        'Deskripsi: ' + item.inf_deskripsi + '<br>' +
-                        '</p>' +
-                       
-                        '</div>';
+					var card = '<div class="card ' + cardStatusClass + '">' +
+						'<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
+						'<p class="card-text">' +
+						'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
+						'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
+						'Deskripsi: ' + item.inf_deskripsi + '<br>' +
+						'</p>' +
 
-                    cardContainer.append(card);
-                });
-            },
-        });
-    }
+						'</div>';
+
+					cardContainer.append(card);
+				});
+			},
+		});
+	}
 </script>

@@ -1,33 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PKKMB_Interface.Controllers
 {
 	public class MahasiswaBaruController : Controller
 	{
 		private readonly IConfiguration _configuration;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public MahasiswaBaruController(IConfiguration configuration)
+		public MahasiswaBaruController(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
 		{
 			_configuration = configuration;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public IActionResult Index()
 		{
-			ViewBag.url = _configuration.GetSection("AppSettings:url").Value;
-			return View();
-		}
+			if (HttpContext.Request.Cookies["token"] != null)
+			{
+				string userToken = HttpContext.Request.Cookies["token"];
+				ViewBag.UserToken = userToken;
 
-		[Route("mahasiswabaru/update/{mhs_nopendaftaran}")]
-		public IActionResult Update(string mhs_nopendaftaran)
-		{
-			ViewBag.mhs_nopendaftaran = mhs_nopendaftaran;
-			return View();
+				var handler = new JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+				if (userRole == "Mahasiswa")
+				{
+					ViewBag.UserId = userId;
+					ViewBag.UserName = userName;
+					ViewBag.UserRole = userRole;
+					return View();
+				}
+				else
+				{
+					return RedirectToAction("Index", "Home");
+				}
+			}
+			else
+			{
+				return RedirectToAction("Index", "Home");
+			}
 		}
 
 		[Route("mahasiswabaru/dashboard")]
 		public IActionResult Dashboard()
 		{
-			return View();
+			if (HttpContext.Request.Cookies["token"] != null)
+			{
+				string userToken = HttpContext.Request.Cookies["token"];
+				ViewBag.UserToken = userToken;
+
+				var handler = new JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+				if (userRole == "Mahasiswa")
+				{
+					ViewBag.UserId = userId;
+					ViewBag.UserName = userName;
+					ViewBag.UserRole = userRole;
+					return View();
+				}
+				else
+				{
+					return RedirectToAction("Index", "Home");
+				}
+			}
+			else
+			{
+				return RedirectToAction("Index", "Home");
+			}
 		}
 	}
 }

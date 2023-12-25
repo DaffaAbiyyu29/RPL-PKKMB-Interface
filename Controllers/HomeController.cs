@@ -20,43 +20,31 @@ namespace PKKMB_Interface.Controllers
 
 		public IActionResult Index()
 		{
-			/*string token = Request.Cookies["token"];
-
-			if (token != null)
-			{
-				var handler = new JwtSecurityTokenHandler();
-				var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-
-				if (jsonToken != null)
-				{
-					// Create a dictionary to store claims
-					var claimsDictionary = new Dictionary<string, object>();
-
-					foreach (var claim in jsonToken.Claims)
-					{
-						// Store each claim in the dictionary
-						claimsDictionary[claim.Type] = claim.Value;
-					}
-
-					// Add the dictionary to ViewBag
-					ViewBag.Claims = claimsDictionary;
-				}
-				else
-				{
-					ViewBag.ErrorMessage = "Invalid JWT token";
-				}
-			}
-			else
-			{
-				ViewBag.ErrorMessage = "Token cookie not found";
-			}*/
-
 			return View();
 		}
 
 		public IActionResult Dashboard()
 		{
-			return View();
+			if (HttpContext.Request.Cookies["token"] != null)
+			{
+				string userToken = HttpContext.Request.Cookies["token"];
+				ViewBag.UserToken = userToken;
+
+				var handler = new JwtSecurityTokenHandler();
+				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+				ViewBag.UserId = userId;
+				ViewBag.UserName = userName;
+				ViewBag.UserRole = userRole;
+				return View();
+			}
+			else
+			{
+				return RedirectToAction("Index", "Home");
+			}
 		}
 
 		public IActionResult Privacy()

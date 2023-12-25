@@ -1,4 +1,18 @@
 ﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+@if (ViewBag.UserRole == "Mahasiswa")
+{
+	<div class="row">
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			<i class="bi bi-exclamation-circle me-1">
+				<strong>Error!</strong> @TempData["ErrorLogin"]
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+						aria-label="Close"></button>
+			</i>
+		</div>
+	</div>
 }
 
 <div class="card">

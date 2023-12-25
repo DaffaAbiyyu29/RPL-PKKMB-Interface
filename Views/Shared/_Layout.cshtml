@@ -33,11 +33,11 @@
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 
-	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 	<script src="~/assets/Scripts/jquery-ui-1.13.2.min.js"></script>
 	<script src="~/assets/Plugins/sweetalert2/dist/sweetalert2.min.js"></script>
 	<script src="~/assets/Plugins/fontawesome-free-5.11.2-web/js/fontawesome.min.js"></script>
@@ -45,34 +45,37 @@
 	<script src="~/assets/Plugins/MDB-Pro_4.14.1/js/mdb.min.js"></script>
 	<script src="~/assets/Plugins/Highcharts-7.2.1/code/highcharts.js"></script>
 	<script src="~/assets/Plugins/Highcharts-7.2.1/code/highcharts-more.js"></script>
-	<script src="//code.tidio.co/magv0uprt7k6dju3bbazrdhmbbcvo45a.js" async></script>
-	<script type="text/javascript">
-		function sentValidation(input) {
-			$(input).addClass('disabled');
-			$(input).text('Mohon tunggu..');
-		}
-
-		$(function () {
-			$(".datepicker").pickadate({
-				monthsFull: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-				monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
-				weekdaysFull: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
-				weekdaysShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
-				today: 'Hari Ini',
-				clear: '',
-				close: 'Tutup',
-				labelMonthNext: 'Bulan berikutnya',
-				labelMonthPrev: 'Bulan sebelumnya',
-				labelMonthSelect: 'Pilih bulan',
-				labelYearSelect: 'Pilih tahun',
-				format: 'yyyy-mm-dd',
-				closeOnSelect: false,
-				closeOnClear: false,
-				selectYears: 50,
-				max: new Date()
-			});
-		});
+	@*<script src="//code.tidio.co/magv0uprt7k6dju3bbazrdhmbbcvo45a.js" async></script>*@
+	<script>
+		var jq = jQuery.noConflict();
 	</script>
+	@*<script type="text/javascript">
+	function sentValidation(input) {
+	$(input).addClass('disabled');
+	$(input).text('Mohon tunggu..');
+	}
+
+	$(function () {
+	$(".datepicker").pickadate({
+	monthsFull: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+	monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'],
+	weekdaysFull: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+	weekdaysShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+	today: 'Hari Ini',
+	clear: '',
+	close: 'Tutup',
+	labelMonthNext: 'Bulan berikutnya',
+	labelMonthPrev: 'Bulan sebelumnya',
+	labelMonthSelect: 'Pilih bulan',
+	labelYearSelect: 'Pilih tahun',
+	format: 'yyyy-mm-dd',
+	closeOnSelect: false,
+	closeOnClear: false,
+	selectYears: 50,
+	max: new Date()
+	});
+	});
+	</script>*@
 </head>
 <body>
 	<form id="form1" runat="server" enctype="multipart/form-data">
@@ -95,7 +98,7 @@
 				<ul class="navbar-nav ml-auto">
 					@*MAHASISWA BARU*@
 					<li class="nav-item mr-3 mahasiswabaru">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="mahasiswabaru" asp-action="index">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="mahasiswabaru" asp-action="dashboard">Dashboard</a>
 					<li class="nav-item dropdown mr-3 mahasiswabaru">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
@@ -114,6 +117,12 @@
 					</li>
 					<li class="nav-item mr-3 mahasiswabaru">
 						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="index">Kelulusan</a>
+					</li>
+					<li class="nav-item dropdown mr-3 mahasiswabaru">
+						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsername"></span> (<span id="showRole"></span>)</a>
+						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
+							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
+						</div>
 					</li>
 						@*---------------------------------------------------------------------------------------------------------------------------------------*@
 						@*Panitia Kesekretariatan*@
@@ -179,9 +188,6 @@
 					<li class="nav-item mr-2 login">
 						<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" asp-controller="akun" asp-action="login" style="padding: 8px 15px; background-color: #0059AB;"><b style="font-weight: bold;">Login</b></a>
 					</li>
-					<li class="nav-item mr-2 logout">
-						<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
-					</li>
 				</ul>
 			</div>
 		</nav>
@@ -237,11 +243,11 @@
 	</form>
 
 	<script>
+
 		$('.nav-item').hide();
 		$('.nav-item.login').show();
-		$('.nav-item.logout').hide();
 
-		var token = getCookie("token"); // Use your method for retrieving the token
+		var token = getCookie("token");
 
 		function getCookie(name) {
 			var nameEQ = name + "=";
@@ -266,30 +272,34 @@
 					'token': token // Pass the token in the request headers
 				},
 				success: function (data) {
-					console.log("data", data);
+					var user = [];
 					if (data.status === 200) {
 						const decodedPayload = decodeJwt(token);
 						console.log("decode", decodedPayload);
+
+						var showUsername = document.getElementById('showUsername');
+						showUsername.textContent = decodedPayload.name;
+						var showRole = document.getElementById('showRole');
+						showRole.textContent = decodedPayload.role;
+
 						if (decodedPayload.role == 'Mahasiswa') {
 							$('.nav-item.mahasiswabaru').show();
 							$('.nav-item.login').hide();
-							$('.nav-item.logout').show();
 						} else if (decodedPayload.role == 'Panitia Kesekretariatan') {
 							$('.nav-item.panitiakesekretariatan').show();
 							$('.nav-item.login').hide();
-							$('.nav-item.logout').show();
 						} else if (decodedPayload.role == 'PIC PKKMB') {
 							$('.nav-item.picpkkmb').show();
 							$('.nav-item.login').hide();
-							$('.nav-item.logout').show();
 						}
 					}
+					else {
+						deleteCookie('token');
+						sessionStorage.clear();
+					}
+				}, error: function (xhr, status) {
+					deleteCookie('token');
 				},
-				error: function (error) {
-					console.error('Error:', error.responseJSON);
-					// Handle error cases, hide content and show alert
-					//hideContentAndShowAlert();
-				}
 			});
 		}
 
@@ -338,6 +348,7 @@
 		function logout(event) {
 			event.preventDefault();
 			deleteCookie('token');
+			sessionStorage.clear();
 			window.location.href = '../';
 		}
 	</script>

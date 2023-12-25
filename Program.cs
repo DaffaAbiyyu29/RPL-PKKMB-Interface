@@ -1,22 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDistributedMemoryCache(); // Tambahkan ini
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromMinutes(30);
-	options.Cookie.HttpOnly = true;
-	options.Cookie.IsEssential = true;
-});
-builder.Services.AddCors(options =>
-{
-	options.AddPolicy("AllowAnyOrigin", builder =>
-	{
-		builder.WithOrigins("http://localhost:7087")
-			   .AllowAnyHeader()
-			   .AllowAnyMethod()
-			   .AllowCredentials();
-	});
+	options.IdleTimeout = TimeSpan.FromMinutes(10); //sesuaikan dengan kebutuhan anda
 });
 builder.Services.AddHttpContextAccessor();
 
@@ -30,16 +18,13 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-app.UseCors("AllowAnyOrigin");
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession();
 
 app.UseRouting();
 
 app.UseAuthorization();
-
-app.UseSession();
 
 app.MapControllerRoute(
 	name: "default",

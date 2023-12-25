@@ -20,5 +20,10 @@ namespace PKKMB_Interface.Controllers
 			ViewBag.tgs_idtugas = tgs_idtugas;
 			return View();
 		}
+
+		public IActionResult PengumpulanTugas()
+		{
+			return View();
+		}
 	}
 }
