@@ -1,0 +1,80 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg">
+		<div class="card">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<input type="text" class="form-control" maxlength="30" id="validateField" name="idtugas" data-target="validateField" placeholder="" value="@ViewBag.tgs_idtugas" hidden>
+				<strong><span name="namatugas"></span>&nbsp;<span name="deadline"></span></strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md">
+						<table class="table" id="datatable">
+							<thead>
+								<tr>
+									<th scope="col">No Pendaftaran</th>
+									<th scope="col">Nama</th>
+									<th scope="col">Kelompok</th>
+									<th scope="col">Kritik</th>
+									<th scope="col">Saran</th>
+									<th scope="col">Umpan Balik</th>
+									<th scope="col">Aksi</th>
+								</tr>
+							</thead>
+							<tbody id="tbody">
+								<tr>
+									<td>@ViewBag.UserId</td>
+									<td>@ViewBag.UserName</td>
+									<td id="kelompok"></td>
+									<td id="kritik"></td>
+									<td id="saran"></td>
+									<td id="umpanbalik"></td>
+									<td><a class="btn btn-primary" asp-controller="mahasiswabaru" asp-action="kirimevaluasi"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Kirim Evaluasi"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var nopendaftaran = '@ViewBag.UserId';
+
+	loadTable()
+
+	function loadTable() {
+		var hostname = 'https://localhost:7087/';
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + nopendaftaran;
+		var method = "GET";
+		var counter = 1; // Initialize a counter variable
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				var kelompokElement = document.getElementById("kelompok");
+				var kritikElement = document.getElementById("kritik");
+				var saranElement = document.getElementById("saran");
+				var umpanbalikElement = document.getElementById("umpanbalik");
+
+				kelompokElement.textContent = item.mhs_idkelompok;
+				kritikElement.textContent = item.mhs_kritik;
+				saranElement.textContent = item.mhs_saran;
+				umpanbalikElement.textContent = item.mhs_insight;
+			},
+			error: function (error) {
+				console.error("Error loading data:", error);
+			}
+		});
+	}
+</script>

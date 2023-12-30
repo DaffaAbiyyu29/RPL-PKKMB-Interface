@@ -102,6 +102,7 @@ namespace PKKMB_Interface.Controllers
 						ViewBag.UserName = userName;
 						ViewBag.UserRole = userRole;
 
+						ViewBag.tgs_idtugas = tgs_idtugas;
 						return View();
 					}
 				}
@@ -133,6 +134,7 @@ namespace PKKMB_Interface.Controllers
 						ViewBag.UserName = userName;
 						ViewBag.UserRole = userRole;
 
+						ViewBag.tgs_idtugas = tgs_idtugas;
 						return View();
 					}
 				}

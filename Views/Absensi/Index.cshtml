@@ -1,6 +1,14 @@
 ﻿@{
 }
-//p
+
+<div class="row">
+	<div class="col-lg">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="absensi" asp-action="Tambah">Tambah Data</a>
+		</div>
+	</div>
+</div>
+
 <div class="row justify-content-center mb-5">
 	<div class="col-lg mb-4">
 		<div class="card">
@@ -24,3 +32,107 @@
 		</div>
 	</div>
 </div>
+
+<script>
+
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js" ></script>
+<script>
+		$(document).ready(function () {
+			loadData();
+		});
+
+	function loadData() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllAbsensi";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				if (response && response.data && Array.isArray(response.data)) {
+					displayData(response.data);
+				} else {
+					console.log('Invalid response format or missing data property:', response);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+</script>
+<script>
+	function displayData(data) {
+		var tbody = $('#tbody');
+		tbody.empty();
+
+		fetchMahasiswaData().then(function (mahasiswaData) {
+			fetchKelompokData().then(function (kelompokData) {
+				var mahasiswaMap = mapMahasiswaData(mahasiswaData);
+				var kelompokMap = mapKelompokData(kelompokData);
+				console.log('Data Kelompok Map:', kelompokMap);
+
+				$.each(data, function (index, item) {
+					console.log('Item Data:', item);
+					var row = $('<tr></tr>');
+					row.append('<td>' + (index + 1) + '</td>');
+					row.append('<td>' + mahasiswaMap[item.abs_nopendaftaran] + '</td>');
+					row.append('<td>' + item.abs_nopendaftaran + '</td>');
+					row.append('<td>' + formatDateForDisplay(item.abs_tglkehadiran) + '</td>');
+					row.append('<td>' + item.abs_keterangan + '</td>');
+					row.append('<td>' + '<a class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' + '</td>');
+					tbody.append(row);
+				});
+			});
+		});
+	}
+
+	function formatDateForDisplay(dateString) {
+		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+		return formattedDate;
+	}
+
+	function fetchMahasiswaData() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "getallmahasiswa";
+		var method = "GET";
+
+		return $.ajax({
+			url: url,
+			type: method,
+			dataType: "json"
+		});
+	}
+
+	function fetchKelompokData() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllKelompok";
+		var method = "GET";
+
+		return $.ajax({
+			url: url,
+			type: method,
+			dataType: "json"
+		});
+	}
+	function mapMahasiswaData(mahasiswaData) {
+		var mahasiswaMap = {};
+		$.each(mahasiswaData.data, function (index, mahasiswa) {
+			mahasiswaMap[mahasiswa.mhs_nopendaftaran] = mahasiswa.mhs_namalengkap;
+		});
+		return mahasiswaMap;
+	}
+
+	function mapKelompokData(kelompokData) {
+		var kelompokMap = {};
+		$.each(kelompokData.data, function (index, kelompok) {
+			kelompokMap[kelompok.kmk_idkelompok] = kelompok.kmk_namakelompok;
+
+		});
+		return kelompokMap;
+	}
+</script>

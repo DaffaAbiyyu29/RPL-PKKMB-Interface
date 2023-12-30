@@ -1,0 +1,171 @@
+﻿
+
+<div class="row">
+	<div class="col-lg">
+		<div class="my-3" style="margin-top: 40px;">
+			<a class="btn" style="background-color:#0059ab; color:white;" href="../TambahAnggota/@ViewBag.kmk_idkelompok">Tambah Anggota</a>
+		</div>
+	</div>
+</div>
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg">
+		<div class="card">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong><span id="kelompok"></span>&nbsp;<span class="float-end" id="fasilitator"></span></strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md">
+						<table class="table" id="datatable">
+							<thead>
+								<tr>
+									<th scope="col">No</th>
+									<th scope="col">No Pendaftaran</th>
+									<th scope="col">Mahasiswa</th>
+									<th scope="col">Jenis Kelamin</th>
+									<th scope="col">Program Studi</th>
+									<th scope="col">Kategori</th>
+									<th scope="col">Aksi</th>
+								</tr>
+							</thead>
+							<tbody id="tbody">
+							</tbody>
+						</table>
+						<div class="float-end" style="margin-top: 20px;">
+							<a class="btn" Style="background-color: #ed302f;" onclick="hapusAnggota(event)">Hapus</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var nim = null;
+	var selectedNoPendaftarans = [];
+	loadDataKelompok()
+
+	function loadDataKelompok() {
+		var idkelompok = '@ViewBag.kmk_idkelompok';
+		var namakelompok = document.getElementById("kelompok");
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetKelompok?kmk_idkelompok=" + idkelompok;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				namakelompok.textContent = item.kmk_namakelompok;
+				nim = item.kmk_nim;
+				namaFasilitator()
+				loadDataAnggota()
+			},
+		});
+	}
+
+	function loadDataAnggota() {
+		var idkelompok = '@ViewBag.kmk_idkelompok';
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAnggotaKelompok?kmk_idkelompok=" + idkelompok;
+		var method = "GET";
+		var counter = 1;
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				var list = data.data
+				list.forEach(function (item) {
+					var newRow = '<tr>' +
+						'<td>' + counter + '</td>' + // Use the counter as a sequence number
+						'<td>' + item.mhs_nopendaftaran + '</td>' +
+						'<td>' + item.mhs_namalengkap + '</td>' +
+						'<td>' + item.mhs_gender + '</td>' +
+						'<td>' + item.mhs_programstudi + '</td>' +
+						'<td>' + item.mhs_kategori + '</td>' +
+						'<td>' +
+						'<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + item.mhs_nopendaftaran + '">' +
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>' +
+						'</td>' +
+						'</tr>';
+
+					$('#tbody').append(newRow);
+					counter++; // Increment the counter for the next row
+				});
+
+				// Add event listener to checkboxes
+				$('input[type="checkbox"]').change(function () {
+					var noPendaftaran = $(this).data('mhs-no');
+					if (this.checked) {
+						// Add to the selectedNIMs array if checked
+						selectedNoPendaftarans.push(noPendaftaran);
+					} else {
+						// Remove from the selectedNIMs array if unchecked
+						selectedNoPendaftarans = selectedNoPendaftarans.filter(function (nop) {
+							return nop !== noPendaftaran;
+						});
+					}
+				});
+			},
+		});
+	}
+
+	function namaFasilitator() {
+		var fasilitator = document.getElementById("fasilitator");
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "dataksk?ksk_nim=" + nim;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
+			},
+		});
+	}
+
+	function hapusAnggota(event) {
+		event.preventDefault();
+
+		var hostname = "https://localhost:7087/";
+		url = hostname + "BatalPengelompokkanMahasiswa";
+		method = "PUT";
+
+		var data = JSON.stringify(selectedNoPendaftarans);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Menghapus Anggota Dari Kelompok.",
+					showConfirmButton: false,
+					timer: 2000,
+				}).then(() => {
+					location.reload();
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>

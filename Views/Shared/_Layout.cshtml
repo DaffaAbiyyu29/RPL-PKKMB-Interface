@@ -14,7 +14,7 @@
 	<!-- End Google Tag Manager -->
 
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>PKKMB Politeknik Astra</title>
 	<link rel="icon" href="~/assets/Images/logo/astratech.ico" />
 	<link rel="shortcut icon" href="~/assets/Images/logo/astratech.ico" />
@@ -90,7 +90,7 @@
 		</noscript>
 		<!-- End Google Tag Manager (noscript) -->
 		<nav class="navbar navbar-expand-lg navbar-light light">
-			<a class="navbar-brand" style="padding: 5px 15px;" href="Default.aspx">
+			<a class="navbar-brand" style="padding: 5px 15px;" asp-controller="Home" asp-action="Index">
 				<img src="~/assets/Images/logo/astratech.png" alt="Logo Politeknik Astra" style="height: 45px;" />
 			</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555" aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,8 +121,9 @@
 						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="index">Kelulusan</a>
 					</li>
 					<li class="nav-item dropdown mr-3 mahasiswabaru">
-						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsername"></span> (<span id="showRole"></span>)</a>
+						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameMhs"></span> (<span id="showRoleMhs"></span>)</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
+							<a class="hovercolor" style="font-weight: bold;" href="../Akun/Ubah/@ViewBag.UserId">Ubah Akun</a>
 							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
 						</div>
 					</li>
@@ -157,6 +158,12 @@
 					<li class="nav-item mr-3 panitiakesekretariatan">
 						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="index">Kelulusan</a>
 					</li>
+					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
+						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameKsk"></span> (<span id="showRoleKsk"></span>)</a>
+						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
+							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
+						</div>
+					</li>
 							@*---------------------------------------------------------------------------------------------------------------------------------------*@
 							@*PIC PKKMB*@
 					<li class="nav-item mr-3 picpkkmb">
@@ -169,8 +176,12 @@
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="index">Ruangan</a>
 						</div>
 					</li>
-					<li class="nav-item mr-3 picpkkmb">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="index">Panitia KSK</a>
+					<li class="nav-item dropdown mr-3 picpkkmb">
+						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kesekretariatan</a>
+						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="index">Daftar Panitia</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="verifikasiksk">Verifikasi Panitia</a>
+						</div>
 					</li>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mahasiswa Baru</a>
@@ -186,6 +197,12 @@
 					<li class="nav-item mr-3 picpkkmb">
 						<a class="nav-link" style="font-weight: bold;" asp-controller="evaluasi" asp-action="index">Evaluasi</a>
 					</li>
+					<li class="nav-item dropdown mr-3 picpkkmb">
+						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernamePic"></span> (<span id="showRolePic"></span>)</a>
+						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
+							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
+						</div>
+					</li>
 								@*---------------------------------------------------------------------------------------------------------------------------------------*@
 					<li class="nav-item mr-2 login">
 						<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" asp-controller="akun" asp-action="login" style="padding: 8px 15px; background-color: #0059AB;"><b style="font-weight: bold;">Login</b></a>
@@ -196,8 +213,10 @@
 		<div class="container-fluid" style="padding-top: 50px;">
 			<!-- Adjust the value according to your needs -->
 			@RenderBody()
+
 		</div>
 		<div class="footer">
+
 			<div class="row">
 				<div class="col-lg-4 socialmedia" style="padding: 20px 40px; text-align: left;">
 					<h6 style="font-weight: bold; margin-bottom: 15px;">POLITEKNIK ASTRA</h6>
@@ -277,26 +296,31 @@
 					var user = [];
 					if (data.status === 200) {
 						const decodedPayload = decodeJwt(token);
-
-						var showUsername = document.getElementById('showUsername');
-						showUsername.textContent = decodedPayload.name;
-						var showRole = document.getElementById('showRole');
-						showRole.textContent = decodedPayload.role;
-
 						if (decodedPayload.role == 'Mahasiswa') {
 							$('.nav-item.mahasiswabaru').show();
 							$('.nav-item.login').hide();
-						} else if (decodedPayload.role == 'Panitia Kesekretariatan') {
+							var showUsernameMhs = document.getElementById('showUsernameMhs');
+							showUsernameMhs.textContent = decodedPayload.name;
+							var showRoleMhs = document.getElementById('showRoleMhs');
+							showRoleMhs.textContent = decodedPayload.role;
+						} else if (decodedPayload.role == 'Fasilitator' || decodedPayload.role == 'KSK') {
 							$('.nav-item.panitiakesekretariatan').show();
 							$('.nav-item.login').hide();
+							var showUsernameKsk = document.getElementById('showUsernameKsk');
+							showUsernameKsk.textContent = decodedPayload.name;
+							var showRoleKsk = document.getElementById('showRoleKsk');
+							showRoleKsk.textContent = decodedPayload.role;
 						} else if (decodedPayload.role == 'PIC PKKMB') {
 							$('.nav-item.picpkkmb').show();
 							$('.nav-item.login').hide();
+							var showUsernamePic = document.getElementById('showUsernamePic');
+							showUsernamePic.textContent = decodedPayload.name;
+							var showRolePic = document.getElementById('showRolePic');
+							showRolePic.textContent = decodedPayload.role;
 						}
 					}
 					else {
 						deleteCookie('token');
-						sessionStorage.clear();
 					}
 				}, error: function (xhr, status) {
 					deleteCookie('token');
@@ -349,8 +373,7 @@
 		function logout(event) {
 			event.preventDefault();
 			deleteCookie('token');
-			sessionStorage.clear();
-			window.location.href = '../';
+			window.location.href = "https://localhost:7240/";
 		}
 	</script>
 

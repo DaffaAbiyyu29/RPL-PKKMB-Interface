@@ -1,0 +1,139 @@
+﻿<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Evaluasi</strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md-6">
+						<!-- First Column -->
+						<div class="input-group has-validation mb-4 kritik">
+							<div class="form-floating">
+								<textarea class="form-control" placeholder="" id="kritik" data-target="validateField" name="kritik" style="height: 100px"></textarea>
+								<label for="validateField">Kritik</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<!-- Second Column -->
+						<div class="input-group has-validation mb-4 saran">
+							<div class="form-floating">
+								<textarea class="form-control" placeholder="" id="saran" data-target="validateField" name="saran" style="height: 100px"></textarea>
+								<label for="validateField">Saran</label>
+							</div>
+						</div>
+					</div>
+					<div class="input-group has-validation mb-4 umpanbalik">
+						<div class="form-floating">
+							<textarea class="form-control" placeholder="" id="umpanbalik" data-target="validateField" name="umpanbalik" style="height: 100px"></textarea>
+							<label for="validateField">Umpan Balik</label>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="kirimEvaluasi(event)">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	loadData();
+
+	function padZero(value) {
+		return value < 10 ? '0' + value : value;
+	}
+
+	function getCurrentDateTime() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = padZero(now.getMonth() + 1);  // Months are zero-based
+		var day = padZero(now.getDate());
+		var hours = padZero(now.getHours());
+		var minutes = padZero(now.getMinutes());
+		var seconds = padZero(now.getSeconds());
+
+		var formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+		return formattedDateTime;
+	}
+
+	function loadData() {
+		var nopendaftaran = '@ViewBag.UserId';
+		var kritik = document.getElementsByName("kritik")[0]
+		var saran = document.getElementsByName("saran")[0]
+		var umpanbalik = document.getElementsByName("umpanbalik")[0]
+
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + nopendaftaran
+		var method = "GET"
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				kritik.value = item.mhs_kritik
+				saran.value = item.mhs_saran
+				umpanbalik.value = item.mhs_insight
+			},
+		});
+	}
+
+	function kirimEvaluasi(event) {
+		event.preventDefault();
+
+		var nopendaftaran = '@ViewBag.UserId';
+		var kritik = document.getElementsByName("kritik")[0].value;
+		var saran = document.getElementsByName("saran")[0].value;
+		var umpanbalik = document.getElementsByName("umpanbalik")[0].value;
+
+		url = "https://localhost:7087/EvaluasiMahasiswa";
+		method = "PUT";
+		data = {
+			mhs_nopendaftaran: nopendaftaran,
+			mhs_namalengkap: "",
+			mhs_gender: "",
+			mhs_programstudi: "",
+			mhs_alamat: "",
+			mhs_notelepon: "",
+			mhs_email: "",
+			mhs_password: "",
+			mhs_kategori: "",
+			mhs_idkelompok: "",
+			mhs_idpkkmb: "",
+			mhs_statuskelulusan: "",
+			mhs_status: "",
+			mhs_saran: saran,
+			mhs_kritik: kritik,
+			mhs_insight: umpanbalik,
+			mhs_tglkirimevaluasi: getCurrentDateTime()
+		};
+		console.log(data)
+		console.log(nopendaftaran)
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Mengirim Evaluasi",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = 'Evaluasi';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>

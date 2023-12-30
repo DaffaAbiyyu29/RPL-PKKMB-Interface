@@ -1,39 +1,34 @@
-﻿@{
+﻿/@{
 	ViewData["Title"] = "Home Page";
 }
 
-@if (ViewBag.UserRole == "Mahasiswa")
-{
-	<div class="row">
-		<div class="alert alert-danger alert-dismissible fade show" role="alert">
-			<i class="bi bi-exclamation-circle me-1">
-				<strong>Error!</strong> @TempData["ErrorLogin"]
-				<button type="button" class="btn-close" data-bs-dismiss="alert"
-						aria-label="Close"></button>
-			</i>
+<div class="row justify-content-center mb-5">
+	<div class="col-lg">
+		<div class="card">
+			<div class="card-header">
+				Mahasiswa Baru
+			</div>
+			<div class="card-body">
+				<table class="table" id="">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Nomor Pendaftaran</th>
+							<th scope="col">Nama Mahasiswa</th>
+							<th scope="col">Gender</th>
+							<th scope="col">Program Studi</th>
+							<th scope="col">Nomor Telepon</th>
+							<th scope="col">Alamat</th>
+							<th scope="col">Email</th>
+							<th scope="col">Kategori</th>
+							<th scope="col">Kelulusan</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbody"></tbody>
+				</table>
+			</div>
 		</div>
-	</div>
-}
-
-<div class="card">
-	<div class="card-body">
-		<table class="table" id="">
-			<thead>
-				<tr>
-					<th scope="col">No</th>
-					<th scope="col">Nomor Pendaftaran</th>
-					<th scope="col">Nama Mahasiswa</th>
-					<th scope="col">Gender</th>
-					<th scope="col">Program Studi</th>
-					<th scope="col">Nomor Telepon</th>
-					<th scope="col">Alamat</th>
-					<th scope="col">Email</th>
-					<th scope="col">Kategori</th>
-					<th scope="col">Aksi</th>
-				</tr>
-			</thead>
-			<tbody id="tbody"></tbody>
-		</table>
 	</div>
 </div>
 
@@ -42,7 +37,7 @@
 	loadTable()
 
 	function loadTable() {
-		var hostname = '@ViewBag.url'
+		var hostname = 'https://localhost:7087/'
 		var url = hostname + "getallmahasiswa"
 		var method = "GET"
 		var counter = 1; // Initialize a counter variable
@@ -64,6 +59,7 @@
 						'<td>' + item.mhs_alamat + '</td>' +
 						'<td>' + item.mhs_email + '</td>' +
 						'<td>' + item.mhs_kategori + '</td>' +
+						'<td>' + item.mhs_statuskelulusan + '</td>' +
 						'<td>' +
 						'<a class="btn btn-primary" href="/Akun/Ubah/' + item.mhs_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
 						//'<button class="btn btn-danger" value="' + item.mhs_nopendaftaran + '" onclick="hapus(this.value)">Delete</button>' +
@@ -73,22 +69,6 @@
 					$('#tbody').append(newRow);
 					counter++; // Increment the counter for the next row
 				});
-			},
-		});
-	}
-
-	function hapus(mhs_nopendaftaran) {
-		var hostname = "https://localhost:7087/"
-		var url = hostname + "hapusmahasiswa?mhs_nopendaftaran=" + mhs_nopendaftaran
-		var method = "DELETE"
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				alert("Data Berhasil Dihapus")
-				location.reload();
 			},
 		});
 	}

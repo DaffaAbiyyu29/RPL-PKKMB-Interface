@@ -13,11 +13,11 @@
 			<div class="card-body px-lg-5 pt-1">
 				<div class="row">
 					<div class="col-md-6">
-						<div class="input-group has-validation mb-4 jenistugas">
+						<div class="input-group has-validation mb-4 namatugas">
 							<div class="form-floating is-invalid">
-								<input type="text" class="form-control is-invalid" maxlength="30" id="validateField" name="jenistugas" data-target="validateField" placeholder="">
-								<label for="validateField">Jenis Tugas</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Jenis Tugas.</div>
+								<input type="text" class="form-control is-invalid" maxlength="30" id="validateField" name="namatugas" data-target="validateField" placeholder="">
+								<label for="validateField">Nama Tugas</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Tugas.</div>
 							</div>
 						</div>
 
@@ -32,18 +32,17 @@
 
 					<div class="col-md-6">
 						<div class="input-group has-validation mb-4 waktuawal">
-							<div class="form-floating is-invalid">
-								<input type="date" class="form-control is-invalid" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="">
+							<div class="form-floating">
+								<input type="datetime-local" class="form-control" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="" readonly>
 								<label for="validateField">Waktu Pemberian Tugas</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Lengkap.</div>
 							</div>
 						</div>
 
 						<div class="input-group has-validation mb-4 deadline">
 							<div class="form-floating is-invalid">
-								<input type="date" class="form-control is-invalid" maxlength="100" id="validateField" name="deadline" data-target="validateField" placeholder="">
+								<input type="datetime-local" class="form-control is-invalid" maxlength="100" id="validateField" name="deadline" data-target="validateField" placeholder="">
 								<label for="validateField">Deadline</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Pemberian Tugas.</div>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Deadline.</div>
 							</div>
 						</div>
 					</div>
@@ -62,10 +61,25 @@
 </div>
 
 <script>
+	// Function to format the current date and time in the required format for datetime-local input
+	function getCurrentDateTime() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = ('0' + (now.getMonth() + 1)).slice(-2);
+		var day = ('0' + now.getDate()).slice(-2);
+		var hours = ('0' + now.getHours()).slice(-2);
+		var minutes = ('0' + now.getMinutes()).slice(-2);
+
+		return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+	}
+
+	// Set default value for the datetime-local input
+	document.getElementsByName("waktuawal")[0].value = getCurrentDateTime();
+
 	function tambahTugas(event) {
 		event.preventDefault();
 
-		var jenistugas = document.getElementsByName("jenistugas")[0].value;
+		var namatugas = document.getElementsByName("namatugas")[0].value;
 		var waktuawal = document.getElementsByName("waktuawal")[0].value;
 		var deadline = document.getElementsByName("deadline")[0].value;
 		var deskripsi = document.getElementsByName("deskripsi")[0].value;
@@ -74,10 +88,10 @@
 		var file = tugasInput.files[0];
 
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/Upload?tgs_nim=KSK001" + "&tgs_jenistugas=" + jenistugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
+		var url = hostname + "Tugas/Upload?tgs_nim=KSK001" + "&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
 		var method = "POST";
 
-		if (jenistugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
+		if (namatugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
 			Swal.fire({
 				position: "top-end",
 				icon: "error",

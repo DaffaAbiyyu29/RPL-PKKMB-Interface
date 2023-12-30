@@ -23,13 +23,13 @@
 
 						<div class="form-floating mb-4 namalengkap">
 							<input type="text" class="form-control" maxlength="10" id="username" name="username" value="@ViewBag.username" hidden>
-							<input type="text" class="form-control" maxlength="10" id="namalengkap" name="namalengkap" placeholder="">
+							<input type="text" class="form-control" maxlength="30" id="namalengkap" name="namalengkap" placeholder="">
 							<label for="floatingInputGrid">Nama Lengkap</label>
 						</div>
 
 						<div class="form-floating mb-4 jeniskelamin">
 							<select class="form-select" id="jeniskelamin" name="jeniskelamin" aria-label="">
-								<option selected>Pilih Jenis Kelamin</option>
+								<option disabled selected>Pilih Jenis Kelamin</option>
 								<option value="Laki-laki">Laki-laki</option>
 								<option value="Perempuan">Perempuan</option>
 							</select>
@@ -92,7 +92,7 @@
 						</div>
 
 						<div class="form-floating mb-4 status">
-							<input type="text" class="form-control" maxlength="50" id="status" name="status" placeholder="">
+							<input type="text" class="form-control" maxlength="50" id="status" name="status" placeholder="" readonly>
 							<label for="floatingInputGrid">Status</label>
 						</div>
 					</div>

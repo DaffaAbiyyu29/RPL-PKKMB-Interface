@@ -4,7 +4,7 @@
 <div class="row">
 	<div class="col-lg">
 		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="jadwal" asp-action="TambahJadwal">Tambah Data</a>
+			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="Kelompok" asp-action="TambahKelompok">Tambah Kelompok</a>
 		</div>
 	</div>
 </div>
@@ -40,7 +40,7 @@
 		var hostname = "https://localhost:7087/"
 		var url = hostname + "GetAllKelompok"
 		var method = "GET"
-		var counter = 1; // Initialize a counter variable
+		var counter = 1;
 
 		$.ajax({
 			url: url,
@@ -55,8 +55,8 @@
 						'<td>' + item.kmk_nim + '</td>' +
 						'<td>' + item.kmk_idruangan + '</td>' +
 						'<td>' +
-						'<a class="btn btn-primary" href="/Kelompok/Ubah/' + item.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						//'<button class="btn btn-danger" value="' + item.kmk_idkelompok + '" onclick="hapus(this.value)">Delete</button>' +
+						'<a class="btn btn-primary" href="/Kelompok/UbahKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+						'<a class="btn btn-primary" href="/Kelompok/DetailKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' +
 						'</td>' +
 						'</tr>';
 

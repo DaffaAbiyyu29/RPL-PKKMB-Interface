@@ -1,0 +1,203 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Ubah Kelompok</strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md">
+						<!-- First Column -->
+						<div class="input-group has-validation mb-4 namakelompok">
+							<div class="form-floating">
+								<input type="text" class="form-control" maxlength="10" id="kmk_idkelompok" name="kmk_idkelompok" value="@ViewBag.kmk_idkelompok" placeholder="" hidden>
+								<input type="text" class="form-control" id="namakelompok" name="namakelompok" placeholder="">
+								<label for="validateField">Nama Kelompok</label>
+							</div>
+						</div>
+						<div class="input-group has-validation mb-4 ruangan">
+							<div class="form-floating">
+								<select class="form-select" id="ruangan" name="ruangan" aria-label="">
+									<option selected disabled>Pilih Ruangan</option>
+									<!-- Options will be populated dynamically using JavaScript -->
+								</select>
+								<label for="ruangan">Ruangan</label>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 fasilitator">
+							<div class="form-floating">
+								<select class="form-select" id="fasilitator" name="fasilitator" aria-label="">
+									<option selected disabled>Pilih Fasilitator</option>
+									<!-- Options will be populated dynamically using JavaScript -->
+								</select>
+								<label for="fasilitator">Fasilitator</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="ubahKelompok(event)">Simpan</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	loadData();
+
+	function loadData() {
+		var kmk_idkelompok = document.getElementById("kmk_idkelompok");
+		var namakelompok = document.getElementById("namakelompok");
+		var fasilitator = document.getElementById("fasilitator");
+		var ruangan = document.getElementById("ruangan");
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetKelompok?kmk_idkelompok=" + kmk_idkelompok.value;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				namakelompok.value = item.kmk_namakelompok;
+
+				// Set selected value for dropdown lists
+				setDropdownSelectedValue(fasilitator, item.kmk_nim);
+				setDropdownSelectedValue(ruangan, item.kmk_idruangan);
+			},
+		});
+	}
+
+	// Function to set the selected value for a dropdown list
+	function setDropdownSelectedValue(dropdown, selectedValue) {
+		var options = dropdown.options;
+		for (var i = 0; i < options.length; i++) {
+			if (options[i].value === selectedValue) {
+				options[i].selected = true;
+				break;
+			}
+		}
+	}
+
+	function ubahKelompok(event) {
+		event.preventDefault();
+
+		var namakelompok = document.getElementsByName("namakelompok")[0].value
+		var fasilitator = document.getElementsByName("fasilitator")[0].value;
+		var ruangan = document.getElementsByName("ruangan")[0].value;
+
+		url = "https://localhost:7087/UbahKelompok";
+		method = "PUT";
+		data = {
+			kmk_idkelompok: kmk_idkelompok.value,
+			kmk_namakelompok: namakelompok,
+			kmk_nim: fasilitator,
+			kmk_idruangan: ruangan,
+			kmk_status: "Aktif",
+		};
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Ubah Kelompok Berhasil",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = '/Kelompok/Index';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+
+				Swal.fire({
+					position: "top-end",
+					icon: "error",
+					title: "Gagal Ubah Kelompok",
+					showConfirmButton: false,
+					timer: 2000
+				});
+			},
+		});
+	}
+</script>
+
+<script>
+	function NamaRuangan() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllRuangan";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				NamaDropDownRuangan(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function NamaDropDownRuangan(data) {
+		var dropdown = $('#ruangan');
+		dropdown.empty();
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.rng_idruangan).text(item.rng_namaruangan);
+		});
+		dropdown.append(options);
+	}
+	$(document).ready(function () {
+		NamaRuangan();
+	});
+</script>
+
+<script>
+	function NamaPanitia() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "TampilFasilitator";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				console.log(response)
+				NamaDropDownFasil(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function NamaDropDownFasil(data) {
+		var dropdown = $('#fasilitator');
+		dropdown.empty();
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.ksk_nim).text(item.ksk_nama);
+		});
+		dropdown.append(options);
+	}
+	$(document).ready(function () {
+		NamaPanitia();
+	});
+</script>

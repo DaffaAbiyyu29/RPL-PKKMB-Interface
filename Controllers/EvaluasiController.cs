@@ -8,5 +8,9 @@ namespace PKKMB_Interface.Controllers
 		{
 			return View();
 		}
-	}
+        public IActionResult Tambah()
+        {
+            return View();
+        }
+    }
 }

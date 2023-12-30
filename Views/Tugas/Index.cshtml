@@ -30,7 +30,7 @@
 						<tr>
 							<th scope="col">No</th>
 							<th scope="col">NIM</th>
-							<th scope="col">Jenis Tugas</th>
+							<th scope="col">Nama Tugas</th>
 							<th scope="col">Tanggal Pemberian</th>
 							<th scope="col">Tugas</th>
 							<th scope="col">Deadline</th>
@@ -73,14 +73,16 @@
 					var newRow = '<tr>' +
 						'<td>' + counter + '</td>' +
 						'<td>' + item.tgs_nim + '</td>' +
-						'<td>' + item.tgs_jenistugas + '</td>' +
+						'<td>' + item.tgs_namatugas + '</td>' +
 						'<td>' + formatDateForDisplay(item.tgs_tglpemberiantugas) + '</td>' +
 						'<td><a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a></td>' +
 						'<td>' + formatDateForDisplay(item.tgs_deadline) + '</td>' +
 						'<td>' + item.tgs_deskripsi + '</td>' +
 						'<td>' +
-						(userRole === "Panitia Kesekretariatan" ? '<a class="btn btn-primary" href="/Tugas/UbahTugas/' + item.tgs_idtugas + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' : '') +
-						(userRole === "Mahasiswa" ? '<a class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + item.tgs_idtugas + '"><i class="fa fa-upload" aria-hidden="true"></i></a>' : '') +
+						(userRole === "Panitia Kesekretariatan" ?
+							'<a class="btn btn-primary" href="/Tugas/UbahTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' : '') +
+						(userRole === "Mahasiswa" ?
+							'<a class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>' : '') +
 						'</td>' +
 						'</tr>';
 
@@ -126,5 +128,4 @@
 				console.error('There was a problem with the fetch operation:', error);
 			});
 	}
-
 </script>

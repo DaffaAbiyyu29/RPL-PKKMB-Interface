@@ -3,89 +3,159 @@
 }
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg-8">
+	<div class="col-lg">
 		<div class="card">
-			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Pengumpulan Tugas</strong>
-				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<input type="text" class="form-control" maxlength="30" id="validateField" name="idtugas" data-target="validateField" placeholder="" value="@ViewBag.tgs_idtugas" hidden>
+				<strong><span name="namatugas"></span>&nbsp;<span name="deadline"></span></strong>
 			</h5>
 			<div class="card-body px-lg-5 pt-1">
 				<div class="row">
-					<div class="col-md-6">
-						<div class="input-group has-validation mb-4 jenistugas">
-							<div class="form-floating is-invalid">
-								<input type="text" class="form-control is-invalid" maxlength="30" id="validateField" name="jenistugas" data-target="validateField" placeholder="">
-								<label for="validateField">Jenis Tugas</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Jenis Tugas.</div>
-							</div>
-						</div>
-
-						<div class="input-group has-validation mb-4 tugas">
-							<div class="form-floating is-invalid">
-								<input type="file" class="form-control is-invalid" maxlength="100" id="validateField" name="tugas" data-target="validateField" placeholder="">
-								<label for="validateField">File Tugas</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Pilih File Tugas.</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						<div class="input-group has-validation mb-4 waktuawal">
-							<div class="form-floating is-invalid">
-								<input type="date" class="form-control is-invalid" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="">
-								<label for="validateField">Waktu Pemberian Tugas</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Lengkap.</div>
-							</div>
-						</div>
-
-						<div class="input-group has-validation mb-4 deadline">
-							<div class="form-floating is-invalid">
-								<input type="date" class="form-control is-invalid" maxlength="100" id="validateField" name="deadline" data-target="validateField" placeholder="">
-								<label for="validateField">Deadline</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Pemberian Tugas.</div>
-							</div>
-						</div>
-					</div>
-					<div class="input-group has-validation mb-4 deskripsi">
-						<div class="form-floating is-invalid">
-							<textarea class="form-control is-invalid" placeholder="" id="validateField" data-target="validateField" name="deskripsi" style="height: 100px"></textarea>
-							<label for="validateFieldNamalengkap">Deskripsi</label>
-							<div class="invalid-feedback" data-target="validateLabel">* Masukkan Deskripsi.</div>
-						</div>
+					<div class="col-md">
+						<table class="table" id="datatable">
+							<thead>
+								<tr>
+									<th scope="col">No Pendaftaran</th>
+									<th scope="col">Nama</th>
+									<th scope="col">Waktu Unggah</th>
+									<th scope="col">Aksi</th>
+								</tr>
+							</thead>
+							<tbody id="tbody">
+								<tr>
+									<td>@ViewBag.UserId</td>
+									<td>@ViewBag.UserName</td>
+									<td class="waktuunggah"></td>
+									<td class="aksi"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
-				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahTugas(event)">Tambah</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="unggahTugasLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color:#0059ab;">
+				<h5 class="modal-title text-white" id="unggahTugasLabel">Unggah Tugas</h5>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="text-center">Format Pengumpulan File Hanya Mendukung .zip .rar .doc .txt</p>
+				<div class="input-group mb-4">
+					<input type="file" class="form-control" id="tugas" name="tugas" data-target="validateField" placeholder="" accept=".zip, .rar, .doc, .txt">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+				<button type="button" class="btn text-white" style="background-color:#0059ab;" onclick="unggahTugas(event)">Simpan</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	function tambahTugas(event) {
+	var deadlineDate;
+	var currentDate = new Date();
+
+	$(document).ready(function () {
+		loadDataTugas();
+		loadDetail();
+	});
+
+	function formatTanggal(dateString) {
+		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+		return formattedDate;
+	}
+
+	function formatJam(dateString) {
+		const options = { hour: 'numeric', minute: 'numeric', hour12: false };
+		const formattedTime = new Date(dateString).toLocaleTimeString('id-ID', options);
+		return formattedTime;
+	}
+
+	function loadDataTugas() {
+		var idtugas = document.getElementsByName("idtugas")[0];
+		var namatugas = document.getElementsByName("namatugas")[0];
+		var deadline = document.getElementsByName("deadline")[0];
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "datatugas?tgs_idtugas=" + idtugas.value;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				idtugas.value = item.tgs_idtugas;
+				namatugas.textContent = item.tgs_namatugas;
+				deadline.textContent = '[Batas Waktu Pengumpulan Tugas : ' + formatTanggal(item.tgs_deadline) + ' | ' + formatJam(item.tgs_deadline) + ' WIB]';
+				deadlineDate = new Date(item.tgs_deadline);
+				loadTable();
+			},
+			error: function (error) {
+				console.error("Error fetching data:", error);
+			},
+		});
+	}
+
+	function loadTable() {
+		if (currentDate <= deadlineDate) {
+			// Create a button with Font Awesome icon
+			var uploadButton = document.createElement('button');
+			uploadButton.innerHTML = '<i class="fa fa-upload" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></i>';
+			uploadButton.className = 'btn btn-primary';
+			uploadButton.setAttribute('type', 'button');
+			uploadButton.setAttribute('data-toggle', 'modal');
+			uploadButton.setAttribute('data-target', '#myModal');
+
+			// Append the button to the 'aksi' cell
+			document.querySelector('.aksi').appendChild(uploadButton);
+		}
+	}
+
+	function getCurrentDateTime() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = padZero(now.getMonth() + 1);  // Months are zero-based
+		var day = padZero(now.getDate());
+		var hours = padZero(now.getHours());
+		var minutes = padZero(now.getMinutes());
+		var seconds = padZero(now.getSeconds());
+
+		var formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+		return formattedDateTime;
+	}
+
+	function padZero(value) {
+		return value < 10 ? '0' + value : value;
+	}
+
+	function unggahTugas(event) {
 		event.preventDefault();
 
-		var jenistugas = document.getElementsByName("jenistugas")[0].value;
-		var waktuawal = document.getElementsByName("waktuawal")[0].value;
-		var deadline = document.getElementsByName("deadline")[0].value;
-		var deskripsi = document.getElementsByName("deskripsi")[0].value;
-
+		var idtugas = "@ViewBag.tgs_idtugas";
+		var nopendaftaran = "@ViewBag.UserId";
+		var waktupengumpulan = getCurrentDateTime()
 		var tugasInput = document.getElementsByName("tugas")[0];
 		var file = tugasInput.files[0];
 
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/Upload?tgs_nim=KSK001" + "&tgs_jenistugas=" + jenistugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
-		var method = "POST";
-
-		if (jenistugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
-			Swal.fire({
-				position: "top-end",
-				icon: "error",
-				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
-			return;
+		if (!file) {
+			location.reload()
 		}
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "Tugas/UploadTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
+		var method = "POST";
 
 		var data = new FormData();
 		data.append("file", file);
@@ -100,7 +170,7 @@
 				Swal.fire({
 					position: "top-end",
 					icon: "success",
-					title: "Berhasil Menambahkan Tugas",
+					title: "Berhasil Mengunggah Tugas",
 					showConfirmButton: false,
 					timer: 2000
 				}).then(() => {
@@ -113,35 +183,89 @@
 			},
 		});
 	}
-</script>
 
-<script>
-	// Mengambil semua elemen dengan nama ID "validateField"
-	var inputFields = document.querySelectorAll('[data-target="validateField"]');
-	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
+	function loadDetail() {
+		var idtugas = document.getElementsByName("idtugas")[0];
+		var nopendaftaran = "@ViewBag.UserId";
 
-	// Menambahkan event listener untuk setiap elemen input
-	inputFields.forEach(function (inputField) {
-		inputField.addEventListener('input', function () {
-			if (inputField.value.trim() !== '') {
-				inputField.classList.remove('is-invalid');
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "Tugas/DataDetailTugas?dts_iddetail=" + idtugas.value + "&dts_nopendaftaran=" + nopendaftaran;
+		var method = "GET";
 
-			} else {
-				inputField.classList.add('is-invalid');
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				if (data && data.data) {
+					var item = data.data;
+					var waktuUnggahElement = document.querySelector('.waktuunggah');
+					var aksiElement = document.querySelector('.aksi');
 
-			}
+					// Menggunakan fungsi formatTanggal dan formatJam yang telah Anda tentukan sebelumnya
+					var formattedDate = formatTanggal(item.dts_waktupengumpulan);
+					var formattedTime = formatJam(item.dts_waktupengumpulan);
+
+					// Mengganti isi waktuunggah dengan tanggal dan waktu yang diformat
+					waktuUnggahElement.textContent = formattedDate + ', ' + formattedTime + ' WIB';
+
+					// Menyaring file name dari data
+					var fileName = item.dts_filetugas;
+
+					// Membuat tautan download
+					var downloadLink = document.createElement('a');
+					downloadLink.href = '#';
+					downloadLink.className = 'btn btn-primary download-link';
+					downloadLink.setAttribute('data-file', fileName);
+					downloadLink.innerHTML = '<i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unduh ' + fileName + '"></i>';
+
+					// Menambahkan tautan download ke dalam elemen aksi
+					aksiElement.appendChild(downloadLink);
+
+					$('.download-link').on('click', function (e) {
+						e.preventDefault();
+						var fileName = $(this).data('file');
+						downloadFile(fileName);
+					});
+				} else {
+					// Menangani jika data tidak ditemukan
+					console.log("Data tidak ditemukan");
+				}
+			},
+			error: function (error) {
+				console.error("Error fetching data:", error);
+			},
 		});
+	}
 
-		inputField.addEventListener('focus', function () {
-			if (inputField.value.trim() === '') {
+	function downloadFile(fileName) {
+		var url = "https://localhost:7087/Tugas/DownloadTugasMahasiswa";
 
-			}
-		});
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(fileName),
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.blob();
+			})
+			.then(blob => {
+				var url = URL.createObjectURL(blob);
+				var a = document.createElement('a');
+				a.href = url;
+				a.download = fileName;
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			})
+			.catch(error => {
+				console.error('There was a problem with the fetch operation:', error);
+			});
+	}
 
-		inputField.addEventListener('blur', function () {
-			if (inputField.value.trim() !== '') {
-
-			}
-		});
-	});
 </script>

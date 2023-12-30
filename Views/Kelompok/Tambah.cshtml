@@ -1,0 +1,200 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Tambah Kelompok</strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md">
+						<!-- First Column -->
+						<div class="input-group has-validation mb-4 namakelompok">
+							<div class="form-floating is-invalid">
+								<input type="text" class="form-control is-invalid" id="namakelompok" name="namakelompok" data-target="validateField" placeholder="">
+								<label for="validateField">Nama Kelompok</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama kelompok.</div>
+							</div>
+						</div>
+						<div class="input-group has-validation mb-4 ruangan">
+							<div class="form-floating is-invalid">
+								<select class="form-select is-invalid" id="ruangan" data-target="validateField" name="ruangan" aria-label="">
+								</select>
+								<label for="ruangan">Ruangan</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Pilih Ruangan.</div>
+							</div>
+						</div>
+
+						<div class="input-group has-validation mb-4 fasilitator">
+							<div class="form-floating is-invalid">
+								<select class="form-select is-invalid" id="fasilitator" data-target="validateField" name="fasilitator" aria-label="">
+								</select>
+								<label for="fasilitator">Fasilitator</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Pilih Fasilitator.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahKelompok(event)">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	function tambahKelompok(event) {
+		event.preventDefault();
+
+		var namakelompok = document.getElementsByName("namakelompok")[0].value;
+		var fasilitator = document.getElementsByName("fasilitator")[0].value;
+		var ruangan = document.getElementsByName("ruangan")[0].value;
+
+		// Adjust the URL, method, and data based on the selected account type
+		if (namakelompok.trim() === '' || ruangan.trim() === '' || fasilitator.trim() === '') {
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Lengkapi Semua Fields",
+				showConfirmButton: false,
+				timer: 2000
+			});
+			return;
+		}
+
+		var url = "https://localhost:7087/TambahKelompok"; // Adjust the endpoint
+		var method = "POST";
+		var data = {
+			kmk_idkelompok: "",
+			kmk_namakelompok: namakelompok,
+			kmk_nim: fasilitator,
+			kmk_idruangan: ruangan,
+			kmk_status: "Aktif"
+		};
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Pembuatan Kelompok Berhasil",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = './';
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>
+
+<script>
+	function NamaRuangan() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllRuangan";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				NamaDropDownRuangan(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function NamaDropDownRuangan(data) {
+		var dropdown = $('#ruangan');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled>Pilih Ruangan</option>'));
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.rng_idruangan).text(item.rng_namaruangan);
+		});
+		dropdown.append(options);
+	}
+	$(document).ready(function () {
+		NamaRuangan();
+	});
+</script>
+
+<script>
+	function NamaPanitia() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "TampilFasilitator";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				NamaDropDownFasil(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function NamaDropDownFasil(data) {
+		var dropdown = $('#fasilitator');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled>Pilih Fasilitator</option>'));
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.ksk_nim).text(item.ksk_nama);
+		});
+		dropdown.append(options);
+	}
+	$(document).ready(function () {
+		NamaPanitia();
+	});
+</script>
+
+<script>
+	// Mengambil semua elemen dengan nama ID "validateField"
+	var inputFields = document.querySelectorAll('[data-target="validateField"]');
+	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
+
+	// Menambahkan event listener untuk setiap elemen input
+	inputFields.forEach(function (inputField) {
+		inputField.addEventListener('input', function () {
+			if (inputField.value.trim() !== '') {
+				inputField.classList.remove('is-invalid');
+
+			} else {
+				inputField.classList.add('is-invalid');
+
+			}
+		});
+
+		inputField.addEventListener('focus', function () {
+			if (inputField.value.trim() === '') {
+
+			}
+		});
+
+		inputField.addEventListener('blur', function () {
+			if (inputField.value.trim() !== '') {
+
+			}
+		});
+	});
+</script>
