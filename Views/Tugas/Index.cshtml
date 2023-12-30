@@ -9,14 +9,16 @@
 	</script>
 }
 
-@ViewBag.a
-<div class="row">
-	<div class="col-lg">
-		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="tugas" asp-action="tambahtugas">Tambah Tugas</a>
+@if (ViewBag.UserRole == "Fasilitator")
+{
+	<div class="row">
+		<div class="col-lg">
+			<div class="my-3" style="margin-top: 40px;">
+				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="tugas" asp-action="tambahtugas">Tambah Tugas</a>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg mb-4">
@@ -79,10 +81,12 @@
 						'<td>' + formatDateForDisplay(item.tgs_deadline) + '</td>' +
 						'<td>' + item.tgs_deskripsi + '</td>' +
 						'<td>' +
-						(userRole === "Panitia Kesekretariatan" ?
-							'<a class="btn btn-primary" href="/Tugas/UbahTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' : '') +
-						(userRole === "Mahasiswa" ?
+						("@ViewBag.UserRole" == "Fasilitator" ?
+							'<a class="btn btn-primary" href="/Tugas/UbahTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' : '') +
+						("@ViewBag.UserRole" == "Mahasiswa" ?
 							'<a class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>' : '') +
+						("@ViewBag.UserRole" == "Fasilitator" ?
+							'<a class="btn btn-primary" href="/Tugas/PenilaianTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-check" aria-hidden="true"></i></a>' : '') +
 						'</td>' +
 						'</tr>';
 

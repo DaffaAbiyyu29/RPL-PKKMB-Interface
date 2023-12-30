@@ -264,7 +264,7 @@
 				mhs_saran: "",
 				mhs_kritik: "",
 				mhs_insight: "",
-				mhs_tglkirimevaluasi: "",
+				mhs_tglkirimevaluasi: "2023-12-30T09:22:52.731Z",
 			};
 		} else if (selectedTipeAkun === 'Panitia Kesekretariatan') {
 			if (namalengkap.trim() === '' || jeniskelamin.trim() === 'Pilih Jenis Kelamin' || programstudi.trim() === 'Pilih Program Studi' || alamat.trim() === '' || notelepon.trim() === '' || email.trim() === '' || role.trim() === 'Pilih Role' || katasandi.trim() === '' || katasandi2.trim() === '') {
@@ -336,7 +336,7 @@
 			});
 			return;
 		}
-
+		console.log(data)
 		$.ajax({
 			url: url,
 			method: method,

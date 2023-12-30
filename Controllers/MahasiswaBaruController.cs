@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PKKMB_Interface.Models;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace PKKMB_Interface.Controllers
@@ -7,11 +8,13 @@ namespace PKKMB_Interface.Controllers
 	{
 		private readonly IConfiguration _configuration;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly ValidateToken _valid;
 
-		public MahasiswaBaruController(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+		public MahasiswaBaruController(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ValidateToken validateToken)
 		{
 			_configuration = configuration;
 			_httpContextAccessor = httpContextAccessor;
+			_valid = validateToken;
 		}
 
 		[Route("Mahasiswa")]
@@ -20,30 +23,29 @@ namespace PKKMB_Interface.Controllers
 			if (HttpContext.Request.Cookies["token"] != null)
 			{
 				string userToken = HttpContext.Request.Cookies["token"];
-				ViewBag.UserToken = userToken;
 
-				var handler = new JwtSecurityTokenHandler();
-				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
-				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
-				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
-				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+				if (_valid.ValidateTokenFromCookies(userToken))
+				{
+					ViewBag.UserToken = userToken;
 
-				if (userRole == "Mahasiswa")
-				{
-					ViewBag.UserId = userId;
-					ViewBag.UserName = userName;
-					ViewBag.UserRole = userRole;
-					return View();
-				}
-				else
-				{
-					return RedirectToAction("Index", "Home");
+					var handler = new JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+					var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+					if (userRole == "Mahasiswa")
+					{
+						ViewBag.UserId = userId;
+						ViewBag.UserName = userName;
+						ViewBag.UserRole = userRole;
+
+						return View();
+					}
 				}
 			}
-			else
-			{
-				return RedirectToAction("Index", "Home");
-			}
+
+			return RedirectToAction("Index", "Home");
 		}
 
 		[Route("Mahasiswa/Dashboard")]
@@ -52,30 +54,29 @@ namespace PKKMB_Interface.Controllers
 			if (HttpContext.Request.Cookies["token"] != null)
 			{
 				string userToken = HttpContext.Request.Cookies["token"];
-				ViewBag.UserToken = userToken;
 
-				var handler = new JwtSecurityTokenHandler();
-				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
-				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
-				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
-				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+				if (_valid.ValidateTokenFromCookies(userToken))
+				{
+					ViewBag.UserToken = userToken;
 
-				if (userRole == "Mahasiswa")
-				{
-					ViewBag.UserId = userId;
-					ViewBag.UserName = userName;
-					ViewBag.UserRole = userRole;
-					return View();
-				}
-				else
-				{
-					return RedirectToAction("Index", "Home");
+					var handler = new JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+					var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+					if (userRole == "Mahasiswa")
+					{
+						ViewBag.UserId = userId;
+						ViewBag.UserName = userName;
+						ViewBag.UserRole = userRole;
+
+						return View();
+					}
 				}
 			}
-			else
-			{
-				return RedirectToAction("Index", "Home");
-			}
+
+			return RedirectToAction("Index", "Home");
 		}
 
 		[Route("Mahasiswa/Evaluasi")]
@@ -84,30 +85,29 @@ namespace PKKMB_Interface.Controllers
 			if (HttpContext.Request.Cookies["token"] != null)
 			{
 				string userToken = HttpContext.Request.Cookies["token"];
-				ViewBag.UserToken = userToken;
 
-				var handler = new JwtSecurityTokenHandler();
-				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
-				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
-				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
-				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+				if (_valid.ValidateTokenFromCookies(userToken))
+				{
+					ViewBag.UserToken = userToken;
 
-				if (userRole == "Mahasiswa")
-				{
-					ViewBag.UserId = userId;
-					ViewBag.UserName = userName;
-					ViewBag.UserRole = userRole;
-					return View();
-				}
-				else
-				{
-					return RedirectToAction("Index", "Home");
+					var handler = new JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+					var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+					if (userRole == "Mahasiswa")
+					{
+						ViewBag.UserId = userId;
+						ViewBag.UserName = userName;
+						ViewBag.UserRole = userRole;
+
+						return View();
+					}
 				}
 			}
-			else
-			{
-				return RedirectToAction("Index", "Home");
-			}
+
+			return RedirectToAction("Index", "Home");
 		}
 
 		[Route("Mahasiswa/KirimEvaluasi")]
@@ -116,30 +116,29 @@ namespace PKKMB_Interface.Controllers
 			if (HttpContext.Request.Cookies["token"] != null)
 			{
 				string userToken = HttpContext.Request.Cookies["token"];
-				ViewBag.UserToken = userToken;
 
-				var handler = new JwtSecurityTokenHandler();
-				var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
-				var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
-				var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
-				var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+				if (_valid.ValidateTokenFromCookies(userToken))
+				{
+					ViewBag.UserToken = userToken;
 
-				if (userRole == "Mahasiswa")
-				{
-					ViewBag.UserId = userId;
-					ViewBag.UserName = userName;
-					ViewBag.UserRole = userRole;
-					return View();
-				}
-				else
-				{
-					return RedirectToAction("Index", "Home");
+					var handler = new JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+					var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+					if (userRole == "Mahasiswa")
+					{
+						ViewBag.UserId = userId;
+						ViewBag.UserName = userName;
+						ViewBag.UserRole = userRole;
+
+						return View();
+					}
 				}
 			}
-			else
-			{
-				return RedirectToAction("Index", "Home");
-			}
+
+			return RedirectToAction("Index", "Home");
 		}
 	}
 }

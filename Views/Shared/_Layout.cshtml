@@ -285,47 +285,49 @@
 		}
 
 		function validate() {
-			$.ajax({
-				url: 'https://localhost:7087/ValidateToken',
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'token': token // Pass the token in the request headers
-				},
-				success: function (data) {
-					var user = [];
-					if (data.status === 200) {
-						const decodedPayload = decodeJwt(token);
-						if (decodedPayload.role == 'Mahasiswa') {
-							$('.nav-item.mahasiswabaru').show();
-							$('.nav-item.login').hide();
-							var showUsernameMhs = document.getElementById('showUsernameMhs');
-							showUsernameMhs.textContent = decodedPayload.name;
-							var showRoleMhs = document.getElementById('showRoleMhs');
-							showRoleMhs.textContent = decodedPayload.role;
-						} else if (decodedPayload.role == 'Fasilitator' || decodedPayload.role == 'KSK') {
-							$('.nav-item.panitiakesekretariatan').show();
-							$('.nav-item.login').hide();
-							var showUsernameKsk = document.getElementById('showUsernameKsk');
-							showUsernameKsk.textContent = decodedPayload.name;
-							var showRoleKsk = document.getElementById('showRoleKsk');
-							showRoleKsk.textContent = decodedPayload.role;
-						} else if (decodedPayload.role == 'PIC PKKMB') {
-							$('.nav-item.picpkkmb').show();
-							$('.nav-item.login').hide();
-							var showUsernamePic = document.getElementById('showUsernamePic');
-							showUsernamePic.textContent = decodedPayload.name;
-							var showRolePic = document.getElementById('showRolePic');
-							showRolePic.textContent = decodedPayload.role;
+			if (getCookie("token") != null) {
+				$.ajax({
+					url: 'https://localhost:7087/ValidateToken',
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'token': token // Pass the token in the request headers
+					},
+					success: function (data) {
+						var user = [];
+						if (data.status === 200) {
+							const decodedPayload = decodeJwt(token);
+							if (decodedPayload.role == 'Mahasiswa') {
+								$('.nav-item.mahasiswabaru').show();
+								$('.nav-item.login').hide();
+								var showUsernameMhs = document.getElementById('showUsernameMhs');
+								showUsernameMhs.textContent = decodedPayload.name;
+								var showRoleMhs = document.getElementById('showRoleMhs');
+								showRoleMhs.textContent = decodedPayload.role;
+							} else if (decodedPayload.role == 'Fasilitator' || decodedPayload.role == 'KSK') {
+								$('.nav-item.panitiakesekretariatan').show();
+								$('.nav-item.login').hide();
+								var showUsernameKsk = document.getElementById('showUsernameKsk');
+								showUsernameKsk.textContent = decodedPayload.name;
+								var showRoleKsk = document.getElementById('showRoleKsk');
+								showRoleKsk.textContent = decodedPayload.role;
+							} else if (decodedPayload.role == 'PIC PKKMB') {
+								$('.nav-item.picpkkmb').show();
+								$('.nav-item.login').hide();
+								var showUsernamePic = document.getElementById('showUsernamePic');
+								showUsernamePic.textContent = decodedPayload.name;
+								var showRolePic = document.getElementById('showRolePic');
+								showRolePic.textContent = decodedPayload.role;
+							}
 						}
-					}
-					else {
+						else {
+							deleteCookie('token');
+						}
+					}, error: function (xhr, status) {
 						deleteCookie('token');
-					}
-				}, error: function (xhr, status) {
-					deleteCookie('token');
-				},
-			});
+					},
+				});
+			}
 		}
 
 		function hideContentAndShowAlert() {

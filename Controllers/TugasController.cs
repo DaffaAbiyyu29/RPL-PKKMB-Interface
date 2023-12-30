@@ -40,10 +40,6 @@ namespace PKKMB_Interface.Controllers
 
 					return View();
 				}
-				else
-				{
-					return RedirectToAction("Index", "Home");
-				}
 			}
 
 			return RedirectToAction("Index", "Home");
@@ -65,7 +61,7 @@ namespace PKKMB_Interface.Controllers
 					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
 					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
 
-					if (userRole == "Panitia Kesekretariatan")
+					if (userRole == "Fasilitator")
 					{
 						ViewBag.UserId = userId;
 						ViewBag.UserName = userName;
@@ -96,7 +92,7 @@ namespace PKKMB_Interface.Controllers
 					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
 					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
 
-					if (userRole == "Panitia Kesekretariatan")
+					if (userRole == "Fasilitator")
 					{
 						ViewBag.UserId = userId;
 						ViewBag.UserName = userName;
@@ -129,6 +125,38 @@ namespace PKKMB_Interface.Controllers
 					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
 
 					if (userRole == "Mahasiswa")
+					{
+						ViewBag.UserId = userId;
+						ViewBag.UserName = userName;
+						ViewBag.UserRole = userRole;
+
+						ViewBag.tgs_idtugas = tgs_idtugas;
+						return View();
+					}
+				}
+			}
+
+			return RedirectToAction("Index", "Home");
+		}
+
+		[Route("Tugas/PenilaianTugas/{tgs_idtugas}")]
+		public IActionResult PenilaianTugas(string tgs_idtugas)
+		{
+			if (HttpContext.Request.Cookies["token"] != null)
+			{
+				string userToken = HttpContext.Request.Cookies["token"];
+
+				if (_valid.ValidateTokenFromCookies(userToken))
+				{
+					ViewBag.UserToken = userToken;
+
+					var handler = new JwtSecurityTokenHandler();
+					var jsonToken = handler.ReadToken(userToken) as JwtSecurityToken;
+					var userId = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "id")?.Value;
+					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
+					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
+
+					if (userRole == "Fasilitator")
 					{
 						ViewBag.UserId = userId;
 						ViewBag.UserName = userName;

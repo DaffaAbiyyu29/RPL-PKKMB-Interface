@@ -63,6 +63,7 @@
 <script>
 	var deadlineDate;
 	var currentDate = new Date();
+	var tugas = null;
 
 	$(document).ready(function () {
 		loadDataTugas();
@@ -154,8 +155,12 @@
 		}
 
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/UploadTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
-		var method = "POST";
+		if (tugas == null) {
+			var method = "POST";
+			var url = hostname + "Tugas/UploadTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
+		}
+		var method = "PUT";
+		var url = hostname + "Tugas/UbahTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
 
 		var data = new FormData();
 		data.append("file", file);
@@ -174,7 +179,7 @@
 					showConfirmButton: false,
 					timer: 2000
 				}).then(() => {
-					window.location.href = '../';
+					location.reload();
 				});
 			},
 			error: function (xhr, status) {
@@ -211,6 +216,7 @@
 
 					// Menyaring file name dari data
 					var fileName = item.dts_filetugas;
+					tugas = item.dts_filetugas;
 
 					// Membuat tautan download
 					var downloadLink = document.createElement('a');
