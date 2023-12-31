@@ -102,6 +102,7 @@
 				deadline.textContent = '[Batas Waktu Pengumpulan Tugas : ' + formatTanggal(item.tgs_deadline) + ' | ' + formatJam(item.tgs_deadline) + ' WIB]';
 				deadlineDate = new Date(item.tgs_deadline);
 				loadTable();
+				console.log(tugas)
 			},
 			error: function (error) {
 				console.error("Error fetching data:", error);
@@ -155,12 +156,16 @@
 		}
 
 		var hostname = "https://localhost:7087/";
+		var method;
+		var url;
+
 		if (tugas == null) {
-			var method = "POST";
-			var url = hostname + "Tugas/UploadTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
+			method = "POST";
+			url = hostname + "Tugas/UploadTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
+		} else {
+			method = "PUT";
+			url = hostname + "Tugas/UbahTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
 		}
-		var method = "PUT";
-		var url = hostname + "Tugas/UbahTugas?dts_iddetail=" + idtugas + "&dts_nopendaftaran=" + nopendaftaran + "&dts_waktupengumpulan=" + waktupengumpulan + "&dts_nilaitugas=0";
 
 		var data = new FormData();
 		data.append("file", file);
@@ -237,9 +242,6 @@
 					// Menangani jika data tidak ditemukan
 					console.log("Data tidak ditemukan");
 				}
-			},
-			error: function (error) {
-				console.error("Error fetching data:", error);
 			},
 		});
 	}
