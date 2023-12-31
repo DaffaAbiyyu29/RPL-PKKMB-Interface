@@ -1,14 +1,10 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-    var inf_idinformasi = ""; // Set the ID of the information to be updated
-}
+
+
+
 <div class="row justify-content-center mb-5">
     <div class="col-lg mb-4">
         <p>
@@ -28,7 +24,7 @@
                     <div class="col-md-6">
                         <!-- First Column -->
                         <div class="form-floating mb-4 inf_idinformasi">
-                            <input type="text" class="form-control" id="inf_idinformasi" name="inf_idinformasi" placeholder="" value="@inf_idinformasi" readonly>
+                            <input type="text" class="form-control" id="inf_idinformasi" name="inf_idinformasi" placeholder="" value="@ViewBag.inf_idinformasi" readonly>
                             <label for="inf_idinformasi">ID Informasi</label>
                         </div>
 
