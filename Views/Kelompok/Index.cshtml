@@ -1,13 +1,16 @@
 ﻿@{
 }
 
-<div class="row">
-	<div class="col-lg">
-		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="Kelompok" asp-action="TambahKelompok">Tambah Kelompok</a>
+@if (@ViewBag.UserRole == "KSK")
+{
+	<div class="row">
+		<div class="col-lg">
+			<div class="my-3" style="margin-top: 40px;">
+				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="Kelompok" asp-action="TambahKelompok">Tambah Kelompok</a>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
@@ -23,6 +26,10 @@
 							<th scope="col">Nama Kelompok</th>
 							<th scope="col">Fasilitator</th>
 							<th scope="col">Ruangan</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -49,16 +56,25 @@
 			success: function (data) {
 				var list = data.data
 				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' + // Use the counter as a sequence number
-						'<td>' + item.kmk_namakelompok + '</td>' +
-						'<td>' + item.kmk_nim + '</td>' +
-						'<td>' + item.kmk_idruangan + '</td>' +
-						'<td>' +
-						'<a class="btn btn-primary" href="/Kelompok/UbahKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
-						'<a class="btn btn-primary" href="/Kelompok/DetailKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' +
-						'</td>' +
-						'</tr>';
+					if ("@ViewBag.UserRole" == "KSK") {
+						var newRow = '<tr>' +
+							'<td>' + counter + '</td>' + // Use the counter as a sequence number
+							'<td>' + item.kmk_namakelompok + '</td>' +
+							'<td>' + item.kmk_nim + '</td>' +
+							'<td>' + item.kmk_idruangan + '</td>' +
+							'<td>' +
+							'<a class="btn btn-primary" href="/Kelompok/UbahKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+							'<a class="btn btn-primary" href="/Kelompok/DetailKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' +
+							'</td>' +
+							'</tr>';
+					} else {
+						var newRow = '<tr>' +
+							'<td>' + counter + '</td>' + // Use the counter as a sequence number
+							'<td>' + item.kmk_namakelompok + '</td>' +
+							'<td>' + item.kmk_nim + '</td>' +
+							'<td>' + item.kmk_idruangan + '</td>' +
+							'</tr>';
+					}
 
 					$('#tbody').append(newRow);
 					counter++; // Increment the counter for the next row

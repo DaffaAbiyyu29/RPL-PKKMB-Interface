@@ -1,12 +1,6 @@
 ﻿@{
 }
-<div class="row justify-content-center mb-5">
-	<div class="col-lg mb-4">
-		<p>
-			<h2 class="text-center"><span style="color:#0059ab;">Kesekretariatan</span> / Informasi / Sikap</h2>
-		</p>
-	</div>
-</div>
+
 <div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
@@ -38,7 +32,7 @@
 						<!-- Second Column -->
 						<div class="input-group has-validation mb-4 tanggal">
 							<div class="form-floating is-invalid">
-								<input type="date" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
+								<input type="datetime-local" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
 								<label for="validateField">Hari / Tanggal</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Hari / Tanggal.</div>
 							</div>
@@ -120,14 +114,14 @@
 
 	function getNamaKelompok(idKelompok) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllpkm_mskelompok";
+		var url = hostname + "GetAllKelompok";
 		var method = "GET";
 
 		$.ajax({
 			url: url,
 			type: method,
 			dataType: "json",
-			success: Function (response) {
+			success: function (response) {
 				if (response && response.data && Array.isArray(response.data)) {
 					var kelompok = response.data.find(function (item) {
 						return item.kmk_idkelompok === idKelompok;
@@ -180,7 +174,7 @@
 		var input = {
 			nls_idnilaisikap: "",
 			nls_nopendaftaran: nls_nopendaftaran,
-			nls_nim: "KSK001",
+			nls_nim: "@ViewBag.UserId",
 			nls_sikap: nls_sikap,
 			nls_tanggal: nls_tanggal,
 			nls_jamplus: 0,
@@ -202,7 +196,7 @@
 					Swal.fire({
 						position: "top-end",
 						icon: "success",
-						title: "Data berhasil ditambahkan",
+						title: "Nilai Sikap  berhasil ditambahkan",
 						showConfirmButton: false,
 						timer: 2000
 					}).then(() => {

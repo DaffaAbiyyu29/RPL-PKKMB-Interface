@@ -29,14 +29,11 @@ namespace PKKMB_Interface.Controllers
 					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
 					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
 
-					if (userRole != "Mahasiswa")
-					{
-						ViewBag.UserId = userId;
-						ViewBag.UserName = userName;
-						ViewBag.UserRole = userRole;
+					ViewBag.UserId = userId;
+					ViewBag.UserName = userName;
+					ViewBag.UserRole = userRole;
 
-						return View();
-					}
+					return View();
 				}
 			}
 

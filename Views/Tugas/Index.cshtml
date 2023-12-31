@@ -37,7 +37,10 @@
 							<th scope="col">Tugas</th>
 							<th scope="col">Deadline</th>
 							<th scope="col">Deskripsi</th>
-							<th scope="col">Aksi</th>
+							@if (ViewBag.UserRole != "PIC PKKMB")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>

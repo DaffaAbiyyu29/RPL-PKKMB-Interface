@@ -20,6 +20,7 @@
 					<thead>
 						<tr>
 							<th scope="col">No</th>
+							<th scope="col">No Pendaftaran</th>
 							<th scope="col">Nama</th>
 							<th scope="col">Nama Kelompok</th>
 							<th scope="col">Kritik</th>
@@ -61,7 +62,6 @@
 						'<td>' + item.mhs_insight + '</td>' +
 						'<td>' +
 						'<a class="btn btn-primary" href="/mahasiswa/ubahmahasiswa/' + item.mhs_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						// '<button class="btn btn-danger" value="' + item.mhs_nopendaftaran + '" onclick="hapus(this.value)">Delete</button>' +
 						'</td>' +
 						'</tr>';
 					$('#tbody').append(newRow);

@@ -1,13 +1,16 @@
 ﻿@{
 }
 
-<div class="row">
-	<div class="col-lg">
-		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="sikap" asp-action="tambahnilaisikap">Tambah Data</a>
+@if (ViewBag.UserRole == "Fasilitator")
+{
+	<div class="row">
+		<div class="col-lg">
+			<div class="my-3" style="margin-top: 40px;">
+				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="sikap" asp-action="tambahnilaisikap">Tambah Data</a>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
@@ -20,10 +23,14 @@
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">Nama </th>
-							<th scope="col">Kelompok</th>
+							<th scope="col" class="nama">Nama </th>
+							<th scope="col" class="kelompok">Kelompok</th>
 							<th scope="col">Hari / Tanggal</th>
 							<th scope="col">Nilai</th>
+							@if (ViewBag.UserRole == "Fasilitator")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -34,64 +41,14 @@
 </div>
 
 <script>
-	var token = getCookie("token"); // Use your method for retrieving the token
-
-	function getCookie(name) {
-		var nameEQ = name + "=";
-		var cookies = document.cookie.split(';');
-
-		for (var i = 0; i < cookies.length; i++) {
-			var cookie = cookies[i].trim();
-			if (cookie.startsWith(nameEQ)) {
-				return cookie.substring(nameEQ.length, cookie.length);
-			}
-		}
-
-		return null; // Return null if the cookie is not found
-	}
-
-	function hideAllElements() {
-		// You can add more elements to hide by selecting them using appropriate selectors
-		document.querySelectorAll('.row, .card, .table').forEach(element => {
-			element.style.display = 'none';
-		});
-	}
-
-	function hideContentAndShowAlert() {
-		if (window.location.href != "https://localhost:7240/" && window.location.href != "https://localhost:7240/Akun/Login" && window.location.href != "https://localhost:7240/Akun/DaftarAkun" && window.location.href != "https://localhost:7240/Akun/LupaKataSandi") {
-			$('body').css('background-color', 'white'); // Set background color to black (you can also use 'white')
-			$('body').html('');
-
-			setTimeout(function () {
-				showAlertAndRefresh();
-			}, 1000);
-		}
-	}
-
-	function showAlertAndRefresh() {
-
-		Swal.fire({
-			position: "top-end",
-			icon: "error",
-			title: "Halaman Tidak Tersedia, Kembali ke Menu Awal",
-			showConfirmButton: false,
-			timer: 2000
-		}).then(() => {
-			window.location.href = '../';
-		});
-	}
-
-	try {
-		const decodedPayload = decodeJwt(token);
-	} catch (error) {
-		hideAllElements()
-		hideContentAndShowAlert()
-	}
-</script>
-
-<script>
+	var nopendaftaran = null;
+	var idkelompok = null;
+	var nama = null;
+	var kelompok = null;
+	var tanggal = null;
+	var tanggalnilai = null;
 	new DataTable('#datatable');
-	loadTable()
+	loadTable();
 
 	function formatDateForDisplay(dateString) {
 		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -100,9 +57,9 @@
 	}
 
 	function loadTable() {
-		var hostname = "https://localhost:7087/"
-		var url = hostname + "GetAllNilaiSikap"
-		var method = "GET"
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllNilaiSikap";
+		var method = "GET";
 		var counter = 1;
 
 		$.ajax({
@@ -110,22 +67,78 @@
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data
+				console.log("API Response:", data);
+				var list = data.data;
 				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' +
-						'<td>' + item.nls_nopendaftaran + '</td>' +
-						'<td>' + item.nls_nopendaftaran + '</td>' +
-						'<td>' + formatDateForDisplay(item.nls_tanggal) + '</td>' +
-						'<td>' + item.nls_sikap + '</td>' +
-						'<td>' +
-						'<a class="btn btn-primary" href="/sikap/ubahnilaisikap/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						'</td>' +
-						'</tr>';
+					getNamaMahasiswa(item.nls_nopendaftaran, function (namaMahasiswa) {
+						console.log("Nama Mahasiswa:", namaMahasiswa);
+						if ("@ViewBag.UserRole" == "Fasilitator") {
+							var newRow = '<tr>' +
+								'<td>' + counter + '</td>' +
+								'<td>' + namaMahasiswa + '</td>' +
+								'<td>' + item.nls_nopendaftaran + '</td>' +
+								'<td>' + formatDateForDisplay(item.nls_tanggal) + '</td>' +
+								'<td>' + item.nls_sikap + '</td>' +
+								'<td>' +
+								'<a class="btn btn-primary" href="/sikap/ubahnilaisikap/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+								'</td>' +
+								'</tr>';
+						} else {
+							var newRow = '<tr>' +
+								'<td>' + counter + '</td>' +
+								'<td>' + namaMahasiswa + '</td>' +
+								'<td>' + item.nls_nopendaftaran + '</td>' +
+								'<td>' + formatDateForDisplay(item.nls_tanggal) + '</td>' +
+								'<td>' + item.nls_sikap + '</td>' +
+								'</tr>';
+						}
 
-					$('#tbody').append(newRow);
-					counter++;
+						$('#tbody').append(newRow);
+						counter++;
+					});
 				});
+			},
+			error: function (error) {
+				console.error("Error fetching data: ", error);
+			},
+		});
+	}
+
+	function getNamaMahasiswa(nopendaftaran, callback) {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + nopendaftaran;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				console.log("Data Mahasiswa:", data);
+				var item = data.data;
+				nama = item.mhs_namalengkap;
+				idkelompok = item.mhs_idkelompok;
+				loadDataKelompok();
+				callback(nama);
+			},
+			error: function (error) {
+				console.error("Error fetching data: ", error);
+			},
+		});
+	}
+
+	function loadDataKelompok() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetKelompok?kmk_idkelompok=" + idkelompok;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				kelompok = item.kmk_namakelompok;
 			},
 		});
 	}

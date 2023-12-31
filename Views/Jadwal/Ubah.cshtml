@@ -17,25 +17,25 @@
 						<!-- First Column -->
 
 						<div class="input-group has-validation mb-4 tanggal">
-							<div class="form-floating is-invalid">
-								<input type="text" class="form-control is-invalid" id="idjadwal" name="idjadwal" data-target="validateField" placeholder="" value="@ViewBag.jdl_idjadwal">
-								<input type="date" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="idjadwal" name="idjadwal" data-target="validateField" placeholder="" value="@ViewBag.jdl_idjadwal" hidden>
+								<input type="date" class="form-control" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
 								<label for="validateField">Tanggal Kegiatan</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Tanggal Kegiatan.</div>
 							</div>
 						</div>
 
 						<div class="input-group has-validation mb-4 waktumulai">
-							<div class="form-floating is-invalid">
-								<input type="time" class="form-control is-invalid" id="waktumulai" name="waktumulai" data-target="validateField" placeholder="">
+							<div class="form-floating">
+								<input type="time" class="form-control" id="waktumulai" name="waktumulai" data-target="validateField" placeholder="">
 								<label for="validateField">Waktu Mulai</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Mulainya Kegiatan.</div>
 							</div>
 						</div>
 
 						<div class="input-group has-validation mb-4 waktuakhir">
-							<div class="form-floating is-invalid">
-								<input type="time" class="form-control is-invalid" id="waktuakhir" name="waktuakhir" data-target="validateField" placeholder="">
+							<div class="form-floating">
+								<input type="time" class="form-control" id="waktuakhir" name="waktuakhir" data-target="validateField" placeholder="">
 								<label for="validateField">Waktu Berakhir</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Berakhirnya Kegiatan.</div>
 							</div>
@@ -46,15 +46,15 @@
 						<!-- Second Column -->
 
 						<div class="input-group has-validation mb-4 kegiatan">
-							<div class="form-floating is-invalid">
-								<textarea class="form-control is-invalid" placeholder="" id="kegiatan" data-target="validateField" name="kegiatan" style="height: 100px"></textarea>
+							<div class="form-floating">
+								<textarea class="form-control" placeholder="" id="kegiatan" data-target="validateField" name="kegiatan" style="height: 100px"></textarea>
 								<label for="validateField">Kegiatan</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Kegiatan.</div>
 							</div>
 						</div>
 						<div class="input-group has-validation mb-4 tempat">
-							<div class="form-floating is-invalid">
-								<textarea class="form-control is-invalid" placeholder="" id="tempat" data-target="validateField" name="tempat" style="height: 100px"></textarea>
+							<div class="form-floating">
+								<textarea class="form-control" placeholder="" id="tempat" data-target="validateField" name="tempat" style="height: 100px"></textarea>
 								<label for="validateField">Tempat</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Tempat.</div>
 							</div>
@@ -134,10 +134,11 @@
 		var tempat = document.getElementsByName("tempat")[0].value;
 		var kegiatan = document.getElementsByName("kegiatan")[0].value;
 
-		url = "https://localhost:7087/UpdateJadwal";
+		url = "https://localhost:7087/UbahJadwal";
 		method = "PUT";
 		data = {
 			jdl_idjadwal: idjadwal.value,
+			jdl_nim: "@ViewBag.UserId",
 			jdl_tglpelaksanaan: tanggal,
 			jdl_waktupelaksanaan: waktumulai + " - " + waktuakhir,
 			jdl_agenda: kegiatan,
@@ -159,7 +160,7 @@
 					showConfirmButton: false,
 					timer: 2000
 				}).then(() => {
-					window.location.href = './';
+					window.location.href = '../';
 				});
 			},
 			error: function (xhr, status) {
@@ -168,28 +169,4 @@
 			},
 		});
 	}
-</script>
-
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-		var inputFields = document.querySelectorAll('[data-target="validateField"]');
-
-		inputFields.forEach(function (inputField) {
-			inputField.addEventListener('input', function () {
-				validateInput(inputField);
-			});
-
-			inputField.addEventListener('blur', function () {
-				validateInput(inputField);
-			});
-		});
-
-		function validateInput(inputField) {
-			if (inputField.value.trim() !== '') {
-				inputField.classList.remove('is-invalid');
-			} else {
-				inputField.classList.add('is-invalid');
-			}
-		}
-	});
 </script>
