@@ -4,10 +4,10 @@
 
 <div class="row">
 	<div class="col-lg-4">
-		@if (@ViewBag.UserId == "KSK")
+		@if (@ViewBag.UserRole == "KSK")
 		{
 			<div class="my-3" style="margin-top: 40px;">
-				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="jadwal" asp-action="TambahJadwal">Tambah Data</a>
+				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="jadwal" asp-action="TambahJadwal">Tambah Jadwal</a>
 			</div>
 		}
 	</div>
@@ -30,7 +30,7 @@
 </div>
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg mb-4 semua">
+	<div class="col-lg semua">
 		<div class="card">
 			<div class="card-header">
 				Jadwal PKKMB
@@ -44,7 +44,10 @@
 							<th scope="col">Waktu</th>
 							<th scope="col">Kegiatan</th>
 							<th scope="col">Tempat</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbodysemua"></tbody>
@@ -66,7 +69,10 @@
 							<th scope="col">Waktu</th>
 							<th scope="col">Kegiatan</th>
 							<th scope="col">Tempat</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbodysenin"></tbody>
@@ -88,7 +94,10 @@
 							<th scope="col">Waktu</th>
 							<th scope="col">Kegiatan</th>
 							<th scope="col">Tempat</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbodyselasa"></tbody>
@@ -110,7 +119,10 @@
 							<th scope="col">Waktu</th>
 							<th scope="col">Kegiatan</th>
 							<th scope="col">Tempat</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbodyrabu"></tbody>
@@ -132,7 +144,10 @@
 							<th scope="col">Waktu</th>
 							<th scope="col">Kegiatan</th>
 							<th scope="col">Tempat</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbodykamis"></tbody>
@@ -154,7 +169,10 @@
 							<th scope="col">Waktu</th>
 							<th scope="col">Kegiatan</th>
 							<th scope="col">Tempat</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbodyjumat"></tbody>
@@ -244,16 +262,26 @@
 						tabel = '#tbodysemua';
 					}
 
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' +
-						'<td>' + formattedDate + '</td>' +
-						'<td>' + item.jdl_waktupelaksanaan + '</td>' +
-						'<td>' + item.jdl_agenda + '</td>' +
-						'<td>' + item.jdl_tempat + '</td>' +
-						'<td>' +
-						'<a class="btn btn-primary" href="/Jadwal/Ubah/' + item.jdl_idjadwal + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						'</td>' +
-						'</tr>';
+					if ("@ViewBag.UserRole" == "KSK") {
+						var newRow = '<tr>' +
+							'<td>' + counter + '</td>' +
+							'<td>' + formattedDate + '</td>' +
+							'<td>' + item.jdl_waktupelaksanaan + '</td>' +
+							'<td>' + item.jdl_agenda + '</td>' +
+							'<td>' + item.jdl_tempat + '</td>' +
+							'<td>' +
+							'<a class="btn btn-primary" href="/Jadwal/Ubah/' + item.jdl_idjadwal + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+							'</td>' +
+							'</tr>';
+					} else {
+						var newRow = '<tr>' +
+							'<td>' + counter + '</td>' +
+							'<td>' + formattedDate + '</td>' +
+							'<td>' + item.jdl_waktupelaksanaan + '</td>' +
+							'<td>' + item.jdl_agenda + '</td>' +
+							'<td>' + item.jdl_tempat + '</td>' +
+							'</tr>';
+					}
 
 					console.log(hari, tabel)
 					$(tabel).append(newRow);

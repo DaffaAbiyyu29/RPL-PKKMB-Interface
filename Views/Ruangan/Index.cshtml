@@ -1,16 +1,19 @@
 ﻿@{
 }
 
-<div class="row">
-	<div class="col-lg">
-		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="ruangan" asp-action="tambahruangan">Tambah Data</a>
+@if (@ViewBag.UserRole == "KSK")
+{
+	<div class="row">
+		<div class="col-lg">
+			<div class="my-3" style="margin-top: 40px;">
+				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="ruangan" asp-action="tambahruangan">Tambah Ruangan</a>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg mb-4">
+	<div class="col-lg">
 		<div class="card">
 			<div class="card-header">
 				Ruangan
@@ -22,7 +25,10 @@
 							<th scope="col">Id Ruangan</th>
 							<th scope="col">Nama Ruangan</th>
 							<th scope="col">Status</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "KSK")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -50,14 +56,22 @@
 				var list = data.data; // Assuming the API response is directly an array
 
 				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + item.rng_idruangan + '</td>' +
-						'<td>' + item.rng_namaruangan + '</td>' +
-						'<td>' + item.rng_status + '</td>' +
-						'<td>' +
-						'<a class="btn btn-primary" href="/ruangan/ubahruangan/' + item.rng_idruangan + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						'</td>' +
-						'</tr>';
+					if ("@ViewBag.UserRole" == "KSK") {
+						var newRow = '<tr>' +
+							'<td>' + item.rng_idruangan + '</td>' +
+							'<td>' + item.rng_namaruangan + '</td>' +
+							'<td>' + item.rng_status + '</td>' +
+							'<td>' +
+							'<a class="btn btn-primary" href="/ruangan/ubahruangan/' + item.rng_idruangan + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
+							'</td>' +
+							'</tr>';
+					} else {
+						var newRow = '<tr>' +
+							'<td>' + item.rng_idruangan + '</td>' +
+							'<td>' + item.rng_namaruangan + '</td>' +
+							'<td>' + item.rng_status + '</td>' +
+							'</tr>';
+					}
 
 					$('#tbody').append(newRow);
 					counter++; // Increment the counter for the next row

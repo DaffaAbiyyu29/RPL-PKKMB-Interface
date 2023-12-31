@@ -4,67 +4,67 @@
 @{
 }
 
-<div class="card m-5">
-    <div class="card-header mb-1 text-center">
-        <h4 class="font-weight-bold text-primary">Informasi Mahasiswa</h4>
-    </div>
-    <div class="card-body" id="cardContainer"></div>
+<div class="card">
+	<div class="card-header text-center">
+		<h4 class="font-weight-bold text-primary">Informasi Mahasiswa</h4>
+	</div>
+	<div class="card-body" id="cardContainer"></div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        loadCardInformasi();
-    });
+	$(document).ready(function () {
+		loadCardInformasi();
+	});
 
-    function formatDateForDisplay(dateString) {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
-        return formattedDate;
-    }
+	function formatDateForDisplay(dateString) {
+		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+		return formattedDate;
+	}
 
-    function loadCardInformasi() {
-        var hostname = "https://localhost:7087/";
-        var url = hostname + "getallinformasi";
-        var method = "GET";
+	function loadCardInformasi() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "getallinformasi";
+		var method = "GET";
 
-        $.ajax({
-            url: url,
-            method: method,
-            contentType: "application/json",
-            success: function (data) {
-                var cardContainer = $('#cardContainer');
-                var list = data.data;
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var cardContainer = $('#cardContainer');
+				var list = data.data;
 
-                list.forEach(function (item, index) {
-                    var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
-                    var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
+				list.forEach(function (item, index) {
+					var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
+					var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
 
-                    var card = '<div class="card ' + cardStatusClass + '">' +
-                        '<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
-                        '<p class="card-text">' +
-                        'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
-                        'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
-                        'Deskripsi: ' + item.inf_deskripsi + '<br>' +
-                        '</p>' +
-                        '<div class="d-flex justify-content-end">' +
-                        '<a href="#" class="btn btn-primary mx-2" onclick="editInformasi(\'' + item.inf_idinformasi + '\')">Edit</a>' +
-                        '<a href="#" class="btn btn-success mx-2" onclick="tambahInformasi()">Tambah</a>' +
-                        '</div>' +
-                        '</div>';
+					var card = '<div class="card ' + cardStatusClass + '">' +
+						'<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
+						'<p class="card-text">' +
+						'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
+						'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
+						'Deskripsi: ' + item.inf_deskripsi + '<br>' +
+						'</p>' +
+						'<div class="d-flex justify-content-end">' +
+						'<a href="#" class="btn btn-primary mx-2" onclick="editInformasi(\'' + item.inf_idinformasi + '\')">Edit</a>' +
+						'<a href="#" class="btn btn-success mx-2" onclick="tambahInformasi()">Tambah</a>' +
+						'</div>' +
+						'</div>';
 
-                    cardContainer.append(card);
-                });
-            },
-        });
-    }
+					cardContainer.append(card);
+				});
+			},
+		});
+	}
 
-    function editInformasi(inf_idinformasi) {
-        // Replace the link with your actual edit page URL
-        window.location.href = 'editInformasiPage?inf_idinformasi=' + inf_idinformasi;
-    }
+	function editInformasi(inf_idinformasi) {
+		// Replace the link with your actual edit page URL
+		window.location.href = 'editInformasiPage?inf_idinformasi=' + inf_idinformasi;
+	}
 
-    function tambahInformasi() {
-        // Replace the link with your actual add page URL
-        window.location.href = 'tambahInformasiPage';
-    }
+	function tambahInformasi() {
+		// Replace the link with your actual add page URL
+		window.location.href = 'tambahInformasiPage';
+	}
 </script>
