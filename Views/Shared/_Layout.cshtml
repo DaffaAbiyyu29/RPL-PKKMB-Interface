@@ -381,34 +381,19 @@
 
 	<script>
 		$(document).ready(function () {
+			// Tentukan tinggi dari elemen navigasi
+			var navHeight = $('.navbar').outerHeight();
 
-			// Tambahkan event handler saat halaman di-scroll
-			$(window).scroll(function () {
-				// Mendapatkan tinggi scroll dari atas halaman
-				var scrollHeight = $(window).scrollTop();
-
-				// Tentukan tinggi dari elemen navigasi
-				var navHeight = $('.navbar').outerHeight();
-
-				// Jika tinggi scroll lebih besar dari atau sama dengan tinggi elemen navigasi
-				if (scrollHeight >= navHeight) {
-					// Terapkan properti CSS position: fixed pada elemen navigasi
-					$('.navbar').css({
-						'position': 'fixed',
-						'top': '0',
-						'width': '100%',
-						'z-index': '1000',
-
-					});
-				} else {
-					// Jika belum mencapai tinggi elemen navigasi, kembalikan ke posisi relatif
-					$('.navbar').css({
-						'position': 'relative'
-					});
-				}
+			// Terapkan properti CSS position: sticky pada elemen navigasi
+			$('.navbar').css({
+				'position': 'sticky',
+				'top': '0',
+				'width': '100%',
+				'z-index': '1000',
 			});
 		});
 	</script>
+
 
 </body>
 </html>
