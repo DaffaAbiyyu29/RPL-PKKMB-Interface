@@ -1,0 +1,299 @@
+﻿@{
+	Layout = "_Layout";
+}
+
+<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Ubah Jam</strong>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="input-group has-validation mb-4 namamahasiswa">
+							<div class="form-floating">
+								<input type="text" class="form-control" maxlength="30" id="nopendaftaran" name="nopendaftaran" data-target="validateField" placeholder="" value="@ViewBag.dtj_nopendaftaran" hidden>
+								<input type="text" class="form-control" maxlength="10" id="namamahasiswa" name="namamahasiswa" data-target="validateField" style="background-color:white;" placeholder="" readonly>
+								<label for="validateField">Nama Mahasiswa</label>
+							</div>
+						</div>
+						<div class="input-group has-validation mb-4 namakelompok">
+							<div class="form-floating">
+								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: white;" placeholder="" readonly>
+								<label for="floatingInputGrid">Kelompok</label>
+							</div>
+						</div>
+						<div class="input-group has-validation mb-4 tanggal" hidden>
+							<div class="form-floating">
+								<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: white;" placeholder="">
+								<label for="validateField">Hari / Tanggal</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="input-group has-validation mb-4 jenisjam">
+							<div class="form-floating">
+								<select class="form-select" id="jenisjam" name="jenisjam" data-target="validateField" aria-label="">
+									<option selected disabled>Pilih Kategori Jam</option>
+									<option value="Jam Plus">Jam Plus</option>
+									<option value="Jam Minus">Jam Minus</option>
+								</select>
+								<label for="floatingSelect">Kategori Jam</label>
+							</div>
+						</div>
+						<div class="input-group has-validation mb-4 jumlah">
+							<div class="form-floating">
+								<input type="number" class="form-control" maxlength="100" id="jumlah" name="jumlah" data-target="validateField" placeholder="">
+								<label for="floatingInputGrid">Jumlah Jam</label>
+							</div>
+						</div>
+					</div>
+					<div class="input-group has-validation mb-4 deskripsi">
+						<div class="form-floating">
+							<textarea class="form-control" placeholder="" id="deskripsi" data-target="validateField" name="deskripsi" style="height: 100px"></textarea>
+							<label for="validateField">Deskripsi</label>
+						</div>
+					</div>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="ubahJam(event)">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var idkelompok = null;
+	$(document).ready(function () {
+		loadData();
+	});
+
+	$('#tanggal').val(getCurrentDateTime());
+
+	function getCurrentDateTime() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = ('0' + (now.getMonth() + 1)).slice(-2);
+		var day = ('0' + now.getDate()).slice(-2);
+		var hours = ('0' + now.getHours()).slice(-2);
+		var minutes = ('0' + now.getMinutes()).slice(-2);
+
+		return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+	}
+
+	function loadData() {
+		var jenisjam = document.getElementsByName("jenisjam")[0];
+		var jumlah = document.getElementsByName("jumlah")[0];
+		var deskripsi = document.getElementsByName("deskripsi")[0];
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetDataDetailJamMahasiswa?dtj_idjam=@ViewBag.dtj_idjam&dtj_nopendaftaran=@ViewBag.dtj_nopendaftaran";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				fetchMahasiswaData()
+
+				jenisjam.value = item.dtj_jenisjam
+				jumlah.value = item.dtj_jumlah
+				deskripsi.value = item.dtj_deskripsi
+			},
+			error: function (error) {
+				console.error("Error fetching data:", error);
+			},
+		});
+	}
+
+	function ubahTugas(event) {
+		event.preventDefault();
+
+		var idtugas = document.getElementsByName("idtugas")[0].value
+		var namatugas = document.getElementsByName("namatugas")[0].value;
+		var waktuawal = document.getElementsByName("waktuawal")[0].value;
+		var deadline = document.getElementsByName("deadline")[0].value;
+		var deskripsi = document.getElementsByName("deskripsi")[0].value;
+
+		if (file == null) {
+			url = "https://localhost:7087/UpdateTugas";
+			method = "PUT";
+			data = {
+				tgs_idtugas: idtugas,
+				tgs_nim: "KSK001",
+				tgs_namatugas: namatugas,
+				tgs_filetugas: "",
+				tgs_tglpemberiantugas: waktuawal,
+				tgs_deadline: deadline,
+				tgs_deskripsi: deskripsi,
+				tgs_status: "Aktif",
+			};
+
+			$.ajax({
+				url: url,
+				method: method,
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				success: function (data) {
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: "Berhasil Mengubah Tugas",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = '../';
+					});
+				},
+				error: function (xhr, status) {
+					console.error("AJAX request error:", status);
+					console.log("Server response:", xhr.responseJSON);
+				},
+			});
+		} else {
+			var url = "https://localhost:7087/Tugas/Ubah?tgs_idtugas=" + idtugas + "&tgs_nim=KSK001&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi + "&tgs_status=Aktif";
+			method = "PUT";
+
+			var data = new FormData();
+			data.append("file", file);
+
+			$.ajax({
+				url: url,
+				method: method,
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: "Berhasil Mengubah Tugas",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = '../';
+					});
+				},
+				error: function (xhr, status) {
+					console.error("AJAX request error:", status);
+					console.log("Server response:", xhr.responseJSON);
+				},
+			});
+		}
+	}
+
+	function fetchMahasiswaData() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=@ViewBag.dtj_nopendaftaran";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				idkelompok = item.mhs_idkelompok
+				$('#namamahasiswa').val(item.mhs_namalengkap);
+				fetchKelompokName()
+			},
+			error: function (error) {
+				console.error("Error fetching data:", error);
+			},
+		});
+	}
+
+	function fetchKelompokName() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetKelompok?kmk_idkelompok=" + idkelompok;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				$('#namakelompok').val(item.kmk_namakelompok);
+			},
+			error: function (error) {
+				console.error("Error fetching data:", error);
+			},
+		});
+	}
+
+	function ubahJam(event) {
+		event.preventDefault();
+
+		var jenisjam = document.getElementsByName("jenisjam")[0].value;
+		var jumlah = document.getElementsByName("jumlah")[0].value;
+		var deskripsi = document.getElementsByName("deskripsi")[0].value;
+		var namamahasiswa = document.getElementsByName("namamahasiswa")[0].value;
+		var namakelompok = document.getElementsByName("namakelompok")[0].value;
+		var tanggal = document.getElementsByName("tanggal")[0].value;
+
+		if (jenisjam.trim() === '' || jumlah.trim() === '' || deskripsi.trim() === '') {
+			Swal.fire({
+				position: "top-end",
+				icon: "error",
+				title: "Lengkapi Semua Fields",
+				showConfirmButton: false,
+				timer: 2000
+			});
+			return;
+		}
+
+		var hostname = "https://localhost:7087";
+		var url = hostname + "/ubahJamPlusMinus";
+		var method = "PUT";
+		var input = {
+			dtj_idjam: "@ViewBag.dtj_idjam",
+			dtj_nopendaftaran: "@ViewBag.dtj_nopendaftaran",
+			dtj_nim: "@ViewBag.UserId",
+			dtj_jenisjam: jenisjam,
+			dtj_jumlah: jumlah,
+			dtj_deskripsi: deskripsi,
+			dtj_tanggal: tanggal,
+		};
+
+		var data = JSON.stringify(input);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				console.log('Data from server:', data);
+				if (data.status === 200) {
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: jenisjam + " Berhasil Diubah",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = '/JamPlusMinus/DetailJam/@ViewBag.dtj_nopendaftaran';
+					});
+				} else {
+					Swal.fire({
+						position: "top-end",
+						icon: "error",
+						title: "Gagal menyimpan data.",
+						showConfirmButton: false,
+						timer: 2000
+					})
+					console.log('Insert failed. Server response:', data);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.log('Error saving data:', error);
+				console.log(xhr.responseJSON.message);
+				console.log(status);
+			}
+		});
+	}
+</script>

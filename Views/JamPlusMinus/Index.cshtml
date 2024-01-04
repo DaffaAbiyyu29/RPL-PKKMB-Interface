@@ -1,26 +1,35 @@
 ﻿@{
 }
-<div class="row">
-	<div class="col-lg">
+
+@if (ViewBag.UserRole == "Fasilitator")
+{
+	<div class="row">
+		<div class="col-lg">
+			<div class="my-3" style="margin-top: 40px;">
+				<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="jamplusminus" asp-action="tambahjam">Tambah Data</a>
+			</div>
+		</div>
 	</div>
-</div>
+}
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
 			<div class="card-header">
-				Jam Minus
+				Jam Plus / Minus
 			</div>
 			<div class="card-body">
 				<table class="table" id="">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">Nama </th>
+							<th scope="col">Nama</th>
+							<th scope="col">Jenis Kelamin</th>
+							<th scope="col">Kategori</th>
 							<th scope="col">Kelompok</th>
-							<th scope="col">Hari / Tanggal</th>
+							<th scope="col">Jam Plus</th>
 							<th scope="col">Jam Minus</th>
-							<th scope="col">Deskripsi</th>
+							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -30,7 +39,6 @@
 	</div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 	$(document).ready(function () {
 		loadData();
@@ -38,7 +46,7 @@
 
 	function loadData() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllNilaiSikap";
+		var url = hostname + "getallmahasiswa";
 		var method = "GET";
 
 		$.ajax({
@@ -63,26 +71,23 @@
 		var tbody = $('#tbody');
 		tbody.empty();
 
-		fetchMahasiswaData().then(function (mahasiswaData) {
-			fetchKelompokData().then(function (kelompokData) {
-				var mahasiswaMap = mapMahasiswaData(mahasiswaData);
-				var kelompokMap = mapKelompokData(kelompokData);
-				console.log('Data Kelompok Map:', kelompokMap);
+		fetchKelompokData().then(function (kelompokData) {
+			var kelompokMap = mapKelompokData(kelompokData);
 
-				$.each(data, function (index, item) {
-					console.log('Item Data:', item);
-					var row = $('<tr></tr>');
-					row.append('<td>' + (index + 1) + '</td>');
-					row.append('<td>' + mahasiswaMap[item.nls_nopendaftaran] + '</td>');
-					row.append('<td>' + item.nls_nopendaftaran + '</td>');
-					row.append('<td>' + formatDateForDisplay(item.nls_tanggal) + '</td>');
-					row.append('<td>' + item.nls_jamminus + '</td>');
-					row.append('<td>' + item.nls_deskripsi + '</td>');
-					if ("@ViewBag.UserRole" == "Fasilitator") {
-						row.append('<td>' + '<a class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' + '</td>');
-					}
-					tbody.append(row);
-				});
+			$.each(data, function (index, item) {
+				var row = $('<tr></tr>');
+				row.append('<td>' + (index + 1) + '</td>');
+				row.append('<td>' + item.mhs_namalengkap + '</td>');
+				row.append('<td>' + item.mhs_gender + '</td>');
+				row.append('<td>' + item.mhs_kategori + '</td>');
+				var kelompokName = kelompokMap[item.mhs_idkelompok] || 'Tidak Diketahui';
+				row.append('<td>' + kelompokName + '</td>');
+				row.append('<td>' + item.mhs_jamplus + '</td>');
+				row.append('<td>' + item.mhs_jamminus + '</td>');
+				if ("@ViewBag.UserRole" == "Fasilitator") {
+					row.append('<td>' + '<a class="btn btn-primary" href="/JamPlusMinus/DetailJam/' + item.mhs_nopendaftaran + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' + '</td>');
+				}
+				tbody.append(row);
 			});
 		});
 	}
@@ -116,6 +121,7 @@
 			dataType: "json"
 		});
 	}
+
 	function mapMahasiswaData(mahasiswaData) {
 		var mahasiswaMap = {};
 		$.each(mahasiswaData.data, function (index, mahasiswa) {
@@ -127,7 +133,7 @@
 	function mapKelompokData(kelompokData) {
 		var kelompokMap = {};
 		$.each(kelompokData.data, function (index, kelompok) {
-			kelompokMap["KEL" + kelompok.kmk_idkelompok] = kelompok.kmk_namakelompok;
+			kelompokMap[kelompok.kmk_idkelompok] = kelompok.kmk_namakelompok;
 
 		});
 		return kelompokMap;

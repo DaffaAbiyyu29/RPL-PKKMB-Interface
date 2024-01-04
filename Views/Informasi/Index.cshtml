@@ -1,68 +1,71 @@
 ﻿<style>
-    .card-container {
-        display: flex;
-        justify-content: space-between;
-    }
+	.card-container {
+		display: flex;
+		justify-content: space-between;
+	}
 
-    .card {
-        flex: 0 0 calc(33.33% - 20px); /* Adjust the width as needed */
-        background-color: #fff; /* Card background color */
-        border: 2px solid #ddd; /* Card border color */
-        border-radius: 8px; /* Card border radius */
-        padding: 15px; /* Card padding */
-        margin-bottom: 20px; /* Bottom margin between cards */
-    }
+	.card {
+		flex: 0 0 calc(33.33% - 20px); /* Adjust the width as needed */
+		background-color: #fff; /* Card background color */
+		border: 2px solid #ddd; /* Card border color */
+		border-radius: 8px; /* Card border radius */
+		padding: 15px; /* Card padding */
+		margin-bottom: 20px; /* Bottom margin between cards */
+	}
 
-    .card-title {
-        font-size: 20px; /* Title font size */
-        margin-bottom: 10px; /* Bottom margin for title */
-    }
+	.card-title {
+		font-size: 20px; /* Title font size */
+		margin-bottom: 10px; /* Bottom margin for title */
+	}
 
-    .card-body {
-        font-size: 16px; /* Body text font size */
-    }
+	.card-body {
+		font-size: 16px; /* Body text font size */
+	}
 
-    .card-danger {
-        border-color: #dc3545 !important; /* Red border for unread status */
-    }
+	.card-danger {
+		border-color: #dc3545 !important; /* Red border for unread status */
+	}
 
-    .card-success {
-        border-color: #28a745 !important; /* Green border for read status */
-    }
+	.card-success {
+		border-color: #28a745 !important; /* Green border for read status */
+	}
 </style>
 
 <div class="card m-5">
-    <div class="card-header mb-1 text-center">
-        <h4 class="font-weight-bold text-primary">Informasi Mahasiswa</h4>
-    </div>
-    <div class="card-body">
-        <div id="informasiCarousel" class="carousel slide mb-5" data-ride="carousel">
-            <div class="carousel-inner" id="cardContainer"></div>
-            <a class="carousel-control-prev" href="#informasiCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="false" style="font-size: 30px; color: #555;"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#informasiCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="false" style="font-size: 30px; color: #555;"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
+	<div class="card-header mb-1 text-center">
+		<h4 class="font-weight-bold text-primary">Informasi Mahasiswa</h4>
+	</div>
+	<div class="card-body">
+		<div id="informasiCarousel" class="carousel slide mb-5" data-ride="carousel">
+			<div class="carousel-inner" id="cardContainer"></div>
+			<a class="carousel-control-prev" href="#informasiCarousel" role="button" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="false" style="font-size: 30px; color: #555;"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#informasiCarousel" role="button" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="false" style="font-size: 30px; color: #555;"></span>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
 
-        <div class="row">
-            <div class="col-lg">
-                <div class="my-3" style="margin-top: 40px;">
-                    <a class="btn" style="background-color:#0059ab; color:white;" asp-controller="Informasi" asp-action="Create">Tambah Informasi</a>
-                </div>
-            </div>
-        </div>
-    </div>
+		@if (ViewBag.UserRole == "KSK")
+		{
+			<div class="row">
+				<div class="col-lg">
+					<div class="my-3" style="margin-top: 40px;">
+						<a class="btn" style="background-color:#0059ab; color:white;" asp-controller="Informasi" asp-action="Create">Tambah Informasi</a>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        loadCardInformasi();
-        $('#informasiCarousel').carousel();
-    });
+	$(document).ready(function () {
+		loadCardInformasi();
+		$('#informasiCarousel').carousel();
+	});
 
 	function formatDateForDisplay(dateString) {
 		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -83,39 +86,39 @@
 				var cardContainer = $('#cardContainer');
 				var list = data.data;
 
-                for (var i = 0; i < list.length; i += 3) {
-                    var item1 = list[i];
-                    var item2 = i + 1 < list.length ? list[i + 1] : null;
-                    var item3 = i + 2 < list.length ? list[i + 2] : null;
+				for (var i = 0; i < list.length; i += 3) {
+					var item1 = list[i];
+					var item2 = i + 1 < list.length ? list[i + 1] : null;
+					var item3 = i + 2 < list.length ? list[i + 2] : null;
 
-                    var card1 = createCard(item1);
-                    var card2 = item2 ? createCard(item2) : '';
-                    var card3 = item3 ? createCard(item3) : '';
+					var card1 = createCard(item1);
+					var card2 = item2 ? createCard(item2) : '';
+					var card3 = item3 ? createCard(item3) : '';
 
-                    var carouselItem = '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
-                        '<div class="card-container">' + card1 + card2 + card3 + '</div>' +
-                        '</div>';
+					var carouselItem = '<div class="carousel-item' + (i === 0 ? ' active' : '') + '">' +
+						'<div class="card-container">' + card1 + card2 + card3 + '</div>' +
+						'</div>';
 
-                    cardContainer.append(carouselItem);
-                }
+					cardContainer.append(carouselItem);
+				}
 
-                // Initialize Carousel after appending data
-                $('#informasiCarousel').carousel();
-            },
-        });
-    }
+				// Initialize Carousel after appending data
+				$('#informasiCarousel').carousel();
+			},
+		});
+	}
 
-    function createCard(item) {
-        var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
-        var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
+	function createCard(item) {
+		var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
+		var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
 
-        return '<div class="card ' + cardStatusClass + '">' +
-            '<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
-            '<p class="card-text">' +
-            'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
-            'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
-            'Deskripsi: ' + item.inf_deskripsi + '<br>' +
-            '<a href="./Update/' + item.inf_idinformasi + '" class="btn btn-primary">Edit</a>' +
-            '</div>';
-    }
+		return '<div class="card ' + cardStatusClass + '">' +
+			'<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
+			'<p class="card-text">' +
+			'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
+			'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
+			'Deskripsi: ' + item.inf_deskripsi + '<br>' +
+			'<a href="./Update/' + item.inf_idinformasi + '" class="btn btn-primary">Edit</a>' +
+			'</div>';
+	}
 </script>

@@ -104,21 +104,20 @@
 					<li class="nav-item dropdown mr-3 mahasiswabaru">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="index">Jadwal</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="index">Tugas</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="index">Absensi</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jamplus" asp-action="index">Jam Plus</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jamminus" asp-action="index">Jam Minus</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="index">Sikap</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="index">Kelompok</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="index">Ruangan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="Index">Jadwal</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="Index">Tugas</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="Index">Absensi</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="JamPlusMinus" asp-action="Index">Jam Plus / Minus</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="Index">Sikap</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="Index">Ruangan</a>
 						</div>
 					</li>
 					<li class="nav-item mr-3 mahasiswabaru">
 						<a class="nav-link" style="font-weight: bold;" asp-controller="mahasiswabaru" asp-action="evaluasi">Evaluasi</a>
 					</li>
 					<li class="nav-item mr-3 mahasiswabaru">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="index">Kelulusan</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="Index">Kelulusan</a>
 					</li>
 					<li class="nav-item dropdown mr-3 mahasiswabaru">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameMhs"></span> (<span id="showRoleMhs"></span>)</a>
@@ -130,33 +129,32 @@
 						@*---------------------------------------------------------------------------------------------------------------------------------------*@
 						@*Panitia Kesekretariatan*@
 					<li class="nav-item mr-3 panitiakesekretariatan">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="index">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="Index">Dashboard</a>
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="index">Jadwal</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="index">Kelompok</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="index">Ruangan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="Index">Jadwal</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="Index">Ruangan</a>
 						</div>
 					</li>
 					<li class="nav-item mr-3 panitiakesekretariatan">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="tugas" asp-action="index">Tugas</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="tugas" asp-action="Index">Tugas</a>
 					</li>
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nilai</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="index">Tugas</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="index">Sikap</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jamplus" asp-action="index">Jam Plus</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jamminus" asp-action="index">Jam Minus</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="index">Absensi</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="Index">Tugas</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="Index">Sikap</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="JamPlusMinus" asp-action="Index">Jam Plus / Minus</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="Index">Absensi</a>
 						</div>
 					</li>
 					<li class="nav-item mr-3 panitiakesekretariatan">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="evaluasi" asp-action="index">Evaluasi</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="evaluasi" asp-action="Index">Evaluasi</a>
 					</li>
 					<li class="nav-item mr-3 panitiakesekretariatan">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="index">Kelulusan</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="kelulusan" asp-action="Index">Kelulusan</a>
 					</li>
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameKsk"></span> (<span id="showRoleKsk"></span>)</a>
@@ -167,35 +165,34 @@
 							@*---------------------------------------------------------------------------------------------------------------------------------------*@
 							@*PIC PKKMB*@
 					<li class="nav-item mr-3 picpkkmb">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="picpkkmb" asp-action="index">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="picpkkmb" asp-action="Index">Dashboard</a>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="index">Jadwal</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="index">Kelompok</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="index">Ruangan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="Index">Jadwal</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="Index">Ruangan</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Kesekretariatan</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="index">Daftar Panitia</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="Index">Daftar Panitia</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="verifikasiksk">Verifikasi Panitia</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mahasiswa Baru</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="index">Tugas</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="index">Absensi</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jamplus" asp-action="index">Jam Plus</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="jamminus" asp-action="index">Jam Minus</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="index">Sikap</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelulusan" asp-action="index">Kelulusan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="Index">Tugas</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="Index">Absensi</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="JamPlusMinus" asp-action="Index">Jam Plus / Minus</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="Index">Sikap</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelulusan" asp-action="Index">Kelulusan</a>
 						</div>
 					</li>
 					<li class="nav-item mr-3 picpkkmb">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="evaluasi" asp-action="index">Evaluasi</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="evaluasi" asp-action="Index">Evaluasi</a>
 					</li>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernamePic"></span> (<span id="showRolePic"></span>)</a>
@@ -397,7 +394,7 @@
 						'position': 'fixed',
 						'top': '0',
 						'width': '100%',
-						'z-index': '1000',
+						'z-Index': '1000',
 
 					});
 				} else {

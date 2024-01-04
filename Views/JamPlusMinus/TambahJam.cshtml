@@ -1,11 +1,14 @@
-﻿@{
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
 }
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Tambah Nilai Sikap</strong>
+				<strong>Tambah Jam Plus / Minus</strong>
 			</h5>
 			<div class="card-body px-lg-5 pt-0">
 				<div class="row">
@@ -21,47 +24,88 @@
 							</div>
 						</div>
 						<div class="input-group has-validation mb-4 namakelompok">
-							<div class="form-floating is-invalid">
-								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" placeholder="" readonly>
+							<div class="form-floating">
+								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: white;" placeholder="" readonly>
 								<label for="floatingInputGrid">Kelompok</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Kelompok.</div>
+							</div>
+						</div>
+						<div class="input-group has-validation mb-4 tanggal" hidden>
+							<div class="form-floating">
+								<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: white;" placeholder="">
+								<label for="validateField">Hari / Tanggal</label>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
-						<div class="input-group has-validation mb-4 tanggal">
+						<div class="input-group has-validation mb-4 jenisjam">
 							<div class="form-floating is-invalid">
-								<input type="datetime-local" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
-								<label for="validateField">Hari / Tanggal</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Hari / Tanggal.</div>
+								<select class="form-select is-invalid" id="jenisjam" name="jenisjam" data-target="validateField" aria-label="">
+									<option selected disabled>Pilih Kategori Jam</option>
+									<option value="Jam Plus">Jam Plus</option>
+									<option value="Jam Minus">Jam Minus</option>
+								</select>
+								<label for="floatingSelect">Kategori Jam</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Kategori Jam.</div>
 							</div>
 						</div>
-						<div class="input-group has-validation mb-4 nilaisikap">
+						<div class="input-group has-validation mb-4 jumlah">
 							<div class="form-floating is-invalid">
-								<select class="form-select is-invalid" id="nilaisikap" name="nilaisikap" data-target="validateField" aria-label="">
-									<option selected disabled>Pilih Kategori Nilai</option>
-									<option value="A">A</option>
-									<option value="B">B</option>
-									<option value="C">C</option>
-									<option value="D">D</option>
-								</select>
-								<label for="floatingSelect">Kategori Nilai</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Kategori Nilai.</div>
+								<input type="number" class="form-control is-invalid" maxlength="100" id="jumlah" name="jumlah" data-target="validateField" placeholder="">
+								<label for="floatingInputGrid">Jumlah Jam</label>
+								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Jumlah Jam.</div>
 							</div>
 						</div>
 					</div>
+					<div class="input-group has-validation mb-4 deskripsi">
+						<div class="form-floating is-invalid">
+							<textarea class="form-control is-invalid" placeholder="" id="deskripsi" data-target="validateField" name="deskripsi" style="height: 100px"></textarea>
+							<label for="validateField">Deskripsi</label>
+							<div class="invalid-feedback" data-target="validateLabel">* Masukkan Deskripsi.</div>
+						</div>
+					</div>
 				</div>
-				<button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahnilaisikap(event)">Simpan</button>
+				<button class="btn btn-rounded btn-block my-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahJam(event)">Simpan</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
+	var idkelompok = null;
+	NamaKelompok()
+	$('#tanggal').val(getCurrentDateTime());
+
+	function getCurrentDateTime() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = ('0' + (now.getMonth() + 1)).slice(-2);
+		var day = ('0' + now.getDate()).slice(-2);
+		var hours = ('0' + now.getHours()).slice(-2);
+		var minutes = ('0' + now.getMinutes()).slice(-2);
+
+		return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+	}
+
+	function NamaKelompok() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetKelompokByNim?kmk_nim=@ViewBag.UserId";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				idkelompok = item.kmk_idkelompok;
+			},
+		});
+	}
+
 	function NamaMahasiswa() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallmahasiswa";
+		var url = hostname + "GetMahasiswaByKelompok?kmk_idkelompok=" + idkelompok;
 		var method = "GET";
 
 		$.ajax({
@@ -69,7 +113,7 @@
 			type: method,
 			dataType: "json",
 			success: function (response) {
-				NamaDropDown(response.data);
+				NamaDropDown(response);
 			},
 			error: function (xhr, status, error) {
 				console.log('Error fetching data:', error);
@@ -98,12 +142,10 @@
 	}
 
 	function KelompokID(noPendaftaran, data) {
-		console.log('Selected Nopendaftaran:', noPendaftaran);
-
 		var Mhs = data.find(function (item) {
 			return item.mhs_nopendaftaran === noPendaftaran;
 		});
-		console.log('Selected Mahasiswa:', Mhs);
+
 		if (Mhs) {
 			var idKelompok = Mhs.mhs_idkelompok;
 			getNamaKelompok(idKelompok);
@@ -149,15 +191,18 @@
 		NamaMahasiswa();
 	});
 </script>
+
 <script>
-	function tambahnilaisikap(event) {
+	function tambahJam(event) {
 		event.preventDefault();
 
-		var nls_nopendaftaran = document.getElementsByName("nama")[0].value;
-		var nls_sikap = document.getElementsByName("nilaisikap")[0].value;
-		var nls_tanggal = document.getElementsByName("tanggal")[0].value;
+		var nopendaftaran = document.getElementsByName("nama")[0].value;
+		var jenisjam = document.getElementsByName("jenisjam")[0].value;
+		var jumlah = document.getElementsByName("jumlah")[0].value;
+		var deskripsi = document.getElementsByName("deskripsi")[0].value;
+		var tanggal = document.getElementsByName("tanggal")[0].value;
 
-		if (nls_nopendaftaran.trim() === '' || nls_sikap.trim() === '' || nls_tanggal.trim() === '') {
+		if (nopendaftaran.trim() === '' || jenisjam.trim() === '' || jumlah.trim() === '' || deskripsi.trim() === '') {
 			Swal.fire({
 				position: "top-end",
 				icon: "error",
@@ -169,15 +214,16 @@
 		}
 
 		var hostname = "https://localhost:7087";
-		var url = hostname + "/InsertNilaiSikap";
+		var url = hostname + "/insertJamPlusMinus";
 		var method = "POST";
 		var input = {
-			nls_idnilaisikap: "",
-			nls_nopendaftaran: nls_nopendaftaran,
-			nls_nim: "@ViewBag.UserId",
-			nls_sikap: nls_sikap,
-			nls_tanggal: nls_tanggal,
-			nls_status: "Aktif"
+			dtj_idjam: "",
+			dtj_nopendaftaran: nopendaftaran,
+			dtj_nim: "@ViewBag.UserId",
+			dtj_jenisjam: jenisjam,
+			dtj_jumlah: jumlah,
+			dtj_deskripsi: deskripsi,
+			dtj_tanggal: tanggal,
 		};
 
 		var data = JSON.stringify(input);
@@ -193,11 +239,11 @@
 					Swal.fire({
 						position: "top-end",
 						icon: "success",
-						title: "Nilai Sikap  berhasil ditambahkan",
+						title: jenisjam + " Berhasil Ditambahkan",
 						showConfirmButton: false,
 						timer: 2000
 					}).then(() => {
-						window.location.href = '/sikap/index';
+						window.location.href = '/JamPlusMinus/Index';
 					});
 				} else {
 					Swal.fire({
@@ -211,20 +257,14 @@
 				}
 			},
 			error: function (xhr, status, error) {
-				Swal.fire({
-					position: "top-end",
-					icon: "error",
-					title: xhr.responseJSON.message,
-					showConfirmButton: false,
-					timer: 2000
-				})
 				console.log('Error saving data:', error);
-				console.log(xhr.responseJSON);
+				console.log(xhr.responseJSON.message);
 				console.log(status);
 			}
 		});
 	}
 </script>
+
 <script>
 	var inputFields = document.querySelectorAll('[data-target="validateField"]');
 	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
