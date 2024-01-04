@@ -31,6 +31,7 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Koulen:wght@400;700&display=swap">
 
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -209,6 +210,7 @@
 		</nav>
 		<div class="container-fluid" style="padding-top: 50px;">
 			<!-- Adjust the value according to your needs -->
+			
 			@RenderBody()
 
 		</div>
@@ -378,34 +380,21 @@
 
 	<script>
 		$(document).ready(function () {
+			// Tentukan tinggi dari elemen navigasi
+			var navHeight = $('.navbar').outerHeight();
 
-			// Tambahkan event handler saat halaman di-scroll
-			$(window).scroll(function () {
-				// Mendapatkan tinggi scroll dari atas halaman
-				var scrollHeight = $(window).scrollTop();
-
-				// Tentukan tinggi dari elemen navigasi
-				var navHeight = $('.navbar').outerHeight();
-
-				// Jika tinggi scroll lebih besar dari atau sama dengan tinggi elemen navigasi
-				if (scrollHeight >= navHeight) {
-					// Terapkan properti CSS position: fixed pada elemen navigasi
-					$('.navbar').css({
-						'position': 'fixed',
-						'top': '0',
-						'width': '100%',
-						'z-Index': '1000',
-
-					});
-				} else {
-					// Jika belum mencapai tinggi elemen navigasi, kembalikan ke posisi relatif
-					$('.navbar').css({
-						'position': 'relative'
-					});
-				}
+			// Terapkan properti CSS position: sticky pada elemen navigasi
+			$('.navbar').css({
+				'position': 'sticky',
+				'top': '0',
+				'width': '100%',
+				'z-index': '1000',
 			});
 		});
 	</script>
+
+	
+
 
 </body>
 </html>
