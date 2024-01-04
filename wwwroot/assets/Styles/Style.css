@@ -622,3 +622,189 @@ body {
         transform: translate(-50%, -50%) translateY(-20px);
     }
 }
+
+.lazy-load {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out; /* Transisi untuk efek fading */
+}
+
+.body-custom {
+    margin: 0;
+    overflow: hidden;
+    color : lightgrey;
+}
+
+.slider {
+    display: flex;
+    width: 100; /* Sesuaikan lebar slider dengan jumlah gambar */
+    animation: slide 30s linear infinite; /* Sesuaikan durasi dan timing function */
+}
+
+    .slider img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+@keyframes slide {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-130%); /* Sesuaikan nilai dengan lebar slider */
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff; /* Warna latar belakang overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+    z-index: 9999;
+}
+
+    .overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+.page {
+    display: none;
+}
+
+    .page.visible {
+        display: block;
+    }
+
+
+body {
+    margin: 0;
+}
+
+.water-container {
+    position: relative;
+    width: 100vw;
+    height: 150vh;
+    overflow: hidden;
+}
+
+.water {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.wave {
+    width: 200%;
+    height: 200%;
+    background-color: #3498db; /* Ubah warna latar belakang menjadi biru (contoh: #3498db) */
+    position: absolute;
+    top: -150%;
+    left: -50%;
+    border-radius: 40%;
+    animation: anim 12s linear infinite;
+}
+
+    .wave:nth-child(2) {
+        width: 204%;
+        height: 204%;
+        background-color: #2980b9; /* Ubah warna latar belakang menjadi biru (contoh: #2980b9) */
+        left: -52%;
+        animation-delay: 0.5s;
+    }
+
+
+.img-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+@keyframes anim {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.slide-up {
+    animation: slideUp 1s ease-in-out; /* Animasi slide up selama 0.5 detik */
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db; /* Warna biru (ganti sesuai keinginan) */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 1.5s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* Sembunyikan loader awalnya */
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+#animated-text {
+    display: inline-block;
+    position: relative;
+}
+
+    #animated-text span {
+        position: relative;
+    }
+
+        #animated-text span::before {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            overflow: hidden;
+            color: #fff; /* Warna latar belakang */
+            width: 0;
+            transition: width 0.3s ease-out;
+        }
+
+        #animated-text span:hover::before {
+            width: 100%;
+        }
