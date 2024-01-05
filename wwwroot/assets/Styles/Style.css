@@ -581,32 +581,39 @@ body {
 }
 
 .floating-element {
-    width: 20vw; /* Menggunakan vw agar mengikuti lebar viewport */
-    height: 20vw; /* Menggunakan vw agar mengikuti lebar viewport */
-    background-color: #3498db;
-    border-radius: 10%;
     position: fixed;
-    top: 50%;
-    left: -8%; /* Menggunakan persen untuk posisi elemen */
     transform: translate(-50%, -50%);
-    animation: floatAnimation 2s ease-in-out infinite alternate;
+    animation: fadeIn 2s ease-in-out;
     z-index: 1000;
+    display: none; /* Sembunyikan elemen secara default */
 }
 
-.floating-element-2 {
-    width: 20vw; /* Menggunakan vw agar mengikuti lebar viewport */
-    height: 10vw; /* Menggunakan vw agar mengikuti lebar viewport */
-    background-color: #3498db;
-    border-radius: 30%;
-    opacity: 70%;
-    position: fixed;
-    top: 70%;
-    left: -9%; /* Menggunakan persen untuk posisi elemen */
-    transform: translate(-50%, -50%);
-    animation: floatAnimation 2s ease-in-out infinite alternate;
-    z-index: 1000;
-}
+    .floating-element.left {
+        top: 58%;
+        left: 11%;
+    }
 
+    .floating-element.right {
+        top: 58%;
+        right: -15%;
+    }
+
+    .floating-element img {
+        width: 100%;
+        height: 100%;
+       
+    }
+
+/* Animasi Fade In */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
 
 .content {
     text-align: center;
@@ -638,7 +645,7 @@ body {
 .slider {
     display: flex;
     width: 100; /* Sesuaikan lebar slider dengan jumlah gambar */
-    animation: slide 30s linear infinite; /* Sesuaikan durasi dan timing function */
+    animation: slide 1s linear infinite; /* Sesuaikan durasi dan timing function */
 }
 
     .slider img {
@@ -652,7 +659,7 @@ body {
     }
 
     100% {
-        transform: translateX(-130%); /* Sesuaikan nilai dengan lebar slider */
+        transform: translateX(-1%); /* Sesuaikan nilai dengan lebar slider */
     }
 }
 
