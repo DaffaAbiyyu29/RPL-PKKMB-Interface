@@ -4,33 +4,39 @@
 
 
 <div class="container-fluid content p-5	">
-	<img id="gambarInteraktif" src="/assets/Images/logo/Logo-PKKMB-480.png" class="rounded" alt="...">
+	<img id="gambarInteraktif" src="/assets/Images/logo/Logo-PKKMB-650.png" class="rounded" alt="...">
 </div>
 
-<h5 class="fw-bold text-center" style="font-family: 'Koulen'; font-weight: bold; font-size:150px;">
-	<span style="color: #2828AA;">
+
+<div style="background-color: #3498db; padding: 20px; width:100vw">
+	<h5 class="fw-bold text-center" style="font-family: 'Poppins', sans-serif; font-weight: bold; font-size:80px; color: white;">
 		PKKMB
-	</span>
-</h5><h5 class="fw-bold text-center mb-5" style="font-family: 'Koulen'; font-weight: bold; font-size:150px;">
-	<span style="color: #2828AA;">
-		Politeknik Astra
-	</span>
-</h5>
+		<span style="color: white;">
+			Politeknik Astra
+		</span>
+	</h5>
+</div>
 
 
+<div class="floating-element left" id="leftFloatingElement">
+	<!-- Gambar di kiri -->
+	<img src="/assets/Images/logo/Element-2-left.png" alt="Left Image">
+</div>
 
 
+<div class="floating-element right" id="rightFloatingElement">
+	<!-- Gambar di kanan -->
+	<img src="/assets/Images/logo/Element-2-right.png" alt="Right Image">
+</div>
 
 
-
-<div class="floating-element-2"></div>
-<div class="floating-element"></div>
 
 
 <div class="water-container" >
 	<div class="water">
 		<div class="wave"></div>
 		<div class="wave" style="animation-delay: 1s;"></div>
+		<div class="wave" style="animation-delay: 2s; opacity:80%;"></div>
 	</div>
 
 
@@ -131,18 +137,48 @@
 	</div>
 
 <div class="contact-section">
-	<div class="custom-body">
+	
+	<div style="text-align: center;">
+		<img src="/assets/Images/logo/Footer.png" style="display: inline-block;" />
+	</div>
+
+	
+	@* <body class="custom-body">
 
 		<div class="slider">
-			<img src="/assets/Images/logo/Footer.png" alt="Gambar 1">
+			<img src="/assets/Images/logo/Roll-Film.jpg" alt="Gambar 1">
 		</div>
 
-	</div>
+	</body> *@
 </div>
 
 
 <script>
-	
+	document.addEventListener('DOMContentLoaded', function () {
+		var leftFloatingElement = document.getElementById('leftFloatingElement');
+		var rightFloatingElement = document.getElementById('rightFloatingElement');
+
+		// Tampilkan elemen saat dokumen dimuat
+		leftFloatingElement.style.display = 'block';
+		rightFloatingElement.style.display = 'block';
+
+		// Tambahkan event listener untuk mendeteksi scroll
+		window.addEventListener('scroll', function () {
+			var scrollPosition = window.scrollY || window.pageYOffset;
+
+			// Tentukan kapan elemen harus fade out
+			if (scrollPosition > window.innerHeight) {
+				leftFloatingElement.style.animation = 'fadeOut 0.5s ease-in-out';
+				rightFloatingElement.style.animation = 'fadeOut 0.5s ease-in-out';
+
+				// Atur timeout untuk menghilangkan elemen setelah animasi fade out selesai
+				setTimeout(function () {
+					leftFloatingElement.style.display = 'none';
+					rightFloatingElement.style.display = 'none';
+				}, 500); // Ubah angka ini sesuai dengan durasi animasi fade out
+			}
+		});
+	});
 
 	document.addEventListener("DOMContentLoaded", function () {
 		var lazyLoadElements = document.querySelectorAll('.lazy-load');
