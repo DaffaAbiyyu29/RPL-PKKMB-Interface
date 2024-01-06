@@ -7,7 +7,7 @@
 			<div class="card-body px-lg-5 pt-1">
 				<div class="row">
 					<div class="col-md">
-						<table class="table" id="datatable">
+						<table class="table table-hover table-striped table-sm" style="width:100%" id="tabellist">
 							<thead>
 								<tr>
 									<th scope="col">No</th>
@@ -21,8 +21,6 @@
 									<th scope="col">Aksi</th>
 								</tr>
 							</thead>
-							<tbody id="tbody">
-							</tbody>
 						</table>
 					</div>
 				</div>
@@ -57,7 +55,17 @@
 <script>
 	var idkelompok = null;
 	var selectedNoPendaftarans = [];
+	var iddetail = '@ViewBag.tgs_idtugas';
+
 	namaFasilitator()
+
+	$("#nilai").keypress(function (event) {
+		// Mengecek jika tombol yang ditekan adalah tombol Enter
+		if (event.which === 13) {
+			// Memanggil fungsi SubmitNilai()
+			SubmitNilai(event);
+		}
+	});
 
 	function limitToMax(element, maxValue) {
 		if (element.value > maxValue) {
@@ -88,39 +96,33 @@
 
 	function loadDataAnggota() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/GetDetailTugasByKelompok?kmk_idkelompok=" + idkelompok;
+		var url = hostname + "Tugas/GetDetailTugasByKelompok?id_tugas=" + iddetail + "&id_kelompok=" + idkelompok;
 		var method = "GET";
 		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				data.forEach(function (item) {
-					var filePath = "C:\\RPL\\PKKMB-API\\File_Tugas\\TugasMahasiswa\\" + item.tgs_filetugas;
-					var fileName = item.dts_filetugas.split('\\').pop();
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' + // Use the counter as a sequence number
-						'<td>' + item.dts_nopendaftaran + '</td>' +
-						'<td>' + item.mhs_namalengkap + '</td>' +
-						'<td>' + item.mhs_gender + '</td>' +
-						'<td>' + item.mhs_programstudi + '</td>' +
-						'<td>' + item.mhs_kategori + '</td>' +
-						'<td><a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a></td>' +
-						'<td>' + item.dts_nilaitugas + '</td>' +
-						'<td>' +
-						'<button class="btn btn-primary btn-unggah-tugas" type="button" data-toggle="modal" data-target="#myModal" data-nomhs="' + item.dts_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></button>' +
-						'</td>' +
-						'</tr>';
-
-					$('#tbody').append(newRow);
+				$.each(data, function (key, val) {
+					var filePath = "C:\\RPL\\PKKMB-API\\File_Tugas\\TugasMahasiswa\\" + val.tgs_filetugas;
+					var fileName = val.dts_filetugas.split('\\').pop();
+					var downloadtugas = '<td><a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a></td>'
+					var unggahnilai = '<button class="btn btn-primary btn-unggah-tugas" type="button" data-toggle="modal" data-target="#myModal" data-nomhs="' + val.dts_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></button>'
+					detailData.push([counter, val.dts_nopendaftaran, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, downloadtugas, val.dts_nilaitugas, unggahnilai])
 					counter++;
+				});
+
+				jq('#tabellist').DataTable({
+					data: detailData
 				});
 
 				$('.download-link').on('click', function (e) {
 					e.preventDefault();
 					var fileName = $(this).data('file');
+					console.log(fileName)
 					downloadFile(fileName);
 				});
 			},
@@ -138,6 +140,7 @@
 			url: url,
 			method: method,
 			contentType: "application/json",
+			async: false,
 			success: function (data) {
 				var item = data.data;
 				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
@@ -147,7 +150,7 @@
 	}
 
 	function downloadFile(fileName) {
-		var url = "https://localhost:7087/Tugas/Download";
+		var url = "https://localhost:7087/Tugas/DownloadTugasMahasiswa";
 
 		fetch(url, {
 			method: 'POST',
@@ -186,7 +189,6 @@
 		// Check if nopendaftaran is not undefined or null
 		if (nopendaftaran) {
 			// Use the values in your AJAX request
-			var iddetail = '@ViewBag.tgs_idtugas';
 			var method = "PUT";
 			var url = "https://localhost:7087/Tugas/PenilaianTugas?dts_iddetail=" + iddetail + "&dts_nopendaftaran=" + nopendaftaran;
 
@@ -201,11 +203,11 @@
 					Swal.fire({
 						position: "top-end",
 						icon: "success",
-						title: "Berhasil memberikan penilaian tugas",
+						title: "Berhasil Menilai Tugas",
 						showConfirmButton: false,
 						timer: 2000
 					}).then(() => {
-						location.reload();
+						location.reload()
 					});
 				},
 				error: function (xhr, status) {

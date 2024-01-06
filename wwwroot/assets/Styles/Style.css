@@ -632,13 +632,13 @@ body {
 .body-custom {
     margin: 0;
     overflow: hidden;
-    color : lightgrey;
+    color: lightgrey;
 }
 
 .slider {
     display: flex;
-    width: 100; /* Sesuaikan lebar slider dengan jumlah gambar */
-    animation: slide 30s linear infinite; /* Sesuaikan durasi dan timing function */
+    width: 100%; /* Sesuaikan lebar slider dengan jumlah gambar */
+    animation: slide 10s linear infinite alternate;
 }
 
     .slider img {
@@ -652,7 +652,7 @@ body {
     }
 
     100% {
-        transform: translateX(-130%); /* Sesuaikan nilai dengan lebar slider */
+        transform: translateX(-100%);
     }
 }
 
