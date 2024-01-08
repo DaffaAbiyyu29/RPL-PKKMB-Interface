@@ -1,15 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-@{
-	// Get the user role value and set a JavaScript variable
-	string userRole = ViewBag.UserRole;
-	<script>
-		var userRole = '@userRole';
-	</script>
-}
-
-@if (ViewBag.UserRole == "Fasilitator")
+﻿@if (ViewBag.UserRole == "Fasilitator")
 {
 	<div class="row">
 		<div class="col-lg">
@@ -21,13 +10,13 @@
 }
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg mb-4">
+	<div class="col-lg">
 		<div class="card">
-			<div class="card-header">
-				Tugas Mahasiswa Baru
-			</div>
-			<div class="card-body">
-				<table class="table" id="datatable">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Tugas Mahasiswa Baru</strong>
+			</h5>
+			<div class="card-body pt-1">
+				<table class="table table-hover table-striped" style="width:100%; height:10px;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -43,7 +32,6 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
 			</div>
 		</div>
@@ -64,37 +52,40 @@
 		var url = hostname + "getalltugas";
 		var method = "GET";
 		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data;
-				list.forEach(function (item) {
-					var filePath = "C:\\RPL\\PKKMB-API\\File_Tugas\\TugasMahasiswa\\" + item.tgs_filetugas;
-					var fileName = item.tgs_filetugas.split('\\').pop();
-
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' +
-						'<td>' + item.tgs_nim + '</td>' +
-						'<td>' + item.tgs_namatugas + '</td>' +
-						'<td>' + formatDateForDisplay(item.tgs_tglpemberiantugas) + '</td>' +
-						'<td><a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a></td>' +
-						'<td>' + formatDateForDisplay(item.tgs_deadline) + '</td>' +
-						'<td>' + item.tgs_deskripsi + '</td>' +
-						'<td>' +
-						("@ViewBag.UserRole" == "Fasilitator" ?
-							'<a class="btn btn-primary" href="/Tugas/UbahTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' : '') +
-						("@ViewBag.UserRole" == "Mahasiswa" ?
-							'<a class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>' : '') +
-						("@ViewBag.UserRole" == "Fasilitator" ?
-							'<a class="btn btn-primary" href="/Tugas/PenilaianTugas/' + item.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>' : '') +
-						'</td>' +
-						'</tr>';
-
-					$('#tbody').append(newRow);
+				var item = data.data
+				$.each(item, function (key, val) {
+					var aksi = null;
+					var fileName = val.tgs_filetugas.split('\\').pop();
+					var downloadtugas = '<a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a>'
+					if ("@ViewBag.UserRole" == "Fasilitator") {
+						aksi = '<a class="btn btn-primary" href="/Tugas/UbahTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+							'<a class="btn btn-primary" href="/Tugas/PenilaianTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
+					} else if ("@ViewBag.UserRole" == "Mahasiswa") {
+						aksi = '<a class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
+					}
+					detailData.push([counter, val.tgs_nim, val.tgs_namatugas, formatDateForDisplay(val.tgs_tglpemberiantugas), downloadtugas, formatDateForDisplay(val.tgs_deadline), val.tgs_deskripsi, aksi])
 					counter++;
+				});
+
+				jq('#tabellist').DataTable({
+					data: detailData,
+					columnDefs: [
+						{ height: '10px', targets: 0 },  // No
+						{ height: '10px', targets: 1 }, // NIM
+						{ height: '10px', targets: 2 }, // Nama Tugas
+						{ height: '10px', targets: 3 }, // Tanggal Pemberian
+						{ height: '10px', targets: 4 }, // Tugas
+						{ height: '10px', targets: 5 }, // Deadline
+						{ height: '10px', targets: 6 }, // Deskripsi
+						{ height: '10px', targets: 7 }  // Aksi
+					],
 				});
 
 				$('.download-link').on('click', function (e) {

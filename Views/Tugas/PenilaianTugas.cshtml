@@ -4,26 +4,22 @@
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong><span id="kelompok"></span>&nbsp;<span class="float-end" id="fasilitator"></span></strong>
 			</h5>
-			<div class="card-body px-lg-5 pt-1">
-				<div class="row">
-					<div class="col-md">
-						<table class="table table-hover table-striped table-sm" style="width:100%" id="tabellist">
-							<thead>
-								<tr>
-									<th scope="col">No</th>
-									<th scope="col">No Pendaftaran</th>
-									<th scope="col">Mahasiswa</th>
-									<th scope="col">Jenis Kelamin</th>
-									<th scope="col">Program Studi</th>
-									<th scope="col">Kategori</th>
-									<th scope="col">Tugas</th>
-									<th scope="col">Nilai</th>
-									<th scope="col">Aksi</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-				</div>
+			<div class="card-body pt-1">
+				<table class="table table-hover table-striped table-sm" style="width:100%" id="tabellist">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">No Pendaftaran</th>
+							<th scope="col">Mahasiswa</th>
+							<th scope="col">Jenis Kelamin</th>
+							<th scope="col">Program Studi</th>
+							<th scope="col">Kategori</th>
+							<th scope="col">Tugas</th>
+							<th scope="col">Nilai</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -107,9 +103,8 @@
 			contentType: "application/json",
 			success: function (data) {
 				$.each(data, function (key, val) {
-					var filePath = "C:\\RPL\\PKKMB-API\\File_Tugas\\TugasMahasiswa\\" + val.tgs_filetugas;
 					var fileName = val.dts_filetugas.split('\\').pop();
-					var downloadtugas = '<td><a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a></td>'
+					var downloadtugas = '<a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a>'
 					var unggahnilai = '<button class="btn btn-primary btn-unggah-tugas" type="button" data-toggle="modal" data-target="#myModal" data-nomhs="' + val.dts_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></button>'
 					detailData.push([counter, val.dts_nopendaftaran, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, downloadtugas, val.dts_nilaitugas, unggahnilai])
 					counter++;
@@ -122,7 +117,6 @@
 				$('.download-link').on('click', function (e) {
 					e.preventDefault();
 					var fileName = $(this).data('file');
-					console.log(fileName)
 					downloadFile(fileName);
 				});
 			},

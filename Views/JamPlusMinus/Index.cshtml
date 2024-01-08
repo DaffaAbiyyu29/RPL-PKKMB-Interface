@@ -29,7 +29,10 @@
 							<th scope="col">Kelompok</th>
 							<th scope="col">Jam Plus</th>
 							<th scope="col">Jam Minus</th>
-							<th scope="col">Aksi</th>
+							@if (@ViewBag.UserRole == "Fasilitator")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
