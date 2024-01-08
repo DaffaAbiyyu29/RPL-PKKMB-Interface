@@ -21,12 +21,6 @@
 				<div class="row">
 					<div class="col-md-6">
 						<!-- First Column -->
-						<div class="form-floating mb-4 inf_idinformasi">
-							<!-- You can decide whether to make this field readonly or not based on your requirements -->
-							<input type="text" class="form-control" id="inf_idinformasi" name="inf_idinformasi" placeholder="">
-							<label for="inf_idinformasi">ID Informasi</label>
-						</div>
-
 						<div class="form-floating mb-4 inf_jenisinformasi">
 							<input type="text" class="form-control" id="inf_jenisinformasi" name="inf_jenisinformasi" placeholder="">
 							<label for="inf_jenisinformasi">Jenis Informasi</label>
@@ -65,7 +59,6 @@
 	function tambahInformasi(event) {
 		event.preventDefault();
 
-		var inf_idinformasi = document.getElementById("inf_idinformasi").value;
 		var inf_jenisinformasi = document.getElementById("inf_jenisinformasi").value;
 		var inf_namainformasi = document.getElementById("inf_namainformasi").value;
 		var inf_tglpublikasi = document.getElementById("inf_tglpublikasi").value;
@@ -76,7 +69,7 @@
 		var url = hostname + "/InsertInformasi";
 		var method = "POST";
 		var input = {
-			inf_idinformasi: inf_idinformasi,
+			inf_idinformasi: "",
 			inf_jenisinformasi: inf_jenisinformasi,
 			inf_namainformasi: inf_namainformasi,
 			inf_tglpublikasi: inf_tglpublikasi,
@@ -94,8 +87,15 @@
 			success: function (data) {
 				console.log('Data from server:', data);
 				if (data.status === 200) {
-					alert("Data berhasil disimpan");
-					window.location.href = '../';
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: "Berhasil Menambah Informasi",
+						showConfirmButton: false,
+						timer: 2000
+					}).then(() => {
+						window.location.href = './';
+					});
 				}
 			},
 			error: function (xhr, status, error) {

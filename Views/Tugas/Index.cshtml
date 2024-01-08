@@ -26,7 +26,7 @@
 							<th scope="col">Tugas</th>
 							<th scope="col">Deadline</th>
 							<th scope="col">Deskripsi</th>
-							@if (ViewBag.UserRole != "PIC PKKMB")
+							@if (ViewBag.UserRole == "Fasilitator" || ViewBag.UserRole == "Mahasiswa")
 							{
 								<th scope="col">Aksi</th>
 							}
@@ -75,17 +75,7 @@
 				});
 
 				jq('#tabellist').DataTable({
-					data: detailData,
-					columnDefs: [
-						{ height: '10px', targets: 0 },  // No
-						{ height: '10px', targets: 1 }, // NIM
-						{ height: '10px', targets: 2 }, // Nama Tugas
-						{ height: '10px', targets: 3 }, // Tanggal Pemberian
-						{ height: '10px', targets: 4 }, // Tugas
-						{ height: '10px', targets: 5 }, // Deadline
-						{ height: '10px', targets: 6 }, // Deskripsi
-						{ height: '10px', targets: 7 }  // Aksi
-					],
+					data: detailData
 				});
 
 				$('.download-link').on('click', function (e) {
