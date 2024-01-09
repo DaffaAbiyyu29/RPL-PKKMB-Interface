@@ -18,7 +18,13 @@
 </div>
 
 
-<div class="floating-element left" id="leftFloatingElement">
+<div id="downloadButton" class="floating-element-button left-floating-button">
+	<i class="fa fa-book" style="position: relative; top: -3px;"></i>
+</div>
+
+
+
+@* <div class="floating-element left" id="leftFloatingElement">
 	<!-- Gambar di kiri -->
 	<img src="/assets/Images/logo/Element-2-left.png" alt="Left Image">
 </div>
@@ -27,7 +33,7 @@
 <div class="floating-element right" id="rightFloatingElement">
 	<!-- Gambar di kanan -->
 	<img src="/assets/Images/logo/Element-2-right.png" alt="Right Image">
-</div>
+</div> *@
 
 
 
@@ -101,7 +107,6 @@
 
 
 
-
 <div class="container mb-5 mt-5" id="video-bg-container" style="background-color: white;">
 	<div class="loader" id="loader"></div>
 	<h5 class="fw-bold text-center my-3" style="font-family: 'Poppins', sans-serif; font-weight: bold; font-size:50px;">
@@ -154,6 +159,19 @@
 
 
 <script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var floatingButton = document.querySelector('.floating-element-button');
+
+		// Tambahkan kelas 'show' setelah DOM dimuat
+		floatingButton.classList.add('show');
+
+		// Tambahkan event listener untuk menghapus kelas 'show' saat tombol di klik
+		floatingButton.addEventListener('click', function () {
+			floatingButton.classList.remove('show');
+		});
+	});
+
+
 	document.addEventListener('DOMContentLoaded', function () {
 		var leftFloatingElement = document.getElementById('leftFloatingElement');
 		var rightFloatingElement = document.getElementById('rightFloatingElement');
@@ -286,4 +304,6 @@
 			notificationCard.style.display = "none";
 		}, 500); // Delay hiding the card to allow transition
 	}
+
+
 </script>
