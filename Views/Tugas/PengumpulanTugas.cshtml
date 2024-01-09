@@ -271,8 +271,6 @@
 				});
 			},
 			error: function (xhr, status) {
-				console.log(currentDate)
-				console.log(deadlineDate)
 				var downloadTugas = ''
 				var unggahTugas = ''
 				if (currentDate <= deadlineDate) {
@@ -281,7 +279,6 @@
 						'</button>';
 				}
 				var aksi = downloadTugas + unggahTugas;
-				console.log(aksi)
 				detailData.push([counter, '@ViewBag.UserId', '@ViewBag.UserName', null, aksi])
 				jq('#tabellist').DataTable({
 					data: detailData
