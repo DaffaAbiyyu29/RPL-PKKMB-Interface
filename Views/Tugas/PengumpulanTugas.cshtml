@@ -1,37 +1,22 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<input type="text" class="form-control" maxlength="30" id="validateField" name="idtugas" data-target="validateField" placeholder="" value="@ViewBag.tgs_idtugas" hidden>
 				<strong><span name="namatugas"></span>&nbsp;<span name="deadline"></span></strong>
 			</h5>
-			<div class="card-body px-lg-5 pt-1">
-				<div class="row">
-					<div class="col-md">
-						<table class="table" id="datatable">
-							<thead>
-								<tr>
-									<th scope="col">No Pendaftaran</th>
-									<th scope="col">Nama</th>
-									<th scope="col">Waktu Unggah</th>
-									<th scope="col">Aksi</th>
-								</tr>
-							</thead>
-							<tbody id="tbody">
-								<tr>
-									<td>@ViewBag.UserId</td>
-									<td>@ViewBag.UserName</td>
-									<td class="waktuunggah"></td>
-									<td class="aksi"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">No Pendaftaran</th>
+							<th scope="col">Nama</th>
+							<th scope="col">Waktu Unggah</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -67,7 +52,8 @@
 
 	$(document).ready(function () {
 		loadDataTugas();
-		loadDetail();
+		//loadDetail();
+		loadDataAnggota()
 	});
 
 	function formatTanggal(dateString) {
@@ -101,8 +87,6 @@
 				namatugas.textContent = item.tgs_namatugas;
 				deadline.textContent = '[Batas Waktu Pengumpulan Tugas : ' + formatTanggal(item.tgs_deadline) + ' | ' + formatJam(item.tgs_deadline) + ' WIB]';
 				deadlineDate = new Date(item.tgs_deadline);
-				loadTable();
-				console.log(tugas)
 			},
 			error: function (error) {
 				console.error("Error fetching data:", error);
@@ -246,6 +230,66 @@
 		});
 	}
 
+	function loadDataAnggota() {
+		var idtugas = document.getElementsByName("idtugas")[0];
+		var nopendaftaran = "@ViewBag.UserId";
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "Tugas/DataDetailTugas?dts_iddetail=" + idtugas.value + "&dts_nopendaftaran=" + nopendaftaran;
+		var method = "GET";
+		var counter = 1;
+		var detailData = []
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				console.log(data.status)
+				var formattedDate = formatTanggal(item.dts_waktupengumpulan);
+				var formattedTime = formatJam(item.dts_waktupengumpulan);
+				var fileName = item.dts_filetugas.split('\\').pop();
+				var downloadTugas = '<a href="#" style="background-color: #3a4584 !important;" class="btn btn-primary download-link" data-file="' + fileName + '"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unduh ' + fileName + '"></i></a>';
+				var unggahTugas = ''
+				if (currentDate <= deadlineDate) {
+					unggahTugas = '<button style="background-color: #3a4584 !important;" class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">' +
+						'<i class="fa fa-upload" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></i>' +
+						'</button>';
+				}
+				var aksi = downloadTugas + unggahTugas;
+				detailData.push([counter, '@ViewBag.UserId', '@ViewBag.UserName', formattedDate + ', ' + formattedTime + ' WIB', aksi])
+
+				jq('#tabellist').DataTable({
+					data: detailData
+				});
+
+				$('.download-link').on('click', function (e) {
+					e.preventDefault();
+					var fileName = $(this).data('file');
+					downloadFile(fileName);
+				});
+			},
+			error: function (xhr, status) {
+				console.log(currentDate)
+				console.log(deadlineDate)
+				var downloadTugas = ''
+				var unggahTugas = ''
+				if (currentDate <= deadlineDate) {
+					unggahTugas = '<button style="background-color: #3a4584 !important;" class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal">' +
+						'<i class="fa fa-upload" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></i>' +
+						'</button>';
+				}
+				var aksi = downloadTugas + unggahTugas;
+				console.log(aksi)
+				detailData.push([counter, '@ViewBag.UserId', '@ViewBag.UserName', null, aksi])
+				jq('#tabellist').DataTable({
+					data: detailData
+				});
+			},
+		});
+	}
+
 	function downloadFile(fileName) {
 		var url = "https://localhost:7087/Tugas/DownloadTugasMahasiswa";
 
@@ -275,5 +319,4 @@
 				console.error('There was a problem with the fetch operation:', error);
 			});
 	}
-
 </script>

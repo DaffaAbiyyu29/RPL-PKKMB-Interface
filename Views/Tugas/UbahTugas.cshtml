@@ -24,7 +24,7 @@
 							<div class="col-md-3 px-0">
 								<div class="input-group has-validation mb-4 tugas">
 									<div class="form-floating">
-										<input type="file" class="form-control" id="fileInput" name="tugas" data-target="validateField" placeholder="">
+										<input onchange="validateFile(this)" type="file" class="form-control" id="fileInput" name="tugas" data-target="validateField" placeholder="">
 										<label for="fileInput">File Tugas</label>
 										<div class="invalid-feedback" data-target="validateLabel">* Pilih File Tugas.</div>
 									</div>
@@ -72,6 +72,34 @@
 </div>
 
 <script>
+	function validateFile(input) {
+		const fileSize = input.files[0].size / 1024 / 1024;
+
+		var ext = input.value.split(".");
+		ext = ext[ext.length - 1].toLowerCase();
+		var arrayExtensions = ["rar", "zip", "txt", "docx", "pptx", "pdf", "xlsx"];
+
+		if (arrayExtensions.lastIndexOf(ext) == -1) {
+			Swal.fire({
+				icon: "warning",
+				title: "Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xlsx",
+				showConfirmButton: false,
+				timer: 3000,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			//alert("Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xls");
+			$(input).val('');
+		} else if (fileSize > 10) {
+			alert("Ukuran File Terlalu Besar. Maksimal 10 MB.");
+			$(input).val('');
+		}
+	}
+
 	$(document).ready(function () {
 		loadDataTugas();
 
@@ -157,7 +185,7 @@
 			method = "PUT";
 			data = {
 				tgs_idtugas: idtugas,
-				tgs_nim: "KSK001",
+				tgs_nim: "@ViewBag.UserId",
 				tgs_namatugas: namatugas,
 				tgs_filetugas: "",
 				tgs_tglpemberiantugas: waktuawal,

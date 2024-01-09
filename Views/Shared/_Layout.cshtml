@@ -31,6 +31,8 @@
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap">
 
+	<link rel="stylesheet"
+		  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
@@ -77,6 +79,28 @@
 	});
 	});
 	</script>*@
+	<style>
+		.table td {
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.table th {
+			text-align: center !important;
+			vertical-align: middle !important;
+			font-size: 17px;
+			white-space: nowrap;
+			font-weight: bold;
+			text-align: center;
+			background-color: #3A4584;
+			color: white;
+			height: 40px;
+		}
+
+		.scrollable-table {
+			overflow-x: auto; /* Aktifkan scroll horizontal jika diperlukan */
+		}
+	</style>
 </head>
 <body>
 	<form id="form1" runat="server" enctype="multipart/form-data">
@@ -128,7 +152,7 @@
 						@*---------------------------------------------------------------------------------------------------------------------------------------*@
 						@*Panitia Kesekretariatan*@
 					<li class="nav-item mr-3 panitiakesekretariatan">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="Index">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="Dashboard">Dashboard</a>
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
@@ -164,7 +188,7 @@
 							@*---------------------------------------------------------------------------------------------------------------------------------------*@
 							@*PIC PKKMB*@
 					<li class="nav-item mr-3 picpkkmb">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="picpkkmb" asp-action="Index">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="picpkkmb" asp-action="Dashboard">Dashboard</a>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">

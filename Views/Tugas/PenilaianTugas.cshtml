@@ -4,8 +4,8 @@
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong><span id="kelompok"></span>&nbsp;<span class="float-end" id="fasilitator"></span></strong>
 			</h5>
-			<div class="card-body pt-1">
-				<table class="table table-hover table-striped table-sm" style="width:100%" id="tabellist">
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -105,7 +105,7 @@
 				$.each(data, function (key, val) {
 					var fileName = val.dts_filetugas.split('\\').pop();
 					var downloadtugas = '<a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a>'
-					var unggahnilai = '<button class="btn btn-primary btn-unggah-tugas" type="button" data-toggle="modal" data-target="#myModal" data-nomhs="' + val.dts_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></button>'
+					var unggahnilai = '<button style="background-color: #3a4584 !important;" class="btn btn-primary btn-unggah-tugas" type="button" data-toggle="modal" data-target="#myModal" data-nomhs="' + val.dts_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></button>'
 					detailData.push([counter, val.dts_nopendaftaran, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, downloadtugas, val.dts_nilaitugas, unggahnilai])
 					counter++;
 				});

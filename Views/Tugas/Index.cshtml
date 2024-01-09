@@ -15,8 +15,8 @@
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Tugas Mahasiswa Baru</strong>
 			</h5>
-			<div class="card-body pt-1">
-				<table class="table table-hover table-striped" style="width:100%; height:10px;" id="tabellist">
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -65,10 +65,10 @@
 					var fileName = val.tgs_filetugas.split('\\').pop();
 					var downloadtugas = '<a href="#" class="download-link" data-file="' + fileName + '">' + fileName + '</a>'
 					if ("@ViewBag.UserRole" == "Fasilitator") {
-						aksi = '<a class="btn btn-primary" href="/Tugas/UbahTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
-							'<a class="btn btn-primary" href="/Tugas/PenilaianTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Tugas/UbahTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Ubah Tugas"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+							'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Tugas/PenilaianTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
 					} else if ("@ViewBag.UserRole" == "Mahasiswa") {
-						aksi = '<a class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
 					}
 					detailData.push([counter, val.tgs_nim, val.tgs_namatugas, formatDateForDisplay(val.tgs_tglpemberiantugas), downloadtugas, formatDateForDisplay(val.tgs_deadline), val.tgs_deskripsi, aksi])
 					counter++;

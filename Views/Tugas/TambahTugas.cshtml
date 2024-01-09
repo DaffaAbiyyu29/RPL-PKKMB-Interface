@@ -23,8 +23,8 @@
 
 						<div class="input-group has-validation mb-4 tugas">
 							<div class="form-floating is-invalid">
-								<input type="file" class="form-control is-invalid" maxlength="100" id="validateField" name="tugas" data-target="validateField" placeholder="">
-								<label for="validateField">File Tugas</label>
+								<input onchange="validateFile(this)" type="file" class="form-control is-invalid" maxlength="100" id="tugas" name="tugas" data-target="validateField" placeholder="">
+								<label for="tugas">File Tugas</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Pilih File Tugas.</div>
 							</div>
 						</div>
@@ -54,14 +54,41 @@
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahTugas(event)">Tambah</button>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="tambahTugas(event)">Simpan</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	// Function to format the current date and time in the required format for datetime-local input
+	function validateFile(input) {
+		const fileSize = input.files[0].size / 1024 / 1024;
+
+		var ext = input.value.split(".");
+		ext = ext[ext.length - 1].toLowerCase();
+		var arrayExtensions = ["rar", "zip", "txt", "docx", "pptx", "pdf", "xlsx"];
+
+		if (arrayExtensions.lastIndexOf(ext) == -1) {
+			Swal.fire({
+				icon: "warning",
+				title: "Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xlsx",
+				showConfirmButton: false,
+				timer: 3000,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			//alert("Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xls");
+			$(input).val('');
+		} else if (fileSize > 10) {
+			alert("Ukuran File Terlalu Besar. Maksimal 10 MB.");
+			$(input).val('');
+		}
+	}
+
 	function getCurrentDateTime() {
 		var now = new Date();
 		var year = now.getFullYear();
@@ -88,7 +115,7 @@
 		var file = tugasInput.files[0];
 
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/Upload?tgs_nim=KSK001" + "&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
+		var url = hostname + "Tugas/Upload?tgs_nim=@ViewBag.UserId" + "&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
 		var method = "POST";
 
 		if (namatugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
