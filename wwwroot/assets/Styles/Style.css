@@ -814,3 +814,46 @@ body {
         #animated-text span:hover::before {
             width: 100%;
         }
+
+
+#downloadButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.floating-element-button {
+    position: fixed;
+    bottom: -60px; /* Mulai di luar layar bawah */
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 60px;
+    z-index: 1000;
+    transition: bottom 0.5s ease; /* Menambahkan efek transisi */
+}
+
+    .floating-element-button i {
+        font-size: 24px;
+    }
+
+.left-floating-button {
+    float: left;
+}
+
+.floating-element-button:hover {
+    background-color: #2980b9;
+}
+
+.floating-element-button.show {
+    bottom: 20px; /* Menggeser ke posisi terlihat saat tombol muncul */
+}
+
+
