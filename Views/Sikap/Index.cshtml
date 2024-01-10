@@ -58,6 +58,8 @@
 		var method = "GET";
 		var counter = 1;
 		var detailData = []
+		var namaMahasiswa = []
+		var namaKelompok = []
 
 		$.ajax({
 			url: url,
@@ -66,13 +68,17 @@
 			success: function (data) {
 				var item = data.data;
 				$.each(item, function (key, val) {
-					getNamaMahasiswa(val.nls_nopendaftaran, function (namaMahasiswa) {
-						loadDataKelompok(idkelompok, function (namaKelompok) {
-							console.log(namaKelompok)
-							detailData.push([counter, namaMahasiswa, namaKelompok, formatDateForDisplay(val.nls_tanggal), val.nls_sikap])
-							counter++;
+					getNamaMahasiswa(val.nls_nopendaftaran, function (namaMhs) {
+						namaMahasiswa = namaMhs
+						console.log(namaMahasiswa)
+						loadDataKelompok(idkelompok, function (namaKmk) {
+							namaKelompok = namaKmk
 						});
 					});
+					console.log(namaKelompok)
+
+					detailData.push([counter, namaMahasiswa, namaKelompok, formatDateForDisplay(val.nls_tanggal), val.nls_sikap])
+					counter++;
 				});
 
 				jq('#tabellist').DataTable({
@@ -95,7 +101,6 @@
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				console.log("Data Mahasiswa:", data);
 				var item = data.data;
 				nama = item.mhs_namalengkap;
 				idkelompok = item.mhs_idkelompok;
@@ -117,7 +122,6 @@
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				console.log("Data Kelompok:", data);
 				var item = data.data;
 				namaKelompok = item.kmk_namakelompok;
 				callback(namaKelompok);
