@@ -36,6 +36,7 @@
 </div>
 
 <script>
+	var ksknim = null
 	loadTable()
 
 	function loadTable() {
@@ -54,6 +55,7 @@
 
 				$.each(item, function (key, val) {
 					var aksi = null
+					ksknim = val.kmk_nim
 					if ("@ViewBag.UserRole" == "KSK") {
 						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/UbahKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
 							'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/DetailKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
@@ -68,6 +70,44 @@
 						zeroRecords: "Data Tidak Ditemukan"
 					}
 				});
+			},
+		});
+	}
+
+	function namaFasilitator() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "dataksk?ksk_nim=" + ksknim;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			async: false,
+			success: function (data) {
+				var item = data.data;
+				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
+				loadDataKelompok()
+			},
+		});
+	}
+
+	function namaRuangan() {
+		var fasilitator = document.getElementById("fasilitator");
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "dataksk?ksk_nim=" + ksknim;
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			async: false,
+			success: function (data) {
+				var item = data.data;
+				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
+				loadDataKelompok()
 			},
 		});
 	}
