@@ -110,8 +110,11 @@
 					counter++;
 				});
 
-				jq('#tabellist').DataTable({
-					data: detailData
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
 				});
 
 				$('.download-link').on('click', function (e) {

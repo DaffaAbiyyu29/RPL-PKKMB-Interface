@@ -35,10 +35,14 @@
 		  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
+	@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
 	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>*@
+	<link href="~/assets/datatables/datatables.css" rel="stylesheet" />
+	<link href="~/assets/datatables/datatables.min.css" rel="stylesheet" />
+	<script src="~/assets/datatables/datatables.js"></script>
+	<script src="~/assets/datatables/datatables.min.js"></script>
 
 	<script src="~/assets/Scripts/jquery-ui-1.13.2.min.js"></script>
 	<script src="~/assets/Plugins/sweetalert2/dist/sweetalert2.min.js"></script>
@@ -51,6 +55,19 @@
 	@*<script src="//code.tidio.co/magv0uprt7k6dju3bbazrdhmbbcvo45a.js" async></script>*@
 	<script>
 		var jq = jQuery.noConflict();
+		function setTodayDateTime() {
+			var currentDate = new Date();
+
+			// Mendapatkan komponen tanggal dan waktu
+			var year = currentDate.getFullYear();
+			var month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Januari dimulai dari 0
+			var day = currentDate.getDate().toString().padStart(2, '0');
+			var hours = currentDate.getHours().toString().padStart(2, '0');
+			var minutes = currentDate.getMinutes().toString().padStart(2, '0');
+
+			// Format string sesuai dengan format input type="datetime-local"
+			return formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+		}
 	</script>
 	@*<script type="text/javascript">
 	function sentValidation(input) {
@@ -167,7 +184,7 @@
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nilai</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="Index">Tugas</a>
+									@*<a class="hovercolor" style="font-weight: bold;" asp-controller="tugas" asp-action="Index">Tugas</a>*@
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="Index">Sikap</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="JamPlusMinus" asp-action="Index">Jam Plus / Minus</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="Index">Absensi</a>
@@ -182,6 +199,7 @@
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameKsk"></span> (<span id="showRoleKsk"></span>)</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
+							<a class="hovercolor" style="font-weight: bold;" href="../Akun/Ubah/@ViewBag.UserId">Ubah Akun</a>
 							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
 						</div>
 					</li>

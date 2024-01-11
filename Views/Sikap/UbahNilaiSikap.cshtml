@@ -16,18 +16,18 @@
 						<!-- First Column -->
 						<div class="form-floating mb-4 nama">
 							<input type="text" class="form-control" maxlength="10" id="nls_idnilaisikap" name="nls_idnilaisikap" value="@ViewBag.nls_idnilaisikap" placeholder="" hidden>
-							<input type="text" class="form-control" maxlength="100" id="nama" name="nama" placeholder="" readonly>
+							<input type="text" class="form-control" maxlength="100" id="nama" name="nama" style="background-color: transparent;" placeholder="" readonly>
 							<label for="nama">Nama</label>
 						</div>
 						<div class="form-floating mb-4 namakelompok">
-							<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" placeholder="" readonly>
+							<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" style="background-color: transparent;" placeholder="" readonly>
 							<label for="floatingInputGrid">Kelompok</label>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
 						<div class="form-floating mb-4 tanggal">
-							<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" placeholder="">
+							<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" style="background-color: transparent;" placeholder="" readonly>
 							<label for="floatingInputGrid">Hari / Tanggal</label>
 						</div>
 
@@ -73,7 +73,7 @@
 				var item = data.data;
 				nls_idnilaisikap.value = item.nls_idnilaisikap;
 				nopendaftaran = item.nls_nopendaftaran;
-				tanggal.value = item.nls_tanggal;
+				tanggal.value = setTodayDateTime();
 				nilaisikap.value = item.nls_sikap;
 				loadDataMahasiswa()
 			},

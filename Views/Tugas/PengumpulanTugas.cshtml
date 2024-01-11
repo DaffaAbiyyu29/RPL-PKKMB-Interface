@@ -52,7 +52,6 @@
 
 	$(document).ready(function () {
 		loadDataTugas();
-		//loadDetail();
 		loadDataAnggota()
 	});
 
@@ -92,21 +91,6 @@
 				console.error("Error fetching data:", error);
 			},
 		});
-	}
-
-	function loadTable() {
-		if (currentDate <= deadlineDate) {
-			// Create a button with Font Awesome icon
-			var uploadButton = document.createElement('button');
-			uploadButton.innerHTML = '<i class="fa fa-upload" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></i>';
-			uploadButton.className = 'btn btn-primary';
-			uploadButton.setAttribute('type', 'button');
-			uploadButton.setAttribute('data-toggle', 'modal');
-			uploadButton.setAttribute('data-target', '#myModal');
-
-			// Append the button to the 'aksi' cell
-			document.querySelector('.aksi').appendChild(uploadButton);
-		}
 	}
 
 	function getCurrentDateTime() {
@@ -178,58 +162,6 @@
 		});
 	}
 
-	function loadDetail() {
-		var idtugas = document.getElementsByName("idtugas")[0];
-		var nopendaftaran = "@ViewBag.UserId";
-
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/DataDetailTugas?dts_iddetail=" + idtugas.value + "&dts_nopendaftaran=" + nopendaftaran;
-		var method = "GET";
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				if (data && data.data) {
-					var item = data.data;
-					var waktuUnggahElement = document.querySelector('.waktuunggah');
-					var aksiElement = document.querySelector('.aksi');
-
-					// Menggunakan fungsi formatTanggal dan formatJam yang telah Anda tentukan sebelumnya
-					var formattedDate = formatTanggal(item.dts_waktupengumpulan);
-					var formattedTime = formatJam(item.dts_waktupengumpulan);
-
-					// Mengganti isi waktuunggah dengan tanggal dan waktu yang diformat
-					waktuUnggahElement.textContent = formattedDate + ', ' + formattedTime + ' WIB';
-
-					// Menyaring file name dari data
-					var fileName = item.dts_filetugas;
-					tugas = item.dts_filetugas;
-
-					// Membuat tautan download
-					var downloadLink = document.createElement('a');
-					downloadLink.href = '#';
-					downloadLink.className = 'btn btn-primary download-link';
-					downloadLink.setAttribute('data-file', fileName);
-					downloadLink.innerHTML = '<i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unduh ' + fileName + '"></i>';
-
-					// Menambahkan tautan download ke dalam elemen aksi
-					aksiElement.appendChild(downloadLink);
-
-					$('.download-link').on('click', function (e) {
-						e.preventDefault();
-						var fileName = $(this).data('file');
-						downloadFile(fileName);
-					});
-				} else {
-					// Menangani jika data tidak ditemukan
-					console.log("Data tidak ditemukan");
-				}
-			},
-		});
-	}
-
 	function loadDataAnggota() {
 		var idtugas = document.getElementsByName("idtugas")[0];
 		var nopendaftaran = "@ViewBag.UserId";
@@ -249,6 +181,7 @@
 				console.log(data.status)
 				var formattedDate = formatTanggal(item.dts_waktupengumpulan);
 				var formattedTime = formatJam(item.dts_waktupengumpulan);
+				tugas = item.dts_filetugas;
 				var fileName = item.dts_filetugas.split('\\').pop();
 				var downloadTugas = '<a href="#" style="background-color: #3a4584 !important;" class="btn btn-primary download-link" data-file="' + fileName + '"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unduh ' + fileName + '"></i></a>';
 				var unggahTugas = ''
@@ -260,8 +193,11 @@
 				var aksi = downloadTugas + unggahTugas;
 				detailData.push([counter, '@ViewBag.UserId', '@ViewBag.UserName', formattedDate + ', ' + formattedTime + ' WIB', aksi])
 
-				jq('#tabellist').DataTable({
-					data: detailData
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
 				});
 
 				$('.download-link').on('click', function (e) {
@@ -280,8 +216,11 @@
 				}
 				var aksi = downloadTugas + unggahTugas;
 				detailData.push([counter, '@ViewBag.UserId', '@ViewBag.UserName', null, aksi])
-				jq('#tabellist').DataTable({
-					data: detailData
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
 				});
 			},
 		});

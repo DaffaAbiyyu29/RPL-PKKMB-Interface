@@ -815,22 +815,21 @@ body {
             width: 100%;
         }
 
-
 #downloadButton {
-    padding: 10px 20px;
+    padding: 10px 15px;
     font-size: 16px;
     cursor: pointer;
 }
 
 .floating-element-button {
     position: fixed;
-    bottom: -60px; /* Mulai di luar layar bawah */
-    left: 20px;
+    bottom: -30px; /* Mulai di luar layar bawah */
+    left: 20px; /* Sesuaikan posisi sesuai kebutuhan */
     width: 60px;
     height: 60px;
     font-size: 20px;
     cursor: pointer;
-    background-color: #3498db;
+    background-color: #0059ab;
     color: #fff;
     border: none;
     border-radius: 50%;
@@ -855,5 +854,3 @@ body {
 .floating-element-button.show {
     bottom: 20px; /* Menggeser ke posisi terlihat saat tombol muncul */
 }
-
-

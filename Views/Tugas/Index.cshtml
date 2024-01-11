@@ -60,6 +60,7 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data
+
 				$.each(item, function (key, val) {
 					var aksi = null;
 					var fileName = val.tgs_filetugas.split('\\').pop();
@@ -74,8 +75,11 @@
 					counter++;
 				});
 
-				jq('#tabellist').DataTable({
-					data: detailData
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
 				});
 
 				$('.download-link').on('click', function (e) {

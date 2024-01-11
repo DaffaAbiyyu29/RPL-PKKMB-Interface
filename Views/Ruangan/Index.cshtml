@@ -1,7 +1,4 @@
-﻿@{
-}
-
-@if (@ViewBag.UserRole == "KSK")
+﻿@if (@ViewBag.UserRole == "KSK")
 {
 	<div class="row">
 		<div class="col-lg">
@@ -15,13 +12,14 @@
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
-			<div class="card-header">
-				Ruangan
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Ruangan Kelas</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
+							<th scope="col">No</th>
 							<th scope="col">Id Ruangan</th>
 							<th scope="col">Nama Ruangan</th>
 							<th scope="col">Status</th>
@@ -31,7 +29,6 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
 			</div>
 		</div>
@@ -39,42 +36,36 @@
 </div>
 
 <script>
-	new DataTable('#datatable');
 	loadTable()
 
 	function loadTable() {
-		var hostname = "https://localhost:7087/" // Replace with your actual API endpoint
+		var hostname = "https://localhost:7087/"
 		var url = hostname + "GetAllRuangan"
 		var method = "GET"
-		var counter = 1; // Initialize a counter variable
+		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data; // Assuming the API response is directly an array
+				var item = data.data;
 
-				list.forEach(function (item) {
+				$.each(item, function (key, val) {
+					var aksi = null;
 					if ("@ViewBag.UserRole" == "KSK") {
-						var newRow = '<tr>' +
-							'<td>' + item.rng_idruangan + '</td>' +
-							'<td>' + item.rng_namaruangan + '</td>' +
-							'<td>' + item.rng_status + '</td>' +
-							'<td>' +
-							'<a class="btn btn-primary" href="/ruangan/ubahruangan/' + item.rng_idruangan + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-							'</td>' +
-							'</tr>';
-					} else {
-						var newRow = '<tr>' +
-							'<td>' + item.rng_idruangan + '</td>' +
-							'<td>' + item.rng_namaruangan + '</td>' +
-							'<td>' + item.rng_status + '</td>' +
-							'</tr>';
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/ruangan/ubahruangan/' + val.rng_idruangan + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>'
 					}
+					detailData.push([counter, val.rng_idruangan, val.rng_namaruangan, val.rng_status, aksi])
+					counter++;
+				});
 
-					$('#tbody').append(newRow);
-					counter++; // Increment the counter for the next row
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
 				});
 			},
 			error: function (error) {

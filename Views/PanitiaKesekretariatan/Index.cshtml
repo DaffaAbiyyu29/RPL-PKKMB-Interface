@@ -1,14 +1,11 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Panitia Kesekretariatan</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -20,46 +17,91 @@
 							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
+				<div class=" float-end" style="margin-top: 20px;">
+					<a class="btn" style="background-color: #3a4584 !important;" onclick="nonAktifKsk(event)">Non Aktifkan</a>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	new DataTable('#datatable');
+	//'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Akun/Ubah/' + val.ksk_nim + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>'
 	loadTable()
+
+	var selectedNIMs = [];
 
 	function loadTable() {
 		var hostname = "https://localhost:7087/"
 		var url = hostname + "TampilKskAktif"
 		var method = "GET"
-		var counter = 1; // Initialize a counter variable
+		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data
-				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' + // Use the counter as a sequence number
-						'<td>' + item.ksk_nim + '</td>' +
-						'<td>' + item.ksk_nama + '</td>' +
-						'<td>' + item.ksk_jeniskelamin + '</td>' +
-						'<td>' + item.ksk_programstudi + '</td>' +
-						'<td>' + item.ksk_role + '</td>' +
-						'<td>' +
-						'<a class="btn btn-primary" href="/Akun/Ubah/' + item.ksk_nim + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-						//'<button class="btn btn-danger" value="' + item.ksk_nim + '" onclick="hapus(this.value)">Delete</button>' +
-						'</td>' +
-						'</tr>';
+				var item = data.data;
 
-					$('#tbody').append(newRow);
-					counter++; // Increment the counter for the next row
+				$.each(item, function (key, val) {
+					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-ksk-nim="' + val.ksk_nim + '">' +
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>'
+					detailData.push([counter, val.ksk_nim, val.ksk_nama, val.ksk_jeniskelamin, val.ksk_programstudi, val.ksk_role, aksi])
+					counter++;
 				});
+
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
+				});
+
+				$('input[type="checkbox"]').change(function () {
+					var kskNim = $(this).data('ksk-nim');
+					if (this.checked) {
+						selectedNIMs.push(kskNim);
+					} else {
+						selectedNIMs = selectedNIMs.filter(function (nim) {
+							return nim !== kskNim;
+						});
+					}
+				});
+			},
+		});
+	}
+
+	function nonAktifKsk(event) {
+		event.preventDefault();
+
+		var hostname = "https://localhost:7087/";
+		url = hostname + "nonAktifKsk";
+		method = "PUT";
+
+		var data = JSON.stringify(selectedNIMs);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Panitia Kesekretariatan Berhasil Dinonaktifkan.",
+					showConfirmButton: false,
+					timer: 2000,
+				}).then(() => {
+					location.reload()
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
 			},
 		});
 	}

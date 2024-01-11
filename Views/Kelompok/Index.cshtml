@@ -1,7 +1,4 @@
-﻿@{
-}
-
-@if (@ViewBag.UserRole == "KSK")
+﻿@if (@ViewBag.UserRole == "KSK")
 {
 	<div class="row">
 		<div class="col-lg">
@@ -15,11 +12,11 @@
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
-			<div class="card-header">
-				Kelompok
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Kelompok</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -32,7 +29,6 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
 			</div>
 		</div>
@@ -40,7 +36,6 @@
 </div>
 
 <script>
-	new DataTable('#datatable');
 	loadTable()
 
 	function loadTable() {
@@ -48,36 +43,30 @@
 		var url = hostname + "GetAllKelompok"
 		var method = "GET"
 		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data
-				list.forEach(function (item) {
-					if ("@ViewBag.UserRole" == "KSK") {
-						var newRow = '<tr>' +
-							'<td>' + counter + '</td>' + // Use the counter as a sequence number
-							'<td>' + item.kmk_namakelompok + '</td>' +
-							'<td>' + item.kmk_nim + '</td>' +
-							'<td>' + item.kmk_idruangan + '</td>' +
-							'<td>' +
-							'<a class="btn btn-primary" href="/Kelompok/UbahKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
-							'<a class="btn btn-primary" href="/Kelompok/DetailKelompok/' + item.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' +
-							'</td>' +
-							'</tr>';
-					} else {
-						var newRow = '<tr>' +
-							'<td>' + counter + '</td>' + // Use the counter as a sequence number
-							'<td>' + item.kmk_namakelompok + '</td>' +
-							'<td>' + item.kmk_nim + '</td>' +
-							'<td>' + item.kmk_idruangan + '</td>' +
-							'</tr>';
-					}
+				var item = data.data;
 
-					$('#tbody').append(newRow);
-					counter++; // Increment the counter for the next row
+				$.each(item, function (key, val) {
+					var aksi = null
+					if ("@ViewBag.UserRole" == "KSK") {
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/UbahKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+							'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/DetailKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+					}
+					detailData.push([counter, val.kmk_namakelompok, val.kmk_nim, val.kmk_idruangan, aksi])
+					counter++;
+				});
+
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
 				});
 			},
 		});

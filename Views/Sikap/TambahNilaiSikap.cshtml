@@ -1,7 +1,4 @@
-﻿@{
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
@@ -22,7 +19,7 @@
 						</div>
 						<div class="input-group has-validation mb-4 namakelompok">
 							<div class="form-floating is-invalid">
-								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" placeholder="" readonly>
+								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: transparent;" placeholder="" readonly>
 								<label for="floatingInputGrid">Kelompok</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Kelompok.</div>
 							</div>
@@ -31,10 +28,9 @@
 					<div class="col-md-6">
 						<!-- Second Column -->
 						<div class="input-group has-validation mb-4 tanggal">
-							<div class="form-floating is-invalid">
-								<input type="datetime-local" class="form-control is-invalid" id="tanggal" name="tanggal" data-target="validateField" placeholder="">
+							<div class="form-floating">
+								<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: transparent;" placeholder="" readonly>
 								<label for="validateField">Hari / Tanggal</label>
-								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Hari / Tanggal.</div>
 							</div>
 						</div>
 						<div class="input-group has-validation mb-4 nilaisikap">
@@ -59,6 +55,10 @@
 </div>
 
 <script>
+	$('#tanggal').val(setTodayDateTime());
+	//var tanggal = document.getElementById("tanggal")
+	//tanggal.value = setTodayDateTime();
+
 	function NamaMahasiswa() {
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "getallmahasiswa";

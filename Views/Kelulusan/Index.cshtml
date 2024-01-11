@@ -1,26 +1,144 @@
-﻿@{
-}
-
-<div class="row justify-content-center mb-5">
-	<div class="col-lg mb-4">
+﻿<div class="row justify-content-center mb-5">
+	<div class="col-lg">
 		<div class="card">
-			<div class="card-header">
-				Kelulusan Mahasiswa Baru
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Mahasiswa Baru</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">Nama</th>
-							<th scope="col">Kelompok</th>
+							<th scope="col">Nama Mahasiswa</th>
+							<th scope="col">Gender</th>
 							<th scope="col">Program Studi</th>
-							<th scope="col">Status</th>
+							<th scope="col">Nomor Telepon</th>
+							<th scope="col">Alamat</th>
+							<th scope="col">Email</th>
+							<th scope="col">Kategori</th>
+							<th scope="col">Kelulusan</th>
+							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
+				<div class=" float-end" style="margin-top: 20px;">
+					<a class="btn" style="background-color: #3a4584 !important;" onclick="verifikasiMhs(event)">Verifikasi Kelulusan</a>
+					<a class="btn" style="background-color: #ed302f !important;" onclick="batalMhs(event)">Batal Kelulusan</a>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	//'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Akun/Ubah/' + val.mhs_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+	loadTable()
+
+	var selectedMhs = [];
+
+	function loadTable() {
+		var hostname = 'https://localhost:7087/'
+		var url = hostname + "getallmahasiswa"
+		var method = "GET"
+		var counter = 1;
+		var detailData = []
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+
+				$.each(item, function (key, val) {
+					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
+					detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_notelepon, val.mhs_alamat, val.mhs_email, val.mhs_kategori, val.mhs_statuskelulusan, aksi])
+					counter++;
+				});
+
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
+				});
+
+				$('input[type="checkbox"]').change(function () {
+					var mhsNo = $(this).data('mhs-no');
+					if (this.checked) {
+						selectedMhs.push(mhsNo);
+					} else {
+						selectedMhs = selectedMhs.filter(function (nim) {
+							return nim !== mhsNo;
+						});
+					}
+				});
+			},
+		});
+	}
+
+	function verifikasiMhs(event) {
+		event.preventDefault();
+
+		var hostname = "https://localhost:7087/";
+		url = hostname + "verifikasiKelulusanMahasiswa";
+		method = "PUT";
+
+		var data = JSON.stringify(selectedMhs);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Meluluskan Mahasiswa Baru.",
+					showConfirmButton: false,
+					timer: 2000,
+				}).then(() => {
+					location.reload();
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+
+	function batalMhs(event) {
+		event.preventDefault();
+
+		var hostname = "https://localhost:7087/";
+		url = hostname + "batalKelulusanMahasiswa";
+		method = "PUT";
+
+		var data = JSON.stringify(selectedMhs);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Membatalkan Kelulusan Mahasiswa Baru.",
+					showConfirmButton: false,
+					timer: 2000,
+				}).then(() => {
+					location.reload();
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr.responseJSON);
+			},
+		});
+	}
+</script>

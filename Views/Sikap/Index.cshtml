@@ -57,9 +57,7 @@
 		var url = hostname + "GetAllNilaiSikap";
 		var method = "GET";
 		var counter = 1;
-		var detailData = []
-		var namaMahasiswa = []
-		var namaKelompok = []
+		var detailData = [];
 
 		$.ajax({
 			url: url,
@@ -67,29 +65,47 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data;
+				var totalData = item.length;
+
 				$.each(item, function (key, val) {
+					var namaMahasiswa = [];
+					var namaKelompok = [];
+
 					getNamaMahasiswa(val.nls_nopendaftaran, function (namaMhs) {
-						namaMahasiswa = namaMhs
-						console.log(namaMahasiswa)
+						namaMahasiswa.push([namaMhs]);
 						loadDataKelompok(idkelompok, function (namaKmk) {
-							namaKelompok = namaKmk
+							namaKelompok.push([namaKmk]);
+							var aksi = '';
+							if ("@ViewBag.UserRole" == "Fasilitator") {
+								aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/sikap/ubahnilaisikap/' + val.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+							}
+							detailData.push([counter, namaMahasiswa, namaKelompok, formatDateForDisplay(val.nls_tanggal), val.nls_sikap, aksi]);
+							counter++;
+
+							// Inisialisasi DataTable setiap kali data baru ditambahkan
+							if (counter - totalData == 1) {
+								initializeDataTable(detailData);
+							}
 						});
 					});
-					console.log(namaKelompok)
-
-					detailData.push([counter, namaMahasiswa, namaKelompok, formatDateForDisplay(val.nls_tanggal), val.nls_sikap])
-					counter++;
-				});
-
-				jq('#tabellist').DataTable({
-					data: detailData
 				});
 			},
 			error: function (error) {
 				console.error("Error fetching data: ", error);
 			},
 		});
+
+		// Fungsi untuk menginisialisasi DataTable
+		function initializeDataTable(data) {
+			$('#tabellist').DataTable({
+				data: detailData,
+				language: {
+					zeroRecords: "Data Tidak Ditemukan"
+				}
+			});
+		}
 	}
+
 
 	function getNamaMahasiswa(nopendaftaran, callback) {
 		var hostname = "https://localhost:7087/";

@@ -1,14 +1,11 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
-			<div class="card-body">
-				<table class="table table-hover">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Verifikasi Kesekretariatan</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th class="text-center" scope="col">No</th>
@@ -20,10 +17,9 @@
 							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
 				<div class=" float-end" style="margin-top: 20px;">
-					<a class="btn" Style="background-color: #0059AB;" onclick="verifikasiKSK(event)">Verifikasi</a>
+					<a class="btn" style="background-color: #3a4584 !important;" onclick="verifikasiKSK(event)">Verifikasi</a>
 				</div>
 			</div>
 		</div>
@@ -31,7 +27,6 @@
 </div>
 
 <script>
-	new DataTable('#datatable');
 	loadTable();
 
 	var selectedNIMs = [];
@@ -40,40 +35,35 @@
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "TampilKskDraft";
 		var method = "GET";
-		var counter = 1; // Initialize a counter variable
+		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data;
-				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td class="text-center">' + counter + '</td>' +
-						'<td class="text-center">' + item.ksk_nim + '</td>' +
-						'<td>' + item.ksk_nama + '</td>' +
-						'<td>' + item.ksk_jeniskelamin + '</td>' +
-						'<td>' + item.ksk_programstudi + '</td>' +
-						'<td>' + item.ksk_role + '</td>' +
-						'<td>' +
-						'<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-ksk-nim="' + item.ksk_nim + '">' +
-						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>' +
-						'</td>' +
-						'</tr>';
+				var item = data.data;
 
-					$('#tbody').append(newRow);
-					counter++; // Increment the counter for the next row
+				$.each(item, function (key, val) {
+					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-ksk-nim="' + val.ksk_nim + '">' +
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
+					detailData.push([counter, val.ksk_nim, val.ksk_nama, val.ksk_jeniskelamin, val.ksk_programstudi, val.ksk_role, aksi])
+					counter++;
 				});
 
-				// Add event listener to checkboxes
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						zeroRecords: "Data Tidak Ditemukan"
+					}
+				});
+
 				$('input[type="checkbox"]').change(function () {
 					var kskNim = $(this).data('ksk-nim');
 					if (this.checked) {
-						// Add to the selectedNIMs array if checked
 						selectedNIMs.push(kskNim);
 					} else {
-						// Remove from the selectedNIMs array if unchecked
 						selectedNIMs = selectedNIMs.filter(function (nim) {
 							return nim !== kskNim;
 						});

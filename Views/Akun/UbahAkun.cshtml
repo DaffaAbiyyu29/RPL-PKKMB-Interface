@@ -92,7 +92,7 @@
 						</div>
 
 						<div class="form-floating mb-4 status">
-							<input type="text" class="form-control" maxlength="50" id="status" name="status" placeholder="" readonly>
+							<input type="text" style="background-color: white;" class="form-control" maxlength="50" id="status" name="status" placeholder="" readonly>
 							<label for="floatingInputGrid">Status</label>
 						</div>
 					</div>
@@ -104,9 +104,44 @@
 </div>
 
 <script>
-	loadDataMhs();
-	loadDataKsk();
-	var redirectPath = ""
+	var token = getCookie("token");
+	var decodedPayload = decodeJwt(token);
+	console.log(token)
+	console.log(decodedPayload)
+
+	if (decodedPayload.role == 'Mahasiswa') {
+		loadDataMhs();
+	} else if (decodedPayload.role == 'Fasilitator' || decodedPayload.role == 'KSK') {
+		loadDataKsk();
+	}
+
+	function getCookie(name) {
+		var nameEQ = name + "=";
+		var cookies = document.cookie.split(';');
+
+		for (var i = 0; i < cookies.length; i++) {
+			var cookie = cookies[i].trim();
+			if (cookie.startsWith(nameEQ)) {
+				return cookie.substring(nameEQ.length, cookie.length);
+			}
+		}
+
+		return null; // Return null if the cookie is not found
+	}
+
+	function decodeJwt(token) {
+		const base64Url = token.split('.')[1];
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+
+		return JSON.parse(jsonPayload);
+	}
+
+	function deleteCookie(name) {
+		document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+	}
 
 	function loadDataMhs() {
 		var username = document.getElementById("username")
@@ -141,7 +176,6 @@
 				kategori.value = item.mhs_kategori
 				katasandi.value = item.mhs_password
 				status.value = item.mhs_status
-				redirectPath = "/mahasiswabaru/index"
 				$('.role').hide();
 			},
 		});
@@ -180,7 +214,6 @@
 				role.value = item.ksk_role
 				katasandi.value = item.ksk_password
 				status.value = item.ksk_status
-				redirectPath = "/panitiakesekretariatan/index"
 				$('.kategori').hide();
 			},
 		});
@@ -260,7 +293,8 @@
 					showConfirmButton: false,
 					timer: 2000,
 				}).then(() => {
-					window.location.href = redirectPath;
+					deleteCookie("token")
+					window.location.href = 'https://localhost:7240';
 				});
 			},
 			error: function (xhr, status) {
