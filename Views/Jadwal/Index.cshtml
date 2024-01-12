@@ -1,8 +1,4 @@
-﻿@{
-}
-
-
-<div class="row">
+﻿<div class="row">
 	<div class="col-lg-4">
 		@if (@ViewBag.UserRole == "KSK")
 		{
@@ -32,11 +28,11 @@
 <div class="row justify-content-center mb-5">
 	<div class="col-lg semua">
 		<div class="card">
-			<div class="card-header">
-				Jadwal PKKMB
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Jadwal PKKMB</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -50,18 +46,17 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbodysemua"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg mb-4 senin">
 		<div class="card">
-			<div class="card-header">
-				Hari ke-1 : Senin
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Hari Ke - 1 : Senin</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistsenin">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -75,18 +70,17 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbodysenin"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg mb-4 selasa">
 		<div class="card">
-			<div class="card-header">
-				Hari ke-2 : Selasa
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Hari Ke - 2 : Selasa</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistselasa">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -100,18 +94,17 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbodyselasa"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg mb-4 rabu">
 		<div class="card">
-			<div class="card-header">
-				Hari ke-3 : Rabu
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Hari Ke - 3 : Rabu</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistrabu">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -125,18 +118,17 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbodyrabu"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg mb-4 kamis">
 		<div class="card">
-			<div class="card-header">
-				Hari ke-4 : Kamis
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Hari Ke - 4 : Kamis</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistkamis">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -150,18 +142,17 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbodykamis"></tbody>
 				</table>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg mb-4 jumat">
 		<div class="card">
-			<div class="card-header">
-				Hari ke-5 : Jumat
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Hari Ke - 5 : Jumat</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistjumat">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -175,7 +166,6 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbodyjumat"></tbody>
 				</table>
 			</div>
 		</div>
@@ -189,9 +179,11 @@
 	$('.kamis').hide();
 	$('.jumat').hide();
 	$('.semua').show();
-	var tabel = '';
+	//var tabel = '#tabellist';
 
 	$(document).ready(function () {
+		loadTable('Semua');
+
 		$('[name="hari"]').change(function () {
 			var selectedHari = $(this).val();
 
@@ -218,80 +210,80 @@
 		});
 	});
 
-
-	new DataTable('#datatable');
-	loadTable();
-
 	function loadTable(selectedHari) {
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "GetAllJadwal";
 		var method = "GET";
+		var counter = 1;
+		var detailData = [];
 
-		// Clear previous content before appending new rows
-		$('#tbodysenin, #tbodyselasa, #tbodyrabu, #tbodykamis, #tbodyjumat, #tbodysemua').empty();
+		// Pilih tabel berdasarkan hari yang dipilih
+		var tabelId = '';
+		if (selectedHari === 'Senin') {
+			tabelId = '#tabellistsenin';
+		} else if (selectedHari === 'Selasa') {
+			tabelId = '#tabellistselasa';
+		} else if (selectedHari === 'Rabu') {
+			tabelId = '#tabellistrabu';
+		} else if (selectedHari === 'Kamis') {
+			tabelId = '#tabellistkamis';
+		} else if (selectedHari === 'Jumat') {
+			tabelId = '#tabellistjumat';
+		} else {
+			tabelId = '#tabellist'; // Default untuk 'Semua'
+		}
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data;
-				var counter = 1;
+				var item = data.data;
 
-				list.forEach(function (item) {
-					// Parse the date string and format it
-					var jadwalDate = new Date(item.jdl_tglpelaksanaan);
+				// Gunakan filter untuk hanya menampilkan data sesuai dengan hari yang dipilih
+				var filteredData = item.filter(function (val) {
+					var jadwalDate = new Date(val.jdl_tglpelaksanaan);
+					var formattedDate = getFormattedDate(jadwalDate);
+					var hari = extractDayOfWeek(formattedDate);
+					return selectedHari === 'Semua' || hari === selectedHari;
+				});
+
+				$.each(filteredData, function (key, val) {
+					var aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Jadwal/Ubah/' + val.jdl_idjadwal + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+					var jadwalDate = new Date(val.jdl_tglpelaksanaan);
 					var formattedDate = getFormattedDate(jadwalDate);
 					var hari = extractDayOfWeek(formattedDate);
 
-					var tabel = '#tbodysemua';
-
-					// Determine the table to append based on the selectedHari
-					if (selectedHari === 'Senin' && hari === 'Senin') {
-						tabel = '#tbodysenin';
-					} else if (selectedHari === 'Selasa' && hari === 'Selasa') {
-						tabel = '#tbodyselasa';
-					} else if (selectedHari === 'Rabu' && hari === 'Rabu') {
-						tabel = '#tbodyrabu';
-					} else if (selectedHari === 'Kamis' && hari === 'Kamis') {
-						tabel = '#tbodykamis';
-					} else if (selectedHari === 'Jumat' && hari === 'Jumat') {
-						tabel = '#tbodyjumat';
-					} else if (selectedHari === 'Semua') {
-						// Always append to "Semua" table
-						tabel = '#tbodysemua';
-					}
-
 					if ("@ViewBag.UserRole" == "KSK") {
-						var newRow = '<tr>' +
-							'<td>' + counter + '</td>' +
-							'<td>' + formattedDate + '</td>' +
-							'<td>' + item.jdl_waktupelaksanaan + '</td>' +
-							'<td>' + item.jdl_agenda + '</td>' +
-							'<td>' + item.jdl_tempat + '</td>' +
-							'<td>' +
-							'<a class="btn btn-primary" href="/Jadwal/Ubah/' + item.jdl_idjadwal + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-							'</td>' +
-							'</tr>';
+						detailData.push([counter, formattedDate, val.jdl_waktupelaksanaan, val.jdl_agenda, val.jdl_tempat, aksi]);
 					} else {
-						var newRow = '<tr>' +
-							'<td>' + counter + '</td>' +
-							'<td>' + formattedDate + '</td>' +
-							'<td>' + item.jdl_waktupelaksanaan + '</td>' +
-							'<td>' + item.jdl_agenda + '</td>' +
-							'<td>' + item.jdl_tempat + '</td>' +
-							'</tr>';
+						detailData.push([counter, formattedDate, val.jdl_waktupelaksanaan, val.jdl_agenda, val.jdl_tempat]);
 					}
 
-					console.log(hari, tabel)
-					$(tabel).append(newRow);
-					counter++; // Increment the counter for the next row
+					counter++;
+				});
+
+				// Hapus dan inisialisasi kembali DataTable untuk mencegah masalah ganda
+				$(tabelId).DataTable().destroy();
+				$(tabelId).DataTable({
+					data: detailData,
+					language: {
+						search: "Cari :",
+						zeroRecords: "Data Tidak Ditemukan",
+						sLengthMenu: "Menampilkan _MENU_ data",
+						info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+						infoEmpty: "Menampilkan 0 data",
+						infoFiltered: "(Difilter dari _MAX_ total data)",
+						paginate: {
+							previous: "Sebelumnya",
+							next: "Berikutnya"
+						}
+					}
 				});
 			},
 		});
 	}
 
-	// Function to format date as "hari, tanggal bulan tahun"
 	function getFormattedDate(date) {
 		var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 		var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -307,10 +299,7 @@
 	// Function to extract the day of the week
 	function extractDayOfWeek(dateString) {
 		var dayPart = dateString.split(',')[0];
-
 		var trimmedDay = dayPart.trim();
-
 		return trimmedDay;
 	}
-
 </script>

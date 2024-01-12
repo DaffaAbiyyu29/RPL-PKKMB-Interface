@@ -1,7 +1,4 @@
-﻿@{
-}
-
-@if (ViewBag.UserRole == "Fasilitator")
+﻿@if (ViewBag.UserRole == "Fasilitator")
 {
 	<div class="row">
 		<div class="col-lg">
@@ -15,16 +12,17 @@
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
-			<div class="card-header">
-				Jam Plus / Minus
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Jam Plus / Minus Mahasiswa</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
 							<th scope="col">Nama</th>
 							<th scope="col">Jenis Kelamin</th>
+							<th scope="col">Program Studi</th>
 							<th scope="col">Kategori</th>
 							<th scope="col">Kelompok</th>
 							<th scope="col">Jam Plus</th>
@@ -35,7 +33,6 @@
 							}
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
 			</div>
 		</div>
@@ -51,16 +48,52 @@
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "getallmahasiswa";
 		var method = "GET";
+		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
 			type: method,
-			dataType: "json",
-			success: function (response) {
-				if (response && response.data && Array.isArray(response.data)) {
-					displayData(response.data);
-				} else {
-					console.log('Invalid response format or missing data property:', response);
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				var totalData = item.length;
+
+				$.each(item, function (key, val) {
+					var namaKelompok = [];
+
+					loadNamaKelompok(val.mhs_idkelompok, function (namaKmk) {
+						namaKelompok.push([namaKmk]);
+						var aksi = '';
+
+						if ("@ViewBag.UserRole" == "Fasilitator") {
+							aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/DetailJam/' + val.mhs_nopendaftaran + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' + '</td>';
+						}
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, namaKelompok, val.mhs_jamplus, val.mhs_jamminus, aksi])
+						counter++;
+
+						if (counter - totalData == 1) {
+							initializeDataTable(detailData);
+						}
+					});
+				});
+
+				function initializeDataTable(data) {
+					$('#tabellist').DataTable({
+						data: detailData,
+						language: {
+							search: "Cari :",
+							zeroRecords: "Data Tidak Ditemukan",
+							sLengthMenu: "Menampilkan _MENU_ data",
+							info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+							infoEmpty: "Menampilkan 0 data",
+							infoFiltered: "(Difilter dari _MAX_ total data)",
+							paginate: {
+								previous: "Sebelumnya",
+								next: "Berikutnya"
+							}
+						}
+					});
 				}
 			},
 			error: function (xhr, status, error) {
@@ -70,75 +103,23 @@
 		});
 	}
 
-	function displayData(data) {
-		var tbody = $('#tbody');
-		tbody.empty();
-
-		fetchKelompokData().then(function (kelompokData) {
-			var kelompokMap = mapKelompokData(kelompokData);
-
-			$.each(data, function (index, item) {
-				var row = $('<tr></tr>');
-				row.append('<td>' + (index + 1) + '</td>');
-				row.append('<td>' + item.mhs_namalengkap + '</td>');
-				row.append('<td>' + item.mhs_gender + '</td>');
-				row.append('<td>' + item.mhs_kategori + '</td>');
-				var kelompokName = kelompokMap[item.mhs_idkelompok] || 'Tidak Diketahui';
-				row.append('<td>' + kelompokName + '</td>');
-				row.append('<td>' + item.mhs_jamplus + '</td>');
-				row.append('<td>' + item.mhs_jamminus + '</td>');
-				if ("@ViewBag.UserRole" == "Fasilitator") {
-					row.append('<td>' + '<a class="btn btn-primary" href="/JamPlusMinus/DetailJam/' + item.mhs_nopendaftaran + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' + '</td>');
-				}
-				tbody.append(row);
-			});
-		});
-	}
-
-	function formatDateForDisplay(dateString) {
-		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
-		return formattedDate;
-	}
-
-	function fetchMahasiswaData() {
+	function loadNamaKelompok(id, callback) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallmahasiswa";
+		var url = hostname + "GetKelompok?kmk_idkelompok=" + id;
 		var method = "GET";
 
-		return $.ajax({
+		$.ajax({
 			url: url,
-			type: method,
-			dataType: "json"
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				namaKelompok = item.kmk_namakelompok;
+				callback(namaKelompok);
+			},
+			error: function (error) {
+				console.error("Error fetching data: ", error);
+			},
 		});
-	}
-
-	function fetchKelompokData() {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllKelompok";
-		var method = "GET";
-
-		return $.ajax({
-			url: url,
-			type: method,
-			dataType: "json"
-		});
-	}
-
-	function mapMahasiswaData(mahasiswaData) {
-		var mahasiswaMap = {};
-		$.each(mahasiswaData.data, function (index, mahasiswa) {
-			mahasiswaMap[mahasiswa.mhs_nopendaftaran] = mahasiswa.mhs_namalengkap;
-		});
-		return mahasiswaMap;
-	}
-
-	function mapKelompokData(kelompokData) {
-		var kelompokMap = {};
-		$.each(kelompokData.data, function (index, kelompok) {
-			kelompokMap[kelompok.kmk_idkelompok] = kelompok.kmk_namakelompok;
-
-		});
-		return kelompokMap;
 	}
 </script>
