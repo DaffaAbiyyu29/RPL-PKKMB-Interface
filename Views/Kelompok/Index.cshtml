@@ -13,7 +13,7 @@
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Kelompok</strong>
+				<strong>Kelompok PKKMB</strong>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
 				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
@@ -52,62 +52,92 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data;
+				var totalData = item.length;
 
 				$.each(item, function (key, val) {
-					var aksi = null
-					ksknim = val.kmk_nim
-					if ("@ViewBag.UserRole" == "KSK") {
-						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/UbahKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
-							'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/DetailKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-					}
-					detailData.push([counter, val.kmk_namakelompok, val.kmk_nim, val.kmk_idruangan, aksi])
-					counter++;
+					var namaKesekretariatan = [];
+					var namaRuangan = [];
+
+					loadNamaKesekretariatan(val.kmk_nim, function (namaKsk) {
+						namaKesekretariatan.push([namaKsk]);
+						loadNamaRuangan(val.kmk_idruangan, function (namaRuang) {
+							namaRuangan.push([namaRuang]);
+							var aksi = '';
+							if ("@ViewBag.UserRole" == "KSK") {
+								aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/UbahKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+									'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Kelompok/DetailKelompok/' + val.kmk_idkelompok + '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+							}
+							detailData.push([counter, val.kmk_namakelompok, namaKesekretariatan, namaRuangan, aksi])
+							counter++;
+
+							if (counter - totalData == 1) {
+								initializeDataTable(detailData);
+							}
+						});
+					});
 				});
 
-				$('#tabellist').DataTable({
-					data: detailData,
-					language: {
-						zeroRecords: "Data Tidak Ditemukan"
-					}
-				});
+				function initializeDataTable(data) {
+					$('#tabellist').DataTable({
+						data: detailData,
+						language: {
+							search: "Cari :",
+							zeroRecords: "Data Tidak Ditemukan",
+							sLengthMenu: "Menampilkan _MENU_ data",
+							info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+							infoEmpty: "Menampilkan 0 data",
+							infoFiltered: "(Difilter dari _MAX_ total data)",
+							paginate: {
+								previous: "Sebelumnya",
+								next: "Berikutnya"
+							}
+						}
+					});
+				}
 			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
 		});
 	}
 
-	function namaFasilitator() {
+	function loadNamaKesekretariatan(id, callback) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "dataksk?ksk_nim=" + ksknim;
+		var url = hostname + "dataksk?ksk_nim=" + id;
 		var method = "GET";
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
-			async: false,
 			success: function (data) {
 				var item = data.data;
-				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
-				loadDataKelompok()
+				namaKsk = item.ksk_nama;
+				callback(namaKsk);
+			},
+			error: function (error) {
+				console.error("Error fetching data: ", error);
 			},
 		});
 	}
 
-	function namaRuangan() {
-		var fasilitator = document.getElementById("fasilitator");
-
+	function loadNamaRuangan(id, callback) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "dataksk?ksk_nim=" + ksknim;
+		var url = hostname + "GetRuangan?rng_idruangan=" + id;
 		var method = "GET";
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
-			async: false,
 			success: function (data) {
 				var item = data.data;
-				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
-				loadDataKelompok()
+				namaRuangan = item.rng_namaruangan;
+				callback(namaRuangan);
+			},
+			error: function (error) {
+				console.error("Error fetching data: ", error);
 			},
 		});
 	}

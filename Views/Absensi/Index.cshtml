@@ -1,7 +1,4 @@
-﻿@{
-}
-
-@if (ViewBag.UserRole == "Fasilitator")
+﻿@if (ViewBag.UserRole == "Fasilitator")
 {
 	<div class="row">
 		<div class="col-lg">
@@ -13,23 +10,23 @@
 }
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg mb-4">
+	<div class="col-lg">
 		<div class="card">
-			<div class="card-header">
-				Absensi Mahasiswa Baru
-			</div>
-			<div class="card-body">
-				<table class="table" id="">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Absensi Mahasiswa</strong>
+			</h5>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">ID Absensi</th>
-							<th scope="col">Nim </th>
+							<th scope="col">Fasilitator</th>
 							<th scope="col">Nomor Pendaftaran</th>
+							<th scope="col">Mahasiswa</th>
 							<th scope="col">Tanggal Kehadiran</th>
 							<th scope="col">Status Kehadiran</th>
 							<th scope="col">Keterangan</th>
-							<th scope="col">Status</th>
+							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
 					<tbody id="tbody"></tbody>
@@ -38,8 +35,6 @@
 		</div>
 	</div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
 	var idkelompok = null;
@@ -120,11 +115,13 @@
 					console.log('Item Data:', item);
 					var row = $('<tr></tr>');
 					row.append('<td>' + (index + 1) + '</td>');
-					row.append('<td>' + mahasiswaMap[item.abs_nopendaftaran] + '</td>');
+					row.append('<td>' + item.abs_nim + '</td>');
 					row.append('<td>' + item.abs_nopendaftaran + '</td>');
+					row.append('<td>' + mahasiswaMap[item.abs_nopendaftaran] + '</td>');
 					row.append('<td>' + formatDateForDisplay(item.abs_tglkehadiran) + '</td>');
+					row.append('<td>' + item.abs_statuskehadiran + '</td>');
 					row.append('<td>' + item.abs_keterangan + '</td>');
-					row.append('<td>' + '<a class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' + '</td>');
+					row.append('<td>' + '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' + '</td>');
 					tbody.append(row);
 				});
 			});

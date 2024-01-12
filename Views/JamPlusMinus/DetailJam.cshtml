@@ -2,101 +2,95 @@
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong><span id="nama"></span></strong>
+				<strong>Detail Jam Plus / Jam Minus Mahasiswa <span id="kelompok"></span>&nbsp;<span class="float-end" id="namamhs"></span></strong>
+				@*<strong>Nama : <span id="nama"></span></strong>*@
 			</h5>
-			<div class="card-body px-lg-5 pt-1">
-				<div class="row">
-					<div class="col-md">
-						<table class="table" id="">
-							<thead>
-								<tr>
-									<th scope="col">No</th>
-									<th scope="col">Tanggal</th>
-									<th scope="col">Jenis Jam</th>
-									<th scope="col">Jumlah</th>
-									<th scope="col">Deskripsi</th>
-									<th scope="col">Aksi</th>
-								</tr>
-							</thead>
-							<tbody id="tbody"></tbody>
-						</table>
-					</div>
-				</div>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Tanggal</th>
+							<th scope="col">Jenis Jam</th>
+							<th scope="col">Jumlah</th>
+							<th scope="col">Deskripsi</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-	new DataTable('#datatable');
 	loadTable()
 
 	function loadTable() {
-		var namaElement = document.getElementById("nama");
-
 		var hostname = 'https://localhost:7087/';
 		var url = hostname + "GetDetailJamMahasiswa?dtj_nopendaftaran=@ViewBag.dtj_nopendaftaran";
 		var method = "GET";
 		var counter = 1;
+		var detailData = [];
 
 		$.ajax({
 			url: url,
 			method: method,
 			contentType: "application/json",
 			success: function (data) {
-				var list = data.data;
-				if (list.length > 0) {
-					var firstItem = list[0];
-					var nopendaftaran = firstItem.dtj_nopendaftaran;
-					fetchMahasiswaData().then(function (mahasiswaData) {
-						var mahasiswaMap = mapMahasiswaData(mahasiswaData);
-						var mahasiswaName = mahasiswaMap[nopendaftaran] || 'Tidak Diketahui';
-						namaElement.textContent = mahasiswaName;
-					});
+				var item = data.data;
+				namaMahasiswa()
 
-					list.forEach(function (item) {
-						var newRow = '<tr>' +
-							'<td>' + counter + '</td>' +
-							'<td>' + formatDateForDisplay(item.dtj_tanggal) + '</td>' +
-							'<td>' + item.dtj_jenisjam + '</td>' +
-							'<td>' + item.dtj_jumlah + '</td>' +
-							'<td>' + item.dtj_deskripsi + '</td>' +
-							'<td>' +
-							'<a class="btn btn-primary" href="/JamPlusMinus/UbahJam/' + item.dtj_idjam + '/' + item.dtj_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' +
-							'</td>' +
-							'</tr>';
+				$.each(item, function (key, val) {
+					var aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/UbahJam/' + val.dtj_idjam + '/' + val.dtj_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+					detailData.push([counter, formatDateForDisplay(val.dtj_tanggal), val.dtj_jenisjam, val.dtj_jumlah, val.dtj_deskripsi, aksi])
+					counter++;
+				});
 
-						$('#tbody').append(newRow);
-						counter++;
-					});
-				}
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						search: "Cari :",
+						zeroRecords: "Data Tidak Ditemukan",
+						sLengthMenu: "Menampilkan _MENU_ data",
+						info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+						infoEmpty: "Menampilkan 0 data",
+						infoFiltered: "(Difilter dari _MAX_ total data)",
+						paginate: {
+							previous: "Sebelumnya",
+							next: "Berikutnya"
+						}
+					}
+				});
 			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
 		});
-	}
-
-	function fetchMahasiswaData() {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallmahasiswa";
-		var method = "GET";
-
-		return $.ajax({
-			url: url,
-			type: method,
-			dataType: "json"
-		});
-	}
-
-	function mapMahasiswaData(mahasiswaData) {
-		var mahasiswaMap = {};
-		$.each(mahasiswaData.data, function (index, mahasiswa) {
-			mahasiswaMap[mahasiswa.mhs_nopendaftaran] = mahasiswa.mhs_namalengkap;
-		});
-		return mahasiswaMap;
 	}
 
 	function formatDateForDisplay(dateString) {
 		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
 		return formattedDate;
+	}
+
+	function namaMahasiswa() {
+		var mahasiswa = document.getElementById("namamhs");
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "datamahasiswa?mhs_nopendaftaran=@ViewBag.dtj_nopendaftaran";
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				mahasiswa.textContent = 'Nama : ' + item.mhs_namalengkap;
+			},
+		});
 	}
 </script>

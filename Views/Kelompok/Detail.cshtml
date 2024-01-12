@@ -1,6 +1,4 @@
-﻿
-
-<div class="row">
+﻿<div class="row">
 	<div class="col-lg">
 		<div class="my-3" style="margin-top: 40px;">
 			<a class="btn" style="background-color:#0059ab; color:white;" href="../TambahAnggota/@ViewBag.kmk_idkelompok">Tambah Anggota</a>
@@ -12,30 +10,23 @@
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong><span id="kelompok"></span>&nbsp;<span class="float-end" id="fasilitator"></span></strong>
+				<strong>Anggota Kelompok <span id="kelompok"></span>&nbsp;<span class="float-end" id="fasilitator"></span></strong>
 			</h5>
-			<div class="card-body px-lg-5 pt-1">
-				<div class="row">
-					<div class="col-md">
-						<table class="table" id="datatable">
-							<thead>
-								<tr>
-									<th scope="col">No</th>
-									<th scope="col">No Pendaftaran</th>
-									<th scope="col">Mahasiswa</th>
-									<th scope="col">Jenis Kelamin</th>
-									<th scope="col">Program Studi</th>
-									<th scope="col">Kategori</th>
-									<th scope="col">Aksi</th>
-								</tr>
-							</thead>
-							<tbody id="tbody">
-							</tbody>
-						</table>
-						<div class="float-end" style="margin-top: 20px;">
-							<a class="btn" Style="background-color: #ed302f;" onclick="hapusAnggota(event)">Hapus</a>
-						</div>
-					</div>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">Mahasiswa</th>
+							<th scope="col">Jenis Kelamin</th>
+							<th scope="col">Program Studi</th>
+							<th scope="col">Kategori</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+				</table>
+				<div class="float-end" style="margin-top: 20px;">
+					<a class="btn" Style="background-color: #ed302f;" onclick="hapusAnggota(event)">Hapus</a>
 				</div>
 			</div>
 		</div>
@@ -44,7 +35,7 @@
 
 <script>
 	var nim = null;
-	var selectedNoPendaftarans = [];
+	var selectedMhs = [];
 	loadDataKelompok()
 
 	function loadDataKelompok() {
@@ -76,6 +67,7 @@
 		var url = hostname + "GetAnggotaKelompok?kmk_idkelompok=" + idkelompok;
 		var method = "GET";
 		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
@@ -83,35 +75,37 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data;
-				var list = data.data
-				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' + // Use the counter as a sequence number
-						'<td>' + item.mhs_nopendaftaran + '</td>' +
-						'<td>' + item.mhs_namalengkap + '</td>' +
-						'<td>' + item.mhs_gender + '</td>' +
-						'<td>' + item.mhs_programstudi + '</td>' +
-						'<td>' + item.mhs_kategori + '</td>' +
-						'<td>' +
-						'<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + item.mhs_nopendaftaran + '">' +
-						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>' +
-						'</td>' +
-						'</tr>';
 
-					$('#tbody').append(newRow);
-					counter++; // Increment the counter for the next row
+				$.each(item, function (key, val) {
+					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
+					detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, aksi])
+					counter++;
 				});
 
-				// Add event listener to checkboxes
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						search: "Cari :",
+						zeroRecords: "Data Tidak Ditemukan",
+						sLengthMenu: "Menampilkan _MENU_ data",
+						info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+						infoEmpty: "Menampilkan 0 data",
+						infoFiltered: "(Difilter dari _MAX_ total data)",
+						paginate: {
+							previous: "Sebelumnya",
+							next: "Berikutnya"
+						}
+					}
+				});
+
 				$('input[type="checkbox"]').change(function () {
-					var noPendaftaran = $(this).data('mhs-no');
+					var mhsNo = $(this).data('mhs-no');
 					if (this.checked) {
-						// Add to the selectedNIMs array if checked
-						selectedNoPendaftarans.push(noPendaftaran);
+						selectedMhs.push(mhsNo);
 					} else {
-						// Remove from the selectedNIMs array if unchecked
-						selectedNoPendaftarans = selectedNoPendaftarans.filter(function (nop) {
-							return nop !== noPendaftaran;
+						selectedMhs = selectedMhs.filter(function (nim) {
+							return nim !== mhsNo;
 						});
 					}
 				});
@@ -140,11 +134,22 @@
 	function hapusAnggota(event) {
 		event.preventDefault();
 
+		if (selectedMhs.length == 0) {
+			Swal.fire({
+				position: "top-end",
+				icon: "warning",
+				title: "Tidak Ada Mahasiswa Yang Dipilih.",
+				showConfirmButton: false,
+				timer: 2000,
+			});
+			return;
+		}
+
 		var hostname = "https://localhost:7087/";
 		url = hostname + "BatalPengelompokkanMahasiswa";
 		method = "PUT";
 
-		var data = JSON.stringify(selectedNoPendaftarans);
+		var data = JSON.stringify(selectedMhs);
 
 		$.ajax({
 			url: url,

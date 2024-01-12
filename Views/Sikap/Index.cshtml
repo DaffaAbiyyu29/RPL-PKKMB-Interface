@@ -95,12 +95,20 @@
 			},
 		});
 
-		// Fungsi untuk menginisialisasi DataTable
 		function initializeDataTable(data) {
 			$('#tabellist').DataTable({
 				data: detailData,
 				language: {
-					zeroRecords: "Data Tidak Ditemukan"
+					search: "Cari :",
+					zeroRecords: "Data Tidak Ditemukan",
+					sLengthMenu: "Menampilkan _MENU_ data",
+					info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+					infoEmpty: "Menampilkan 0 data",
+					infoFiltered: "(Difilter dari _MAX_ total data)",
+					paginate: {
+						previous: "Sebelumnya",
+						next: "Berikutnya"
+					}
 				}
 			});
 		}
