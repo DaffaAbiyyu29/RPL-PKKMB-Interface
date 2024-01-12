@@ -159,19 +159,33 @@
 
 
 <script>
-	document.addEventListener('DOMContentLoaded', function () {
-		var floatingButton = document.querySelector('.floating-element-button');
 
-		// Tambahkan kelas 'show' setelah DOM dimuat
-		floatingButton.classList.add('show');
+		document.addEventListener('DOMContentLoaded', function () {
+			var floatingButton = document.querySelector('.floating-element-button');
 
-		// Tambahkan event listener untuk mengarahkan ke halaman dari repositori Anda saat tombol di klik
-		floatingButton.addEventListener('click', function () {
-			// Gantilah URL sesuai dengan halaman yang Anda inginkan dari repositori Anda
-			var repositoryUrl = '~\assets\Buku_Pedoman_Mahasiswa.pdf';
-			window.location.href = repositoryUrl;
+			// Tambahkan kelas 'show' setelah DOM dimuat
+			floatingButton.classList.add('show');
+
+			// Tambahkan event listener untuk mengarahkan ke halaman dari repositori Anda saat tombol di klik
+			floatingButton.addEventListener('click', function () {
+				// Gantilah nama file sesuai dengan file yang ingin Anda unduh
+				var fileName = 'Buku_Pedoman_Mahasiswa.pdf';
+
+				// Gantilah path sesuai dengan struktur folder di repositori lokal Anda
+				var repositoryPath = 'assets/';
+
+				// Buat URL lengkap untuk file yang akan diunduh
+				var downloadUrl = repositoryPath + fileName;
+
+				// Buat elemen <a> untuk mengunduh file
+				var downloadLink = document.createElement('a');
+				downloadLink.href = downloadUrl;
+				downloadLink.download = fileName;
+
+				// Simulasikan klik pada elemen <a> untuk memulai unduhan
+				downloadLink.click();
+			});
 		});
-	});
 
 
 
