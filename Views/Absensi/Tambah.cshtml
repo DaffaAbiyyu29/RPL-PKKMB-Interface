@@ -147,17 +147,17 @@
 
 		var absensiDataList = [];
 
-		// Iterate over each row to collect absensi data
 		$('input[name^="statusRadio"]:checked').each(function () {
-			var counter = $(this).closest('tr').find('td:first').text(); // Assuming the counter is in the first column
+			var counter = $(this).closest('tr').find('td:first').text();
 
 			var absensiData = {
-				"abs_idabsensi": "", // Leave it empty for now, it may be assigned by the server
-				"abs_nim": '@ViewBag.UserId', // Assuming ViewBag.UserId contains the nim
-				"abs_nopendaftaran": $(this).data('mhs-no'), // Assuming data-mhs-no contains the no pendaftaran
-				"abs_tglkehadiran": new Date().toISOString(), // Set the current date and time
-				"abs_statuskehadiran": $(this).val(), // Assuming the radio value represents the status
-				"abs_keterangan": getKeteranganValue(counter), // Use a function to get the keterangan value
+				"abs_idabsensi": "",
+				"abs_nim": '@ViewBag.UserId',
+				"abs_nopendaftaran": $(this).data('mhs-no'),
+				"abs_tglkehadiran": new Date().toISOString(), 
+				"abs_statuskehadiran": $(this).val(),
+				"abs_keterangan": getKeteranganValue(counter),
+				"abs_idpkkmb": 1,
 				"abs_status": "Aktif"
 			};
 
