@@ -26,10 +26,12 @@
 							<th scope="col">Tanggal Kehadiran</th>
 							<th scope="col">Status Kehadiran</th>
 							<th scope="col">Keterangan</th>
-							<th scope="col">Aksi</th>
+							@if (ViewBag.userRole == "Fasilitator")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
-					<tbody id="tbody"></tbody>
 				</table>
 			</div>
 		</div>
@@ -37,12 +39,10 @@
 </div>
 
 <script>
-	var idkelompok = null;
-	$(document).ready(function () {
-		// Mendapatkan idkelompok
-		getIdKelompok();
+	if ('@ViewBag.userRole' == 'PIC PKKMB' || '@ViewBag.userRole' == 'KSK' || '@ViewBag.userRole' == 'Fasilitator') {
+		var idkelompok = null
+		loadTable();
 
-		// Mendapatkan elemen tombol
 		var tambahDataBtn = document.getElementById("tambahDataBtn");
 
 		// Menangani klik tombol
@@ -57,120 +57,113 @@
 			}
 		};
 
-		loadData();
-	});
+		function loadTable() {
+			var hostname = "https://localhost:7087/";
+			var url = hostname + "GetAllAbsensi";
+			var method = "GET";
+			var counter = 1;
+			var detailData = [];
 
-	function loadData() {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllAbsensi";
-		var method = "GET";
+			$.ajax({
+				url: url,
+				method: method,
+				contentType: "application/json",
+				success: function (data) {
+					var item = data.data;
+					var totalData = item.length;
 
-		$.ajax({
-			url: url,
-			type: method,
-			dataType: "json",
-			success: function (response) {
-				if (response && response.data && Array.isArray(response.data)) {
-					displayData(response.data);
-				} else {
-					console.log('Invalid response format or missing data property:', response);
+					$.each(item, function (key, val) {
+						var namaKesekretariatan = [];
+						var namaMahasiswa = [];
+
+						loadNamaKesekretariatan(val.abs_nim, function (namaKsk) {
+							namaKesekretariatan.push([namaKsk]);
+							loadNamaMahasiswa(val.abs_nopendaftaran, function (namaMhs) {
+								namaMahasiswa.push([namaMhs]);
+								var aksi = '';
+								if ('@ViewBag.userRole' == 'Fasilitator') {
+									aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Absensi/Update/' + val.abs_idabsensi + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+								}
+								detailData.push([counter, namaKesekretariatan, val.abs_nopendaftaran, namaMahasiswa, formatDateForDisplay(val.abs_tglkehadiran), val.abs_statuskehadiran, val.abs_keterangan, aksi]);
+								counter++;
+
+								if (counter - totalData == 1) {
+									initializeDataTable(detailData);
+								}
+							});
+						});
+					});
+
+					function initializeDataTable(data) {
+						$('#tabellist').DataTable({
+							data: detailData,
+							language: {
+								search: "Cari :",
+								zeroRecords: "Data Tidak Ditemukan",
+								sLengthMenu: "Menampilkan _MENU_ data",
+								info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+								infoEmpty: "Menampilkan 0 data",
+								infoFiltered: "(Difilter dari _MAX_ total data)",
+								paginate: {
+									previous: "Sebelumnya",
+									next: "Berikutnya"
+								}
+							}
+						});
+					}
+				},
+				error: function (xhr, status, error) {
+					console.log('Error fetching data:', error);
+					console.log(xhr.responseJSON);
 				}
-			},
-			error: function (xhr, status, error) {
-				console.log('Error fetching data:', error);
-				console.log(xhr.responseJSON);
-			}
-		});
-	}
-
-	function getIdKelompok() {
-		var hostname = "https://localhost:7087/"
-		var url = hostname + "GetKelompokByNim?kmk_nim=@ViewBag.UserId"
-		var method = "GET"
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				var item = data.data;
-				idkelompok = item.kmk_idkelompok
-				console.log(idkelompok)
-			},
-
-		});
-	}
-
-	function displayData(data) {
-		var tbody = $('#tbody');
-		tbody.empty();
-
-		fetchMahasiswaData().then(function (mahasiswaData) {
-			fetchKelompokData().then(function (kelompokData) {
-				var mahasiswaMap = mapMahasiswaData(mahasiswaData);
-				var kelompokMap = mapKelompokData(kelompokData);
-				console.log('Data Kelompok Map:', kelompokMap);
-
-				$.each(data, function (index, item) {
-					console.log('Item Data:', item);
-					var row = $('<tr></tr>');
-					row.append('<td>' + (index + 1) + '</td>');
-					row.append('<td>' + item.abs_nim + '</td>');
-					row.append('<td>' + item.abs_nopendaftaran + '</td>');
-					row.append('<td>' + mahasiswaMap[item.abs_nopendaftaran] + '</td>');
-					row.append('<td>' + formatDateForDisplay(item.abs_tglkehadiran) + '</td>');
-					row.append('<td>' + item.abs_statuskehadiran + '</td>');
-					row.append('<td>' + item.abs_keterangan + '</td>');
-					row.append('<td>' + '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/jamminus/tambahjamminus/' + item.nls_idnilaisikap + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>' + '</td>');
-					tbody.append(row);
-				});
 			});
-		});
-	}
+		}
 
-	function formatDateForDisplay(dateString) {
-		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-		const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
-		return formattedDate;
-	}
+		function formatDateForDisplay(dateString) {
+			const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+			const formattedDate = new Date(dateString).toLocaleDateString('id-ID', options);
+			return formattedDate;
+		}
 
-	function fetchMahasiswaData() {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallmahasiswa";
-		var method = "GET";
+		function loadNamaKesekretariatan(id, callback) {
+			var hostname = "https://localhost:7087/";
+			var url = hostname + "dataksk?ksk_nim=" + id;
+			var method = "GET";
 
-		return $.ajax({
-			url: url,
-			type: method,
-			dataType: "json"
-		});
-	}
+			$.ajax({
+				url: url,
+				method: method,
+				contentType: "application/json",
+				success: function (data) {
+					var item = data.data;
+					namaKsk = item.ksk_nama;
+					callback(namaKsk);
+				},
+				error: function (error) {
+					console.error("Error fetching data: ", error);
+				},
+			});
+		}
 
-	function fetchKelompokData() {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllKelompok";
-		var method = "GET";
+		function loadNamaMahasiswa(id, callback) {
+			var hostname = "https://localhost:7087/";
+			var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + id;
+			var method = "GET";
 
-		return $.ajax({
-			url: url,
-			type: method,
-			dataType: "json"
-		});
-	}
-	function mapMahasiswaData(mahasiswaData) {
-		var mahasiswaMap = {};
-		$.each(mahasiswaData.data, function (index, mahasiswa) {
-			mahasiswaMap[mahasiswa.mhs_nopendaftaran] = mahasiswa.mhs_namalengkap;
-		});
-		return mahasiswaMap;
-	}
-
-	function mapKelompokData(kelompokData) {
-		var kelompokMap = {};
-		$.each(kelompokData.data, function (index, kelompok) {
-			kelompokMap[kelompok.kmk_idkelompok] = kelompok.kmk_namakelompok;
-
-		});
-		return kelompokMap;
+			$.ajax({
+				url: url,
+				method: method,
+				contentType: "application/json",
+				success: function (data) {
+					var item = data.data;
+					idkelompok = item.mhs_idkelompok
+					namaMhs = item.mhs_namalengkap;
+					callback(namaMhs);
+				},
+				error: function (error) {
+					console.error("Error fetching data: ", error);
+				},
+			});
+		}
 	}
 </script>

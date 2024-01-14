@@ -78,18 +78,29 @@
 					var item = list[i];
 					var statusIcon = item.inf_status === "belum terbaca" ? '<i class="fas fa-exclamation-circle text-danger"></i>' : '';
 					var cardStatusClass = item.inf_status === "belum terbaca" ? 'card-danger' : 'card-success';
-
-					var cardHtml = '<div class="card ' + cardStatusClass + ' ">' +
-						'<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
-						'<p class="card-text">' +
-						'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
-						'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
-						'Deskripsi: ' + item.inf_deskripsi + '<br>' +
-						'</p>' +
-						'<div class="d-flex justify-content-end mt-auto">' +
-						'<a href="/Informasi/Update/' + item.inf_idinformasi + '" class="btn btn-primary">Edit</a>' +
-						'</div>' +
-						'</div>';
+					var cardHrml = null;
+					if ('@ViewBag.userRole' == 'KSK') {
+						cardHtml = '<div class="card ' + cardStatusClass + ' ">' +
+							'<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
+							'<p class="card-text">' +
+							'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
+							'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
+							'Deskripsi: ' + item.inf_deskripsi + '<br>' +
+							'</p>' +
+							'<div class="d-flex justify-content-end mt-auto">' +
+							'<a href="/Informasi/Update/' + item.inf_idinformasi + '" class="btn btn-primary">Edit</a>' +
+							'</div>' +
+							'</div>';
+					} else {
+						cardHtml = '<div class="card ' + cardStatusClass + ' ">' +
+							'<h5 class="card-title text-info">' + item.inf_namainformasi + statusIcon + '</h5>' +
+							'<p class="card-text">' +
+							'Jenis Informasi: ' + item.inf_jenisinformasi + '<br>' +
+							'Tanggal Publikasi: ' + formatDateForDisplay(item.inf_tglpublikasi) + '<br>' +
+							'Deskripsi: ' + item.inf_deskripsi + '<br>' +
+							'</p>' +
+							'</div>';
+					}
 
 					cardContainer.append(cardHtml);
 				}

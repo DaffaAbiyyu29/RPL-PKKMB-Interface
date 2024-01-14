@@ -34,7 +34,7 @@ namespace PKKMB_Interface.Controllers
 					var userName = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "name")?.Value;
 					var userRole = jsonToken?.Claims?.FirstOrDefault(claim => claim.Type == "role")?.Value;
 
-					if (userRole == "PIC PKKMB")
+					if (userRole == "KSK" || userRole == "Fasilitator" || userRole == "PIC PKKMB" || userRole == "Mahasiswa")
 					{
 						ViewBag.UserId = userId;
 						ViewBag.UserName = userName;

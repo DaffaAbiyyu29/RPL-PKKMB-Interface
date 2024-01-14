@@ -140,7 +140,7 @@
 				<ul class="navbar-nav ml-auto">
 					@*MAHASISWA BARU*@
 					<li class="nav-item mr-3 mahasiswabaru">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="mahasiswabaru" asp-action="dashboard">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="Informasi" asp-action="Index">Dashboard</a>
 					<li class="nav-item dropdown mr-3 mahasiswabaru">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
@@ -169,7 +169,7 @@
 						@*---------------------------------------------------------------------------------------------------------------------------------------*@
 						@*Panitia Kesekretariatan*@
 					<li class="nav-item mr-3 panitiakesekretariatan">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="panitiakesekretariatan" asp-action="Dashboard">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="Informasi" asp-action="Index">Dashboard</a>
 					<li class="nav-item dropdown mr-3 panitiakesekretariatan">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
@@ -206,7 +206,7 @@
 							@*---------------------------------------------------------------------------------------------------------------------------------------*@
 							@*PIC PKKMB*@
 					<li class="nav-item mr-3 picpkkmb">
-						<a class="nav-link" style="font-weight: bold;" asp-controller="picpkkmb" asp-action="Dashboard">Dashboard</a>
+						<a class="nav-link" style="font-weight: bold;" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
@@ -366,30 +366,6 @@
 					},
 				});
 			}
-		}
-
-		function hideContentAndShowAlert() {
-			if (window.location.href != "https://localhost:7240/" && window.location.href != "https://localhost:7240/Akun/Login" && window.location.href != "https://localhost:7240/Akun/DaftarAkun" && window.location.href != "https://localhost:7240/Akun/LupaKataSandi") {
-				$('body').css('background-color', 'white'); // Set background color to black (you can also use 'white')
-				$('body').html('');
-
-				setTimeout(function () {
-					showAlertAndRefresh();
-				}, 0000);
-			}
-		}
-
-		function showAlertAndRefresh() {
-
-			Swal.fire({
-				position: "top-end",
-				icon: "error",
-				title: "Halaman Tidak Tersedia, Kembali ke Menu Awal",
-				showConfirmButton: false,
-				timer: 2000
-			}).then(() => {
-				window.location.href = '../';
-			});
 		}
 
 		$(document).ready(function () {

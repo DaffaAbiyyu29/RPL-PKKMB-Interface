@@ -5,7 +5,6 @@
 <div class="row justify-content-center mb-5">
 	<div class="col-lg-5">
 		<div class="card">
-			@*@Context.Session.GetString("Peran")*@
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Login Akun PKKMB</strong>
 			</h5>
@@ -58,7 +57,6 @@
 				success: function (data) {
 					if (data.status === 200) {
 						var role = data.role;
-						// Setelah mendapatkan token dari respons API
 						var token = data.token;
 
 						// Simpan token ke dalam cookies MVC
@@ -75,11 +73,11 @@
 						}).then(() => {
 							// Redirect based on the user's role
 							if (role == "Mahasiswa") {
-								window.location.href = '../Mahasiswa/Dashboard';
+								window.location.href = '/Informasi';
 							} else if (role == "Panitia Kesekretariatan") {
-								window.location.href = '../panitiakesekretariatan/dashboard';
+								window.location.href = '/Informasi';
 							} else if (role == "PIC PKKMB") {
-								window.location.href = '../';
+								window.location.href = '/Informasi';
 							}
 						});
 					} else {

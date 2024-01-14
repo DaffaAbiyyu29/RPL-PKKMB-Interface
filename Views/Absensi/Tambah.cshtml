@@ -1,41 +1,43 @@
-﻿
+﻿<style>
+	.radio-buttons {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
-<div class="row">
-	<div class="col-lg">
-		<div class="my-3" style="margin-top: 40px;">
-			<a class="btn" style="background-color:#0059ab; color:white;" href="../TambahAnggota/@ViewBag.kmk_idkelompok">Tambah Anggota</a>
-		</div>
-	</div>
-</div>
+	.form-check {
+		margin-right: 30px; /* Adjust as needed for spacing between radio buttons */
+	}
+
+	.keterangan-field {
+		flex-grow: 1;
+	}
+</style>
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong><span id="kelompok"></span>&nbsp;<span class="float-end" id="fasilitator"></span></strong>
+				<strong>Absensi Mahasiswa</strong>
 			</h5>
-			<div class="card-body px-lg-5 pt-1">
-				<div class="row">
-					<div class="col-md">
-						<table class="table" id="datatable">
-							<thead>
-								<tr>
-									<th scope="col">No</th>
-									<th scope="col">No Pendaftaran</th>
-									<th scope="col">Mahasiswa</th>
-									<th scope="col">Jenis Kelamin</th>
-									<th scope="col">Program Studi</th>
-									<th scope="col">Kategori</th>
-									<th scope="col">Aksi</th>
-								</tr>
-							</thead>
-							<tbody id="tbody">
-							</tbody>
-						</table>
-						<div class="float-end" style="margin-top: 20px;">
-							<a class="btn" Style="background-color: #0059ab;" onclick="submitAbsensi(event)">Simpan</a>
-						</div>
-					</div>
+			<div class="card-body pt-1 scrollable-table">
+				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
+					<thead>
+						<tr>
+							<th scope="col">No</th>
+							<th scope="col">No Pendaftaran</th>
+							<th scope="col">Mahasiswa</th>
+							<th scope="col">Jenis Kelamin</th>
+							<th scope="col">Program Studi</th>
+							<th scope="col">Kategori</th>
+							<th scope="col">Aksi</th>
+						</tr>
+					</thead>
+					<tbody id="tbody">
+					</tbody>
+				</table>
+				<div class="float-end" style="margin-top: 20px;">
+					<a class="btn" style="background-color: #3a4584 !important;" onclick="submitAbsensi(event)">Simpan</a>
 				</div>
 			</div>
 		</div>
@@ -45,29 +47,8 @@
 <script>
 	var nim = null;
 	var selectedNoPendaftarans = [];
-	loadDataKelompok()
-
-	function loadDataKelompok() {
-		var idkelompok = '@ViewBag.kmk_idkelompok';
-		var namakelompok = document.getElementById("kelompok");
-
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetKelompok?kmk_idkelompok=" + idkelompok;
-		var method = "GET";
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				var item = data.data;
-				namakelompok.textContent = item.kmk_namakelompok;
-				nim = item.kmk_nim;
-				namaFasilitator()
-				loadDataAnggota()
-			},
-		});
-	}
+	//loadDataKelompok()
+	loadDataAnggota()
 
 	function loadDataAnggota() {
 		var idkelompok = '@ViewBag.kmk_idkelompok';
@@ -76,6 +57,7 @@
 		var url = hostname + "GetAnggotaKelompok?kmk_idkelompok=" + idkelompok;
 		var method = "GET";
 		var counter = 1;
+		var detailData = []
 
 		$.ajax({
 			url: url,
@@ -83,43 +65,50 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data;
-				var list = data.data
-				list.forEach(function (item) {
-					var newRow = '<tr>' +
-						'<td>' + counter + '</td>' +
-						'<td>' + item.mhs_nopendaftaran + '</td>' +
-						'<td>' + item.mhs_namalengkap + '</td>' +
-						'<td>' + item.mhs_gender + '</td>' +
-						'<td>' + item.mhs_programstudi + '</td>' +
-						'<td>' + item.mhs_kategori + '</td>' +
-						'<td>' +
-						'<div class="form-check">' +
-						'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Hadir" id="hadir' + counter + '" data-mhs-no="' + item.mhs_nopendaftaran + '">' +
-						'<label class="form-check-label" for="hadir' + counter + '">Hadir</label>' +
-						'</div>' +
-						'<div class="form-check">' +
-						'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Sakit" id="sakit' + counter + '" data-mhs-no="' + item.mhs_nopendaftaran + '">' +
-						'<label class="form-check-label" for="sakit' + counter + '">Sakit</label>' +
-						'</div>' +
-						'<div class="form-check">' +
-						'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Izin" id="izin' + counter + '" data-mhs-no="' + item.mhs_nopendaftaran + '">' +
-						'<label class="form-check-label" for="izin' + counter + '">Izin</label>' +
-						'</div>' +
-						'<div class="form-check">' +
-						'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Alpa" id="alpa' + counter + '" data-mhs-no="' + item.mhs_nopendaftaran + '">' +
-						'<label class="form-check-label" for="alpa' + counter + '">Alpa</label>' +
-						'</div>' +
-						'</td>' +
-						'<td>' +
-						'<div class="form-floating mb-4 keterangan-field" style="display: none;">' +
-						'<textarea class="form-control" placeholder="" id="keterangan' + counter + '" name="keterangan" style="height: 100px" value="" disabled></textarea>' +
-						'<label for="keterangan' + counter + '">Keterangan</label>' +
-						'</div>' +
-						'</td>' +
-						'</tr>';
 
-					$('#tbody').append(newRow);
-					counter++;
+				$.each(item, function (key, val) {
+					if (!isMahasiswaAlreadyAbsen(val.mhs_nopendaftaran)) {
+						var aksi = '<div class="radio-buttons">' +
+							'<div class="form-check">' +
+							'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Hadir" id="hadir' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
+							'<label class="form-check-label" for="hadir' + counter + '">Hadir</label>' +
+							'</div>' +
+							'<div class="form-check">' +
+							'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Sakit" id="sakit' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
+							'<label class="form-check-label" for="sakit' + counter + '">Sakit</label>' +
+							'</div>' +
+							'<div class="form-check">' +
+							'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Izin" id="izin' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
+							'<label class="form-check-label" for="izin' + counter + '">Izin</label>' +
+							'</div>' +
+							'<div class="form-check">' +
+							'<input class="form-check-input status-radio" type="radio" name="statusRadio' + counter + '" value="Alpa" id="alpa' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
+							'<label class="form-check-label" for="alpa' + counter + '">Alpa</label>' +
+							'</div>' +
+							'</div>' +
+							'<div class="form-floating mb-4 keterangan-field" style="display: none;">' +
+							'<textarea class="form-control" placeholder="" id="keterangan' + counter + '" name="keterangan" style="height: 100px" value="" disabled></textarea>' +
+							'<label for="keterangan' + counter + '">Keterangan</label>' +
+							'</div>';
+						detailData.push([counter, val.mhs_nopendaftaran, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, aksi])
+						counter++;
+					}
+				});
+
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						search: "Cari :",
+						zeroRecords: "Data Tidak Ditemukan",
+						sLengthMenu: "Menampilkan _MENU_ data",
+						info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+						infoEmpty: "Menampilkan 0 data",
+						infoFiltered: "(Difilter dari _MAX_ total data)",
+						paginate: {
+							previous: "Sebelumnya",
+							next: "Berikutnya"
+						}
+					}
 				});
 
 				// Event listener for radio buttons to show/hide the text area
@@ -149,24 +138,6 @@
 						});
 					}
 				});
-			},
-		});
-	}
-
-	function namaFasilitator() {
-		var fasilitator = document.getElementById("fasilitator");
-
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "dataksk?ksk_nim=" + nim;
-		var method = "GET";
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				var item = data.data;
-				fasilitator.textContent = 'Fasilitator : ' + item.ksk_nama;
 			},
 		});
 	}
@@ -225,9 +196,7 @@
 					showConfirmButton: false,
 					timer: 2000,
 				}).then(() => {
-					// You can perform additional actions after successful submission if needed
-					// For example, reload the page
-					location.reload();
+					window.location.href = "/Absensi"
 				});
 			},
 			error: function (xhr, status) {
@@ -254,5 +223,27 @@
 			// Otherwise, use the value from the textarea
 			return keteranganField.find('textarea').val() || null;
 		}
+	}
+
+	function isMahasiswaAlreadyAbsen(mahasiswaNoPendaftaran) {
+		var today = new Date().toISOString().split('T')[0];
+		var url = `https://localhost:7087/GetAbsensiByTanggal?abs_tglkehadiran=${today}`;
+
+		var isAlreadyAbsen = false;
+
+		$.ajax({
+			url: url,
+			method: "GET",
+			contentType: "application/json",
+			async: false, // Tunggu hasilnya sebelum melanjutkan
+			success: function (data) {
+				var absensiData = data.data;
+				isAlreadyAbsen = absensiData.some(function (absen) {
+					return absen.abs_nopendaftaran === mahasiswaNoPendaftaran;
+				});
+			},
+		});
+
+		return isAlreadyAbsen;
 	}
 </script>
