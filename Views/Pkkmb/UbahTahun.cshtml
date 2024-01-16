@@ -1,0 +1,113 @@
+﻿<div class="row justify-content-center mb-5">
+	<div class="col-lg-8">
+		<div class="card">
+			@*@Context.Session.GetString("Peran")*@
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Ubah Tahun PKKMB</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="input-group mb-4 pkm_tahunPkkmb">
+					<div class="form-floating">
+						<input type="hidden" class="form-control" maxlength="10" id="pkm_idPkkmb" name="pkm_idPkkmb" data-target="validateField" placeholder="" value="@ViewBag.pkm_idPkkmb">
+						<input type="number" class="form-control" maxlength="4" id="pkm_tahunPkkmb" name="pkm_tahunPkkmb" data-target="validateField" placeholder="" value="2020">
+						<label for="validateField">Tahun PKKMB</label>
+					</div>
+					<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="ubahTahun(event)">Simpan</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	getData()
+
+	document.getElementById('pkm_tahunPkkmb').addEventListener('input', function () {
+		var yearInput = this.value.replace(/[^0-9]/g, '').substring(0, 4);
+		this.value = yearInput;
+
+		if (yearInput < 2020) {
+			Swal.fire({
+				icon: "warning",
+				title: "Minimal Tahun 2020",
+				showConfirmButton: false,
+				timer: 2000
+			})
+			this.value = '2020';
+		}
+	});
+
+	function getData() {
+		var pkm_idPkkmb = document.getElementsByName("pkm_idPkkmb")[0].value;
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetPkkmb?pkm_idPkkmb="+pkm_idPkkmb;
+		var method = "GET";
+		var input = {
+			pkm_tahunPkkmb: pkm_tahunPkkmb
+		};
+
+		var data = JSON.stringify(input);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data
+				$('#pkm_tahunPkkmb').val(item.pkm_tahunPkkmb)
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+	
+	function ubahTahun(event) {
+		event.preventDefault();
+
+		var pkm_idPkkmb = document.getElementsByName("pkm_idPkkmb")[0].value;
+		var pkm_tahunPkkmb = document.getElementsByName("pkm_tahunPkkmb")[0].value;
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "UpdatePkkmb";
+		var method = "PUT";
+		var input = {
+			pkm_idPkkmb: pkm_idPkkmb,
+			pkm_tahunPkkmb: pkm_tahunPkkmb
+		};
+
+		var data = JSON.stringify(input);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Mengubah Tahun PKKMB",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					window.location.href = '../';
+				});
+			},
+			error: function (xhr, status, error) {
+				Swal.fire({
+					icon: "warning",
+					title: "Tahun " + input.pkm_tahunPkkmb + " Sudah Tersedia",
+					showConfirmButton: false,
+					timer: 2000
+				})
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+</script>
