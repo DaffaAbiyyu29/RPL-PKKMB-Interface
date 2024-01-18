@@ -3,6 +3,11 @@
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Mahasiswa Baru</strong>
+				<div class="form-floating float-end">
+					<select class="form-select" id="tahun" name="tahun" aria-label="" style="height: 60px;">
+					</select>
+					<label for="floatingSelect">Tahun</label>
+				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
 				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
@@ -12,9 +17,6 @@
 							<th scope="col">Nama Mahasiswa</th>
 							<th scope="col">Gender</th>
 							<th scope="col">Program Studi</th>
-							<th scope="col">Nomor Telepon</th>
-							<th scope="col">Alamat</th>
-							<th scope="col">Email</th>
 							<th scope="col">Kategori</th>
 							<th scope="col">Kelulusan</th>
 							@if (ViewBag.userRole == "PIC PKKMB")
@@ -26,6 +28,10 @@
 				</table>
 				@if (ViewBag.userRole == "PIC PKKMB")
 				{
+					<div class=" float-start" style="margin-top: 20px;">
+						<a class="btn" style="background-color: #3a4584 !important;" onclick="checkAll()">Pilih Semua</a>
+						<a class="btn" style="background-color: #ed302f !important;" onclick="uncheckAll()">Batal Pilih Semua</a>
+					</div>
 					<div class=" float-end" style="margin-top: 20px;">
 						<a class="btn" style="background-color: #3a4584 !important;" onclick="verifikasiMhs(event)">Verifikasi Kelulusan</a>
 						<a class="btn" style="background-color: #ed302f !important;" onclick="batalMhs(event)">Batal Kelulusan</a>
@@ -37,17 +43,66 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
+	function TahunPkkmb() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllPkkmb"
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				DropDownTahunPkkmb(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function DropDownTahunPkkmb(data) {
+		var dropdown = $('#tahun');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled data-idpkkmb="">Pilih Tahun</option>'));
+
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text(item.pkm_tahunPkkmb);
+		});
+
+		dropdown.append(options);
+	}
+
+	$(document).ready(function () {
+		TahunPkkmb();
+
+		$('#tahun').change(function () {
+			var selectedYearId = $(this).find(':selected').attr('data-idpkkmb');
+			var selectedYear = $(this).find(':selected').text();
+			console.log('ID Tahun terpilih:', selectedYearId);
+			console.log('Tahun terpilih:', selectedYear);
+
+			loadTable(selectedYearId);
+		});
+
+		loadTable(idpkkmb);
+	});
+
 	//'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Akun/Ubah/' + val.mhs_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
-	loadTable()
 
 	var selectedMhs = [];
 
-	function loadTable() {
+	function loadTable(id_pkkmb) {
 		var hostname = 'https://localhost:7087/'
-		var url = hostname + "getallmahasiswa"
+		var url = hostname + "getallmahasiswa?mhs_idpkkmb=" + id_pkkmb
 		var method = "GET"
 		var counter = 1;
 		var detailData = []
+
+		$('#tabellist').DataTable().destroy();
 
 		$.ajax({
 			url: url,
@@ -60,9 +115,9 @@
 					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
 						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
 					if ('@ViewBag.userRole' == 'PIC PKKMB') {
-						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_notelepon, val.mhs_alamat, val.mhs_email, val.mhs_kategori, val.mhs_statuskelulusan, aksi])
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, val.mhs_statuskelulusan, aksi])
 					} else {
-						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_notelepon, val.mhs_alamat, val.mhs_email, val.mhs_kategori, val.mhs_statuskelulusan])
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, val.mhs_statuskelulusan])
 					}
 					counter++;
 				});
@@ -113,11 +168,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Meluluskan Mahasiswa Baru.",
-					showConfirmButton: false,
-					timer: 2000,
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload();
 				});
@@ -145,11 +204,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
-					title: "Berhasil Membatalkan Kelulusan Mahasiswa Baru.",
-					showConfirmButton: false,
-					timer: 2000,
+					title: "Berhasil Meluluskan Mahasiswa Baru.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload();
 				});
@@ -159,5 +222,21 @@
 				console.log("Server response:", xhr.responseJSON);
 			},
 		});
+	}
+
+	function checkAll() {
+		// Use prop('checked', true) to set the checked property of checkboxes
+		$('input[type="checkbox"]').prop('checked', true);
+
+		// Update the selectedMhs array to include all checked checkboxes
+		selectedMhs = $('input[type="checkbox"]').map(function () {
+			return $(this).data('mhs-no');
+		}).get();
+	}
+
+	function uncheckAll() {
+		$('input[type="checkbox"]').prop('checked', false);
+		// Clear the selectedMhs array
+		selectedMhs = [];
 	}
 </script>

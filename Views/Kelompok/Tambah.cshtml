@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
@@ -47,6 +43,8 @@
 
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	function tambahKelompok(event) {
 		event.preventDefault();
 
@@ -57,7 +55,6 @@
 		// Adjust the URL, method, and data based on the selected account type
 		if (namakelompok.trim() === '' || ruangan.trim() === '' || fasilitator.trim() === '') {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Lengkapi Semua Fields",
 				showConfirmButton: false,
@@ -73,6 +70,7 @@
 			kmk_namakelompok: namakelompok,
 			kmk_nim: fasilitator,
 			kmk_idruangan: ruangan,
+			kmk_idpkkmb: idpkkmb,
 			kmk_status: "Aktif"
 		};
 
@@ -83,7 +81,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Pembuatan Kelompok Berhasil",
 					showConfirmButton: false,
@@ -93,6 +90,12 @@
 				});
 			},
 			error: function (xhr, status) {
+				Swal.fire({
+					icon: "error",
+					title: "Ruangan / Fasilitator Sudah Tersedia",
+					showConfirmButton: false,
+					timer: 2000
+				});
 				console.error("AJAX request error:", status);
 				console.log("Server response:", xhr.responseJSON);
 			},
@@ -103,7 +106,7 @@
 <script>
 	function NamaRuangan() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllRuangan";
+		var url = hostname + "GetAllRuangan?rng_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({
@@ -137,7 +140,7 @@
 <script>
 	function NamaPanitia() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "TampilFasilitator";
+		var url = hostname + "TampilFasilitator?ksk_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({

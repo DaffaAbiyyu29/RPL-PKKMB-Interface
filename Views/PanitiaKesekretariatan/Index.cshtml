@@ -3,6 +3,11 @@
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Panitia Kesekretariatan</strong>
+				<div class="form-floating float-end">
+					<select class="form-select" id="tahun" name="tahun" aria-label="" style="height: 60px;">
+					</select>
+					<label for="floatingSelect">Tahun</label>
+				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
 				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
@@ -18,8 +23,12 @@
 						</tr>
 					</thead>
 				</table>
+				<div class=" float-start" style="margin-top: 20px;">
+					<a class="btn" style="background-color: #3a4584 !important;" onclick="checkAll()">Pilih Semua</a>
+					<a class="btn" style="background-color: #ed302f !important;" onclick="uncheckAll()">Batal Pilih Semua</a>
+				</div>
 				<div class=" float-end" style="margin-top: 20px;">
-					<a class="btn" style="background-color: #3a4584 !important;" onclick="nonAktifKsk(event)">Non Aktifkan</a>
+					<a class="btn" style="background-color: #ed302f !important;" onclick="nonAktifKsk(event)">Non Aktifkan</a>
 				</div>
 			</div>
 		</div>
@@ -27,17 +36,66 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
+	function TahunPkkmb() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllPkkmb"
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				DropDownTahunPkkmb(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function DropDownTahunPkkmb(data) {
+		var dropdown = $('#tahun');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled data-idpkkmb="">Pilih Tahun</option>'));
+
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text(item.pkm_tahunPkkmb);
+		});
+
+		dropdown.append(options);
+	}
+
+	$(document).ready(function () {
+		TahunPkkmb();
+
+		$('#tahun').change(function () {
+			var selectedYearId = $(this).find(':selected').attr('data-idpkkmb');
+			var selectedYear = $(this).find(':selected').text();
+			console.log('ID Tahun terpilih:', selectedYearId);
+			console.log('Tahun terpilih:', selectedYear);
+
+			loadTable(selectedYearId);
+		});
+
+		loadTable(idpkkmb);
+	});
+
 	//'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Akun/Ubah/' + val.ksk_nim + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>'
-	loadTable()
 
 	var selectedNIMs = [];
 
-	function loadTable() {
-		var hostname = "https://localhost:7087/"
-		var url = hostname + "TampilKskAktif"
-		var method = "GET"
+	function loadTable(id_pkkmb) {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "TampilKskAktif?ksk_idpkkmb=" + id_pkkmb;
+		var method = "GET";
 		var counter = 1;
-		var detailData = []
+		var detailData = [];
+
+		$('#tabellist').DataTable().destroy();
 
 		$.ajax({
 			url: url,
@@ -48,11 +106,12 @@
 
 				$.each(item, function (key, val) {
 					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-ksk-nim="' + val.ksk_nim + '">' +
-						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>'
-					detailData.push([counter, val.ksk_nim, val.ksk_nama, val.ksk_jeniskelamin, val.ksk_programstudi, val.ksk_role, aksi])
+						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
+					detailData.push([counter, val.ksk_nim, val.ksk_nama, val.ksk_jeniskelamin, val.ksk_programstudi, val.ksk_role, aksi]);
 					counter++;
 				});
 
+				// Inisialisasi DataTable setelah dihancurkan
 				$('#tabellist').DataTable({
 					data: detailData,
 					language: {
@@ -99,11 +158,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Panitia Kesekretariatan Berhasil Dinonaktifkan.",
-					showConfirmButton: false,
-					timer: 2000,
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload()
 				});
@@ -113,5 +176,21 @@
 				console.log("Server response:", xhr.responseJSON);
 			},
 		});
+	}
+
+	function checkAll() {
+		// Use prop('checked', true) to set the checked property of checkboxes
+		$('input[type="checkbox"]').prop('checked', true);
+
+		// Update the selectedNIMs array to include all checked checkboxes
+		selectedNIMs = $('input[type="checkbox"]').map(function () {
+			return $(this).data('ksk-nim');
+		}).get();
+	}
+
+	function uncheckAll() {
+		$('input[type="checkbox"]').prop('checked', false);
+		// Clear the selectedNIMs array
+		selectedNIMs = [];
 	}
 </script>

@@ -149,8 +149,8 @@
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="absensi" asp-action="Index">Absensi</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="JamPlusMinus" asp-action="Index">Jam Plus / Minus</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="sikap" asp-action="Index">Sikap</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="Index">Ruangan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
 						</div>
 					</li>
 					<li class="nav-item mr-3 mahasiswabaru">
@@ -174,8 +174,8 @@
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Informasi</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="Index">Jadwal</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="Index">Ruangan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
 						</div>
 					</li>
 					<li class="nav-item mr-3 panitiakesekretariatan">
@@ -212,8 +212,8 @@
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="Pkkmb" asp-action="Index">PKKMB</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="jadwal" asp-action="Index">Jadwal</a>
-							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
 							<a class="hovercolor" style="font-weight: bold;" asp-controller="ruangan" asp-action="Index">Ruangan</a>
+							<a class="hovercolor" style="font-weight: bold;" asp-controller="kelompok" asp-action="Index">Kelompok</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown mr-3 picpkkmb">
@@ -303,6 +303,12 @@
 	</form>
 
 	<script>
+
+		$(document).ready(function () {
+			getPkkmbAktif();
+			validate();
+		});
+
 		$('.nav-item').hide();
 		$('.nav-item.login').show();
 
@@ -319,7 +325,29 @@
 				}
 			}
 
-			return null; // Return null if the cookie is not found
+			return null;
+		}
+
+		function getPkkmbAktif() {
+			var hostname = "https://localhost:7087/"
+			var url = hostname + "GetPkkmbAktif"
+			var method = "GET"
+			var counter = 1;
+			var detailData = []
+
+			$.ajax({
+				url: url,
+				method: method,
+				contentType: "application/json",
+				success: function (data) {
+					var item = data.data;
+					sessionStorage.setItem('id_pkkmb', item.pkm_idPkkmb)
+					sessionStorage.setItem('tahun_pkkmb', item.pkm_tahunPkkmb)
+				},
+				error: function (error) {
+					console.log('Error fetching data:', error);
+				}
+			});
 		}
 
 		function validate() {
@@ -368,10 +396,6 @@
 			}
 		}
 
-		$(document).ready(function () {
-			validate();
-		});
-
 		function decodeJwt(token) {
 			const base64Url = token.split('.')[1];
 			const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -407,9 +431,5 @@
 			});
 		});
 	</script>
-
-
-
-
 </body>
 </html>

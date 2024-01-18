@@ -26,10 +26,6 @@
 							<th scope="col">Tanggal Kehadiran</th>
 							<th scope="col">Status Kehadiran</th>
 							<th scope="col">Keterangan</th>
-							@if (ViewBag.userRole == "Fasilitator")
-							{
-								<th scope="col">Aksi</th>
-							}
 						</tr>
 					</thead>
 				</table>
@@ -39,27 +35,26 @@
 </div>
 
 <script>
-	if ('@ViewBag.userRole' == 'PIC PKKMB' || '@ViewBag.userRole' == 'KSK' || '@ViewBag.userRole' == 'Fasilitator') {
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
+	if ('@ViewBag.userRole' == 'PIC PKKMB' || '@ViewBag.userRole' == 'KSK' || '@ViewBag.userRole' == 'Fasilitator' || '@ViewBag.userRole' == 'Mahasiswa') {
 		var idkelompok = null
 		loadTable();
+		loadKelompok()
 
 		var tambahDataBtn = document.getElementById("tambahDataBtn");
 
-		// Menangani klik tombol
 		tambahDataBtn.onclick = function () {
-			// Cek apakah idkelompok telah diinisialisasi
 			if (idkelompok !== null) {
-				// Redirect ke halaman TambahAbsensi dengan menyertakan idkelompok
 				window.location.href = "/Absensi/TambahAbsensi/" + idkelompok;
 			} else {
-				// Jika idkelompok belum diinisialisasi, tampilkan pesan atau lakukan aksi lainnya
 				alert("Idkelompok belum tersedia.");
 			}
 		};
 
 		function loadTable() {
 			var hostname = "https://localhost:7087/";
-			var url = hostname + "GetAllAbsensi";
+			var url = hostname + "GetAllAbsensi?abs_idpkkmb=" + idpkkmb
 			var method = "GET";
 			var counter = 1;
 			var detailData = [];
@@ -84,7 +79,7 @@
 								if ('@ViewBag.userRole' == 'Fasilitator') {
 									aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Absensi/Update/' + val.abs_idabsensi + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
 								}
-								detailData.push([counter, namaKesekretariatan, val.abs_nopendaftaran, namaMahasiswa, formatDateForDisplay(val.abs_tglkehadiran), val.abs_statuskehadiran, val.abs_keterangan, aksi]);
+								detailData.push([counter, namaKesekretariatan, val.abs_nopendaftaran, namaMahasiswa, formatDateForDisplay(val.abs_tglkehadiran), val.abs_statuskehadiran, val.abs_keterangan]);
 								counter++;
 
 								if (counter - totalData == 1) {
@@ -125,6 +120,26 @@
 			return formattedDate;
 		}
 
+		function loadKelompok() {
+			var hostname = "https://localhost:7087/";
+			var url = hostname + "GetKelompokByNim?kmk_nim=@ViewBag.UserId"
+			var method = "GET";
+
+			$.ajax({
+				url: url,
+				method: method,
+				contentType: "application/json",
+				success: function (data) {
+					var item = data.data;
+					idkelompok = item.kmk_idkelompok;
+					console.log(idkelompok)
+				},
+				error: function (error) {
+					console.error("Error fetching data: ", error);
+				},
+			});
+		}
+
 		function loadNamaKesekretariatan(id, callback) {
 			var hostname = "https://localhost:7087/";
 			var url = hostname + "dataksk?ksk_nim=" + id;
@@ -156,7 +171,6 @@
 				contentType: "application/json",
 				success: function (data) {
 					var item = data.data;
-					idkelompok = item.mhs_idkelompok
 					namaMhs = item.mhs_namalengkap;
 					callback(namaMhs);
 				},

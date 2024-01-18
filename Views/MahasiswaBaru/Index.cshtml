@@ -17,20 +17,28 @@
 							<th scope="col">Email</th>
 							<th scope="col">Kategori</th>
 							<th scope="col">Kelulusan</th>
-							<th scope="col">Aksi</th>
+							@if (ViewBag.userRole == "PIC PKKMB")
+							{
+								<th scope="col">Aksi</th>
+							}
 						</tr>
 					</thead>
 				</table>
-				<div class=" float-end" style="margin-top: 20px;">
-					<a class="btn" style="background-color: #3a4584 !important;" onclick="verifikasiMhs(event)">Verifikasi Kelulusan</a>
-					<a class="btn" style="background-color: #ed302f !important;" onclick="batalMhs(event)">Batal Kelulusan</a>
-				</div>
+				@if (ViewBag.userRole == "PIC PKKMB")
+				{
+					<div class=" float-end" style="margin-top: 20px;">
+						<a class="btn" style="background-color: #3a4584 !important;" onclick="verifikasiMhs(event)">Verifikasi Kelulusan</a>
+						<a class="btn" style="background-color: #ed302f !important;" onclick="batalMhs(event)">Batal Kelulusan</a>
+					</div>
+				}
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	//'<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Akun/Ubah/' + val.mhs_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
 	loadTable()
 
@@ -38,7 +46,7 @@
 
 	function loadTable() {
 		var hostname = 'https://localhost:7087/'
-		var url = hostname + "getallmahasiswa"
+		var url = hostname + "getallmahasiswa?mhs_idpkkmb=" + idpkkmb
 		var method = "GET"
 		var counter = 1;
 		var detailData = []
@@ -53,7 +61,11 @@
 				$.each(item, function (key, val) {
 					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
 						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
-					detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_notelepon, val.mhs_alamat, val.mhs_email, val.mhs_kategori, val.mhs_statuskelulusan, aksi])
+					if ('@ViewBag.userRole' == 'PIC PKKMB') {
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_notelepon, val.mhs_alamat, val.mhs_email, val.mhs_kategori, val.mhs_statuskelulusan, aksi])
+					} else {
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_notelepon, val.mhs_alamat, val.mhs_email, val.mhs_kategori, val.mhs_statuskelulusan])
+					}
 					counter++;
 				});
 
@@ -103,11 +115,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Meluluskan Mahasiswa Baru.",
-					showConfirmButton: false,
-					timer: 2000,
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload();
 				});
@@ -135,11 +151,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
-					title: "Berhasil Membatalkan Kelulusan Mahasiswa Baru.",
-					showConfirmButton: false,
-					timer: 2000,
+					title: "Berhasil Meluluskan Mahasiswa Baru.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload();
 				});

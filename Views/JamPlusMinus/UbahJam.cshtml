@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
@@ -14,13 +10,13 @@
 						<div class="input-group has-validation mb-4 namamahasiswa">
 							<div class="form-floating">
 								<input type="text" class="form-control" maxlength="30" id="nopendaftaran" name="nopendaftaran" data-target="validateField" placeholder="" value="@ViewBag.dtj_nopendaftaran" hidden>
-								<input type="text" class="form-control" maxlength="10" id="namamahasiswa" name="namamahasiswa" data-target="validateField" style="background-color:white;" placeholder="" readonly>
+								<input type="text" class="form-control" maxlength="10" id="namamahasiswa" name="namamahasiswa" data-target="validateField" style="background-color:white;" placeholder="" disabled>
 								<label for="validateField">Nama Mahasiswa</label>
 							</div>
 						</div>
 						<div class="input-group has-validation mb-4 namakelompok">
 							<div class="form-floating">
-								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: white;" placeholder="" readonly>
+								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: white;" placeholder="" disabled>
 								<label for="floatingInputGrid">Kelompok</label>
 							</div>
 						</div>
@@ -64,6 +60,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var idkelompok = null;
 	$(document).ready(function () {
 		loadData();
@@ -107,82 +105,6 @@
 				console.error("Error fetching data:", error);
 			},
 		});
-	}
-
-	function ubahTugas(event) {
-		event.preventDefault();
-
-		var idtugas = document.getElementsByName("idtugas")[0].value
-		var namatugas = document.getElementsByName("namatugas")[0].value;
-		var waktuawal = document.getElementsByName("waktuawal")[0].value;
-		var deadline = document.getElementsByName("deadline")[0].value;
-		var deskripsi = document.getElementsByName("deskripsi")[0].value;
-
-		if (file == null) {
-			url = "https://localhost:7087/UpdateTugas";
-			method = "PUT";
-			data = {
-				tgs_idtugas: idtugas,
-				tgs_nim: "KSK001",
-				tgs_namatugas: namatugas,
-				tgs_filetugas: "",
-				tgs_tglpemberiantugas: waktuawal,
-				tgs_deadline: deadline,
-				tgs_deskripsi: deskripsi,
-				tgs_status: "Aktif",
-			};
-
-			$.ajax({
-				url: url,
-				method: method,
-				data: JSON.stringify(data),
-				contentType: "application/json",
-				success: function (data) {
-					Swal.fire({
-						position: "top-end",
-						icon: "success",
-						title: "Berhasil Mengubah Tugas",
-						showConfirmButton: false,
-						timer: 2000
-					}).then(() => {
-						window.location.href = '../';
-					});
-				},
-				error: function (xhr, status) {
-					console.error("AJAX request error:", status);
-					console.log("Server response:", xhr.responseJSON);
-				},
-			});
-		} else {
-			var url = "https://localhost:7087/Tugas/Ubah?tgs_idtugas=" + idtugas + "&tgs_nim=KSK001&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi + "&tgs_status=Aktif";
-			method = "PUT";
-
-			var data = new FormData();
-			data.append("file", file);
-
-			$.ajax({
-				url: url,
-				method: method,
-				data: data,
-				processData: false,
-				contentType: false,
-				success: function (data) {
-					Swal.fire({
-						position: "top-end",
-						icon: "success",
-						title: "Berhasil Mengubah Tugas",
-						showConfirmButton: false,
-						timer: 2000
-					}).then(() => {
-						window.location.href = '../';
-					});
-				},
-				error: function (xhr, status) {
-					console.error("AJAX request error:", status);
-					console.log("Server response:", xhr.responseJSON);
-				},
-			});
-		}
 	}
 
 	function fetchMahasiswaData() {
@@ -237,12 +159,16 @@
 
 		if (jenisjam.trim() === '' || jumlah.trim() === '' || deskripsi.trim() === '') {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -256,6 +182,7 @@
 			dtj_jenisjam: jenisjam,
 			dtj_jumlah: jumlah,
 			dtj_deskripsi: deskripsi,
+			dtj_idpkkmb: idpkkmb,
 			dtj_tanggal: tanggal,
 		};
 
@@ -270,11 +197,15 @@
 				console.log('Data from server:', data);
 				if (data.status === 200) {
 					Swal.fire({
-						position: "top-end",
 						icon: "success",
 						title: jenisjam + " Berhasil Diubah",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						window.location.href = '/JamPlusMinus/DetailJam/@ViewBag.dtj_nopendaftaran';
 					});

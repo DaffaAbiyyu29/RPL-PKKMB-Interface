@@ -1,7 +1,6 @@
 ﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
-			@*@Context.Session.GetString("Peran")*@
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Evaluasi</strong>
 			</h5>
@@ -40,6 +39,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	loadData();
 
 	function padZero(value) {
@@ -121,11 +122,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Mengirim Evaluasi",
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = 'Evaluasi';
 				});

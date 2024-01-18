@@ -1,14 +1,9 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Tambah Tugas</strong>
-				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
 			</h5>
 			<div class="card-body px-lg-5 pt-1">
 				<div class="row">
@@ -33,7 +28,7 @@
 					<div class="col-md-6">
 						<div class="input-group has-validation mb-4 waktuawal">
 							<div class="form-floating">
-								<input type="datetime-local" class="form-control" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="" readonly>
+								<input type="datetime-local" style="background-color:transparent;" class="form-control" maxlength="100" id="validateField" name="waktuawal" data-target="validateField" placeholder="" disabled>
 								<label for="validateField">Waktu Pemberian Tugas</label>
 							</div>
 						</div>
@@ -61,6 +56,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	function validateFile(input) {
 		const fileSize = input.files[0].size / 1024 / 1024;
 
@@ -72,8 +69,7 @@
 			Swal.fire({
 				icon: "warning",
 				title: "Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xlsx",
-				showConfirmButton: false,
-				timer: 3000,
+				showConfirmButton: true,
 				showClass: {
 					popup: 'animate__animated animate__fadeInDown'
 				},
@@ -81,10 +77,19 @@
 					popup: 'animate__animated animate__fadeOutUp'
 				}
 			})
-			//alert("Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xls");
 			$(input).val('');
 		} else if (fileSize > 10) {
-			alert("Ukuran File Terlalu Besar. Maksimal 10 MB.");
+			Swal.fire({
+				icon: "warning",
+				title: "Ukuran File Terlalu Besar. Maksimal 10 MB.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			$(input).val('');
 		}
 	}
@@ -100,7 +105,6 @@
 		return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
 	}
 
-	// Set default value for the datetime-local input
 	document.getElementsByName("waktuawal")[0].value = getCurrentDateTime();
 
 	function tambahTugas(event) {
@@ -114,23 +118,36 @@
 		var tugasInput = document.getElementsByName("tugas")[0];
 		var file = tugasInput.files[0];
 
+		function generateUUID() {
+			var randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+
+			var uuid = 'PKKMB_' + randomNumber;
+
+			return uuid;
+		}
+		var uniqueFileName = generateUUID() + '_' + file.name;
+
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "Tugas/Upload?tgs_nim=@ViewBag.UserId" + "&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi;
+		var url = hostname + "Tugas/Upload?tgs_nim=@ViewBag.UserId" + "&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi + "&tgs_idpkkmb=" + idpkkmb;
 		var method = "POST";
 
 		if (namatugas.trim() === '' || !file || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
 		var data = new FormData();
-		data.append("file", file);
+		data.append("file", file, uniqueFileName);
 
 		$.ajax({
 			url: url,
@@ -140,11 +157,15 @@
 			contentType: false,
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Menambahkan Tugas",
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = './';
 				});

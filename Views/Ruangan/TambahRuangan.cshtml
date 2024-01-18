@@ -21,10 +21,22 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	function tambahruangan(event) {
 		event.preventDefault();
 
 		var rng_namaruangan = document.getElementsByName("rng_namaruangan")[0].value;
+
+		if (rng_namaruangan.trim() == '') {
+			Swal.fire({
+				icon: "error",
+				title: "Lengkapi Semua Fields",
+				showConfirmButton: false,
+				timer: 2000
+			});
+			return;
+		}
 
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "InsertRuangan";
@@ -32,7 +44,8 @@
 		var input = {
 			rng_idruangan: "",
 			rng_namaruangan: rng_namaruangan,
-			rng_status: "Aktif",
+			rng_idpkkmb: idpkkmb,
+			rng_status: "Aktif"
 		};
 
 		var data = JSON.stringify(input);
@@ -44,7 +57,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Menambahkan Ruangan",
 					showConfirmButton: false,

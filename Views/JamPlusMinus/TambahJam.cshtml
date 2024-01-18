@@ -1,10 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
@@ -25,7 +19,7 @@
 						</div>
 						<div class="input-group has-validation mb-4 namakelompok">
 							<div class="form-floating">
-								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: white;" placeholder="" readonly>
+								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: white;" placeholder="" disabled>
 								<label for="floatingInputGrid">Kelompok</label>
 							</div>
 						</div>
@@ -72,6 +66,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var idkelompok = null;
 	NamaKelompok()
 	$('#tanggal').val(getCurrentDateTime());
@@ -156,7 +152,7 @@
 
 	function getNamaKelompok(idKelompok) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllKelompok";
+		var url = hostname + "GetAllKelompok?kmk_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({
@@ -190,9 +186,7 @@
 	$(document).ready(function () {
 		NamaMahasiswa();
 	});
-</script>
 
-<script>
 	function tambahJam(event) {
 		event.preventDefault();
 
@@ -223,6 +217,7 @@
 			dtj_jenisjam: jenisjam,
 			dtj_jumlah: jumlah,
 			dtj_deskripsi: deskripsi,
+			dtj_idpkkmb: idpkkmb,
 			dtj_tanggal: tanggal,
 		};
 
@@ -234,24 +229,31 @@
 			data: data,
 			contentType: "application/json",
 			success: function (data) {
-				console.log('Data from server:', data);
 				if (data.status === 200) {
 					Swal.fire({
-						position: "top-end",
 						icon: "success",
 						title: jenisjam + " Berhasil Ditambahkan",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						window.location.href = '/JamPlusMinus/Index';
 					});
 				} else {
 					Swal.fire({
-						position: "top-end",
 						icon: "error",
 						title: "Gagal menyimpan data.",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					})
 					console.log('Insert failed. Server response:', data);
 				}

@@ -34,6 +34,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var nim = null;
 	var selectedMhs = [];
 	loadDataKelompok()
@@ -136,7 +138,6 @@
 
 		if (selectedMhs.length == 0) {
 			Swal.fire({
-				position: "top-end",
 				icon: "warning",
 				title: "Tidak Ada Mahasiswa Yang Dipilih.",
 				showConfirmButton: false,
@@ -158,7 +159,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Menghapus Anggota Dari Kelompok.",
 					showConfirmButton: false,

@@ -21,6 +21,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	loadDataRuangan();
 
 	function loadDataRuangan() {
@@ -55,6 +57,7 @@
 		var input = {
 			rng_idruangan: idruangan,
 			rng_namaruangan: namaruangan,
+			rng_idpkkmb: idpkkmb,
 			rng_status: "Aktif",
 		};
 
@@ -68,7 +71,6 @@
 			success: function (data) {
 				if (data.status === 200) {
 					Swal.fire({
-						position: "top-end",
 						icon: "success",
 						title: "Berhasil Mengubah Ruangan",
 						showConfirmButton: false,

@@ -24,11 +24,13 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	loadTable();
 
 	function loadTable() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllMahasiswa"; // Updated endpoint
+		var url = hostname + "GetAllMahasiswa?mhs_idpkkmb=" + idpkkmb
 		var method = "GET";
 		var counter = 1;
 		var detailData = [];
@@ -71,8 +73,9 @@
 							}
 						}
 					});
-				},
-			});
+				}
+			}
+		});
 	}
 
 	function loadNamaKelompok(id, callback) {

@@ -38,151 +38,133 @@
 						</tr>
 					</thead>
 				</table>
-                <div class=" float-end" style="margin-top: 20px;">
-                    <a class="btn" style="background-color: #ed302f !important;" onclick="nonaktifkan(event)">Non Aktifkan</a>
-                </div>
+				<div class=" float-end" style="margin-top: 20px;">
+					<a class="btn" style="background-color: #ed302f !important;" onclick="nonaktifkan(event)">Non Aktifkan</a>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-    var idpkkmb = null
-    getPkkmbAktif()
-    loadTable()
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+	var tahunpkkmb = sessionStorage.getItem('tahun_pkkmb')
+	$('#tahunPkkmb').text(tahunpkkmb)
+	loadTable()
 
-    function getPkkmbAktif() {
-			var hostname = "https://localhost:7087/"
-			var url = hostname + "GetPkkmbAktif"
-			var method = "GET"
-			var counter = 1;
-			var detailData = []
+	function loadTable() {
+		var hostname = "https://localhost:7087/"
+		var url = hostname + "GetAllPkkmb"
+		var method = "GET"
+		var counter = 1;
+		var detailData = []
+		var aksi = null
 
-			$.ajax({
-				url: url,
-				method: method,
-				contentType: "application/json",
-				success: function (data) {
-					var item = data.data;
-					$('#tahunPkkmb').text(item.pkm_tahunPkkmb)
-					idpkkmb = item.pkm_idPkkmb
-				},
-				error: function (error) {
-					console.log('Error fetching data:', error);
-				}
-			});
-		}
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				var item = data.data;
+				$.each(item, function (key, val) {
+					if (idpkkmb == null && tahunpkkmb == null) {
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Pkkmb/UbahTahun/' + val.pkm_idPkkmb + '" data-toggle="tooltip" data-placement="top" title="Ubah Tahun"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
+							'<a style="background-color: #3a4584 !important;" class="btn btn-primary" onclick="aktifkan(event, \'' + val.pkm_idPkkmb + '\', \'' + val.pkm_tahunPkkmb + '\')" data-toggle="tooltip" data-placement="top" title="Verifikasi Tahun"><i class="fa fa-check" aria-hidden="true"></i></a>'
+					} else {
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Pkkmb/UbahTahun/' + val.pkm_idPkkmb + '" data-toggle="tooltip" data-placement="top" title="Ubah Tahun"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> '
+					}
 
-    function loadTable() {
-        var hostname = "https://localhost:7087/"
-        var url = hostname + "GetAllPkkmb"
-        var method = "GET"
-        var counter = 1;
-        var detailData = []
-        var aksi = null
+					detailData.push([counter, val.pkm_idPkkmb, val.pkm_tahunPkkmb, val.pkm_status, aksi])
+					counter++;
+				});
 
-        $.ajax({
-            url: url,
-            method: method,
-            contentType: "application/json",
-            success: function (data) {
-                var item = data.data;
-                console.log(idpkkmb)
-                $.each(item, function (key, val) {
-                    if (idpkkmb == null){
-                        aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Pkkmb/UbahTahun/' + val.pkm_idPkkmb + '" data-toggle="tooltip" data-placement="top" title="Ubah Tahun"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> ' +
-                            '<a style="background-color: #3a4584 !important;" class="btn btn-primary" onclick="aktifkan(event, \'' + val.pkm_idPkkmb + '\')" data-toggle="tooltip" data-placement="top" title="Verifikasi Tahun"><i class="fa fa-check" aria-hidden="true"></i></a>'
-                    } else {
-                        aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Pkkmb/UbahTahun/' + val.pkm_idPkkmb + '" data-toggle="tooltip" data-placement="top" title="Ubah Tahun"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> '
-                    }
-                    
-                    detailData.push([counter, val.pkm_idPkkmb, val.pkm_tahunPkkmb, val.pkm_status, aksi])
-                    counter++;
-                });
+				$('#tabellist').DataTable({
+					data: detailData,
+					language: {
+						search: "Cari :",
+						zeroRecords: "Data Tidak Ditemukan",
+						sLengthMenu: "Menampilkan _MENU_ data",
+						info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+						infoEmpty: "Menampilkan 0 data",
+						infoFiltered: "(Difilter dari _MAX_ total data)",
+						paginate: {
+							previous: "Sebelumnya",
+							next: "Berikutnya"
+						}
+					}
+				});
+			},
+			error: function (error) {
+				console.log('Error fetching data:', error);
+			}
+		});
+	}
 
-                $('#tabellist').DataTable({
-                    data: detailData,
-                    language: {
-                        search: "Cari :",
-                        zeroRecords: "Data Tidak Ditemukan",
-                        sLengthMenu: "Menampilkan _MENU_ data",
-                        info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
-                        infoEmpty: "Menampilkan 0 data",
-                        infoFiltered: "(Difilter dari _MAX_ total data)",
-                        paginate: {
-                            previous: "Sebelumnya",
-                            next: "Berikutnya"
-                        }
-                    }
-                });
-            },
-            error: function (error) {
-                console.log('Error fetching data:', error);
-            }
-        });
-    }
+	function aktifkan(event, pkm_idPkkmb, pkm_tahunPkkmb) {
+		event.preventDefault();
 
-    function aktifkan(event, pkm_idPkkmb) {
-        event.preventDefault();
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "AktifkanPkkmb?pkm_idPkkmb=" + pkm_idPkkmb;
+		var method = "PUT";
 
-        var hostname = "https://localhost:7087/";
-        var url = hostname + "AktifkanPkkmb?pkm_idPkkmb=" + pkm_idPkkmb;
-        var method = "PUT";
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Mengaktifkan PKKMB",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					sessionStorage.setItem('id_pkkmb', pkm_idPkkmb)
+					sessionStorage.setItem('tahun_pkkmb', pkm_tahunPkkmb);
+					location.reload();
+				});
+			},
+			error: function (xhr, status, error) {
+				Swal.fire({
+					icon: "warning",
+					title: "Tahun " + input.pkm_tahunPkkmb + " Sudah Tersedia",
+					showConfirmButton: false,
+					timer: 2000
+				})
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
 
-        $.ajax({
-            url: url,
-            method: method,
-            contentType: "application/json",
-            success: function (data) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Berhasil Mengaktifkan PKKMB",
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    window.location.href = "https://localhost:7240/Pkkmb";
-                });
-            },
-            error: function (xhr, status, error) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Tahun " + input.pkm_tahunPkkmb + " Sudah Tersedia",
-                    showConfirmButton: false,
-                    timer: 2000
-                })
-                console.error("AJAX request error:", status, error);
-                console.log("Server response:", xhr.responseText);
-            },
-        });
-    }
+	function nonaktifkan(event) {
+		event.preventDefault();
 
-    function nonaktifkan(event) {
-        event.preventDefault();
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "NonaktifkanPkkmb?pkm_idPkkmb=" + idpkkmb;
+		var method = "PUT";
 
-        var hostname = "https://localhost:7087/";
-        var url = hostname + "NonaktifkanPkkmb?pkm_idPkkmb=" + idpkkmb;
-        var method = "PUT";
-
-        $.ajax({
-            url: url,
-            method: method,
-            contentType: "application/json",
-            success: function (data) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Berhasil Non Aktifkan PKKMB",
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    location.reload();
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX request error:", status, error);
-                console.log("Server response:", xhr.responseText);
-            },
-        });
-    }
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: "Berhasil Non Aktifkan PKKMB",
+					showConfirmButton: false,
+					timer: 2000
+				}).then(() => {
+					location.reload();
+					sessionStorage.removeItem('id_pkkmb')
+					sessionStorage.removeItem('tahun_pkkmb')
+				});
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
 </script>

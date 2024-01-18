@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
@@ -48,6 +44,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	loadData();
 
 	function loadData() {
@@ -100,6 +98,7 @@
 			kmk_namakelompok: namakelompok,
 			kmk_nim: fasilitator,
 			kmk_idruangan: ruangan,
+			kmk_idpkkmb: idpkkmb,
 			kmk_status: "Aktif",
 		};
 
@@ -110,9 +109,8 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
-					title: "Ubah Kelompok Berhasil",
+					title: "Berhasil Mengubah Kelompok",
 					showConfirmButton: false,
 					timer: 2000
 				}).then(() => {
@@ -124,7 +122,6 @@
 				console.log("Server response:", xhr.responseJSON);
 
 				Swal.fire({
-					position: "top-end",
 					icon: "error",
 					title: "Gagal Ubah Kelompok",
 					showConfirmButton: false,
@@ -138,7 +135,7 @@
 <script>
 	function NamaRuangan() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllRuangan";
+		var url = hostname + "GetAllRuangan?rng_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({
@@ -171,7 +168,7 @@
 <script>
 	function NamaPanitia() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "TampilFasilitator";
+		var url = hostname + "TampilFasilitator?ksk_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({
@@ -179,7 +176,6 @@
 			type: method,
 			dataType: "json",
 			success: function (response) {
-				console.log(response)
 				NamaDropDownFasil(response.data);
 			},
 			error: function (xhr, status, error) {

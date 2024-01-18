@@ -21,6 +21,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	getData()
 
 	document.getElementById('pkm_tahunPkkmb').addEventListener('input', function () {
@@ -42,7 +44,7 @@
 		var pkm_idPkkmb = document.getElementsByName("pkm_idPkkmb")[0].value;
 
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetPkkmb?pkm_idPkkmb="+pkm_idPkkmb;
+		var url = hostname + "GetPkkmb?pkm_idPkkmb=" + pkm_idPkkmb;
 		var method = "GET";
 		var input = {
 			pkm_tahunPkkmb: pkm_tahunPkkmb
@@ -65,7 +67,7 @@
 			},
 		});
 	}
-	
+
 	function ubahTahun(event) {
 		event.preventDefault();
 

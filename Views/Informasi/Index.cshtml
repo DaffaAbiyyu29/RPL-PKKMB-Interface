@@ -51,6 +51,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	$(document).ready(function () {
 		loadCardInformasi();
 	});
@@ -63,7 +65,7 @@
 
 	function loadCardInformasi() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallinformasi";
+		var url = hostname + "getallinformasi?inf_idpkkmb=" + idpkkmb;
 		var method = "GET";
 
 		$.ajax({

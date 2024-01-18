@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
@@ -47,6 +43,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	function validateNumberInput(inputElement) {
 		// Mengganti input hanya dengan karakter angka
 		inputElement.value = inputElement.value.replace(/\D/g, '');

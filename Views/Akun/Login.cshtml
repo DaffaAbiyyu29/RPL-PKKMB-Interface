@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-5">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
@@ -34,6 +30,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	function login(event) {
 		event.preventDefault();
 
@@ -62,14 +60,16 @@
 						// Simpan token ke dalam cookies MVC
 						document.cookie = "token=" + token + ";path=/;secure;SameSite=None";
 
-
-						// Display SweetAlert before redirecting
 						Swal.fire({
-							position: "top-end",
 							icon: "success",
-							title: "Login Berhasil Sebagai " + data.role,
-							showConfirmButton: false,
-							timer: 2000
+							title: "Berhasil Login Sebagai " + data.role,
+							showConfirmButton: true,
+							showClass: {
+								popup: 'animate__animated animate__fadeInDown'
+							},
+							hideClass: {
+								popup: 'animate__animated animate__fadeOutUp'
+							}
 						}).then(() => {
 							// Redirect based on the user's role
 							if (role == "Mahasiswa") {
@@ -93,21 +93,29 @@
 					console.error("AJAX request error:", status);
 					console.log("Server response:", xhr.responseJSON);
 					Swal.fire({
-						position: "top-end",
 						icon: "error",
 						title: xhr.responseJSON.messages,
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					})
 				},
 			});
 		} else {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Username dan Kata Sandi Harus Diisi!",
-				showConfirmButton: false,
-				timer: 2000
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
 			})
 			return;
 		}

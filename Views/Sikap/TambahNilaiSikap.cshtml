@@ -19,7 +19,7 @@
 						</div>
 						<div class="input-group has-validation mb-4 namakelompok">
 							<div class="form-floating is-invalid">
-								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: transparent;" placeholder="" readonly>
+								<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" data-target="validateField" style="background-color: transparent;" placeholder="" disabled>
 								<label for="floatingInputGrid">Kelompok</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Nama Kelompok.</div>
 							</div>
@@ -29,7 +29,7 @@
 						<!-- Second Column -->
 						<div class="input-group has-validation mb-4 tanggal">
 							<div class="form-floating">
-								<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: transparent;" placeholder="" readonly>
+								<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: transparent;" placeholder="" disabled>
 								<label for="validateField">Hari / Tanggal</label>
 							</div>
 						</div>
@@ -55,13 +55,15 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	$('#tanggal').val(setTodayDateTime());
 	//var tanggal = document.getElementById("tanggal")
 	//tanggal.value = setTodayDateTime();
 
 	function NamaMahasiswa() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallmahasiswa";
+		var url = hostname + "getallmahasiswa?mhs_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({
@@ -114,7 +116,7 @@
 
 	function getNamaKelompok(idKelompok) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllKelompok";
+		var url = hostname + "GetAllKelompok?kmk_idpkkmb=" + idpkkmb
 		var method = "GET";
 
 		$.ajax({
@@ -159,12 +161,16 @@
 
 		if (nls_nopendaftaran.trim() === '' || nls_sikap.trim() === '' || nls_tanggal.trim() === '') {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -177,6 +183,7 @@
 			nls_nim: "@ViewBag.UserId",
 			nls_sikap: nls_sikap,
 			nls_tanggal: nls_tanggal,
+			nls_idpkkmb: idpkkmb,
 			nls_status: "Aktif"
 		};
 
@@ -191,32 +198,44 @@
 				console.log('Data from server:', data);
 				if (data.status === 200) {
 					Swal.fire({
-						position: "top-end",
 						icon: "success",
 						title: "Nilai Sikap  berhasil ditambahkan",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						window.location.href = '/sikap/index';
 					});
 				} else {
 					Swal.fire({
-						position: "top-end",
 						icon: "error",
 						title: "Gagal menyimpan data.",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					})
 					console.log('Insert failed. Server response:', data);
 				}
 			},
 			error: function (xhr, status, error) {
 				Swal.fire({
-					position: "top-end",
 					icon: "error",
 					title: xhr.responseJSON.message,
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				})
 				console.log('Error saving data:', error);
 				console.log(xhr.responseJSON);

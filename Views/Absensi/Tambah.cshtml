@@ -45,6 +45,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var nim = null;
 	var selectedNoPendaftarans = [];
 	//loadDataKelompok()
@@ -154,10 +156,10 @@
 				"abs_idabsensi": "",
 				"abs_nim": '@ViewBag.UserId',
 				"abs_nopendaftaran": $(this).data('mhs-no'),
-				"abs_tglkehadiran": new Date().toISOString(), 
+				"abs_tglkehadiran": new Date().toISOString(),
 				"abs_statuskehadiran": $(this).val(),
 				"abs_keterangan": getKeteranganValue(counter),
-				"abs_idpkkmb": 1,
+				"abs_idpkkmb": idpkkmb,
 				"abs_status": "Aktif"
 			};
 
@@ -165,15 +167,17 @@
 		});
 
 		if (absensiDataList.length === 0) {
-			// No radio button is checked
 			Swal.fire({
-				position: "top-end",
 				icon: "warning",
 				title: "Pilih setidaknya satu status kehadiran.",
-				text: "Anda perlu memilih status kehadiran untuk minimal satu mahasiswa.",
-				showConfirmButton: false,
-				timer: 2000,
-			});
+				text: "Anda perlu memilih status kehadiran untuk minimal satu mahasiswa.", showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -190,11 +194,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Menambahkan Absensi.",
-					showConfirmButton: false,
-					timer: 2000,
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = "/Absensi"
 				});
@@ -202,12 +210,17 @@
 			error: function (xhr, status) {
 				console.error("AJAX request error:", status);
 				console.log("Server response:", xhr.responseJSON);
-				// Handle the error as needed, show an alert, log, etc.
 				Swal.fire({
 					icon: "error",
 					title: "Gagal Menambahkan Absensi.",
-					text: "Terjadi kesalahan saat mengirim data absensi.",
-				});
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				})
 			},
 		});
 	}

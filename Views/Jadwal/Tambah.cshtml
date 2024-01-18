@@ -1,8 +1,4 @@
-﻿\@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
@@ -66,6 +62,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	function tambahJadwal(event) {
 		event.preventDefault();
 
@@ -78,7 +76,6 @@
 		// Adjust the URL, method, and data based on the selected account type
 		if (tanggal.trim() === '' || waktumulai.trim() === '' || waktuakhir.trim() === '' || tempat.trim() === '' || kegiatan.trim() === '') {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Lengkapi Semua Fields",
 				showConfirmButton: false,
@@ -96,7 +93,8 @@
 			jdl_waktupelaksanaan: waktumulai + " - " + waktuakhir,
 			jdl_agenda: kegiatan,
 			jdl_tempat: tempat,
-			jdl_status: "Aktif",
+			jdl_idpkkmb: idpkkmb,
+			jdl_status: "Aktif"
 		};
 
 
@@ -107,7 +105,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Pembuatan Jadwal Berhasil",
 					showConfirmButton: false,

@@ -20,6 +20,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	document.getElementById('pkm_tahunPkkmb').addEventListener('input', function () {
 		var yearInput = this.value.replace(/[^0-9]/g, '').substring(0, 4);
 		this.value = yearInput;

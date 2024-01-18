@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
@@ -144,6 +140,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	$('.nim').hide();
 	$('.nopendaftaran').hide();
 	$('.namalengkap').hide();
@@ -236,7 +234,6 @@
 		if (selectedTipeAkun === 'Mahasiswa Baru') {
 			if (namalengkap.trim() === '' || jeniskelamin.trim() === 'Pilih Jenis Kelamin' || programstudi.trim() === 'Pilih Program Studi' || alamat.trim() === '' || notelepon.trim() === '' || email.trim() === '' || kategori.trim() === 'Pilih Kategori Mahasiswa' || katasandi.trim() === '' || katasandi2.trim() === '') {
 				Swal.fire({
-					position: "top-end",
 					icon: "error",
 					title: "Lengkapi Semua Fields",
 					showConfirmButton: false,
@@ -259,7 +256,7 @@
 				mhs_password: katasandi,
 				mhs_status: "Aktif",
 				mhs_idkelompok: "",
-				mhs_idpkkmb: "",
+				mhs_idpkkmb: idpkkmb,
 				mhs_statuskelulusan: "",
 				mhs_saran: "",
 				mhs_kritik: "",
@@ -269,7 +266,6 @@
 		} else if (selectedTipeAkun === 'Panitia Kesekretariatan') {
 			if (namalengkap.trim() === '' || jeniskelamin.trim() === 'Pilih Jenis Kelamin' || programstudi.trim() === 'Pilih Program Studi' || alamat.trim() === '' || notelepon.trim() === '' || email.trim() === '' || role.trim() === 'Pilih Role' || katasandi.trim() === '' || katasandi2.trim() === '') {
 				Swal.fire({
-					position: "top-end",
 					icon: "error",
 					title: "Isi Semua Fields",
 					showConfirmButton: false,
@@ -290,11 +286,11 @@
 				ksk_email: email,
 				ksk_role: role,
 				ksk_password: katasandi,
+				ksk_idpkkmb: idpkkmb,
 				ksk_status: "Menunggu Verifikasi",
 			};
 		} else {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Pilih Tipe Akun",
 				showConfirmButton: false,
@@ -317,7 +313,6 @@
 		var isEmailValid = validateEmailFormat(document.getElementsByName("email")[0]);
 		if (!isEmailValid) {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
 				title: "Format Email Tidak Sesuai",
 				showConfirmButton: false,
@@ -344,7 +339,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Pendaftaran Berhasil",
 					showConfirmButton: false,

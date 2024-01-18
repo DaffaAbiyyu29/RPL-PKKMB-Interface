@@ -104,6 +104,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var token = getCookie("token");
 	var decodedPayload = decodeJwt(token);
 	console.log(token)

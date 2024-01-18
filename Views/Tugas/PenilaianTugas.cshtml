@@ -49,6 +49,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var idkelompok = null;
 	var selectedNoPendaftarans = [];
 	var iddetail = '@ViewBag.tgs_idtugas';
@@ -207,11 +209,15 @@
 				contentType: "application/json",
 				success: function (data) {
 					Swal.fire({
-						position: "top-end",
 						icon: "success",
 						title: "Berhasil Menilai Tugas",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						location.reload()
 					});

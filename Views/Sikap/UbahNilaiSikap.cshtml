@@ -1,10 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
@@ -16,18 +10,18 @@
 						<!-- First Column -->
 						<div class="form-floating mb-4 nama">
 							<input type="text" class="form-control" maxlength="10" id="nls_idnilaisikap" name="nls_idnilaisikap" value="@ViewBag.nls_idnilaisikap" placeholder="" hidden>
-							<input type="text" class="form-control" maxlength="100" id="nama" name="nama" style="background-color: transparent;" placeholder="" readonly>
+							<input type="text" class="form-control" maxlength="100" id="nama" name="nama" style="background-color: transparent;" placeholder="" disabled>
 							<label for="nama">Nama</label>
 						</div>
 						<div class="form-floating mb-4 namakelompok">
-							<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" style="background-color: transparent;" placeholder="" readonly>
+							<input type="text" class="form-control" maxlength="100" id="namakelompok" name="namakelompok" style="background-color: transparent;" placeholder="" disabled>
 							<label for="floatingInputGrid">Kelompok</label>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
 						<div class="form-floating mb-4 tanggal">
-							<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" style="background-color: transparent;" placeholder="" readonly>
+							<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" style="background-color: transparent;" placeholder="" disabled>
 							<label for="floatingInputGrid">Hari / Tanggal</label>
 						</div>
 
@@ -50,6 +44,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var nopendaftaran = null;
 	var idkelompok = null;
 	loadDataNilai();
@@ -137,9 +133,7 @@
 			nls_nim: "@ViewBag.UserId",
 			nls_sikap: nls_sikap,
 			nls_tanggal: nls_tanggal,
-			nls_jamplus: 0,
-			nls_jamminus: 0,
-			nls_deskripsi: "",
+			nls_idpkkmb: idpkkmb,
 			nls_status: "Aktif"
 		};
 
@@ -151,14 +145,17 @@
 			data: data,
 			contentType: "application/json",
 			success: function (data) {
-				console.log('Data from server:', data);
 				if (data.status === 200) {
 					Swal.fire({
-						position: "top-end",
 						icon: "success",
 						title: "Data berhasil diubah",
-						showConfirmButton: false,
-						timer: 2000
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						window.location.href = '/sikap/index';
 					});

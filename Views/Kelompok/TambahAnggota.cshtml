@@ -26,6 +26,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	var nim = null;
 	var selectedMhs = [];
 	loadDataKelompok()
@@ -104,7 +106,8 @@
 							previous: "Sebelumnya",
 							next: "Berikutnya"
 						}
-					});
+					}
+				});
 
 				$('input[type="checkbox"]').change(function () {
 					var mhsNo = $(this).data('mhs-no');
@@ -125,7 +128,6 @@
 
 		if (selectedMhs.length == 0) {
 			Swal.fire({
-				position: "top-end",
 				icon: "warning",
 				title: "Tidak Ada Mahasiswa Yang Dipilih.",
 				showConfirmButton: false,
@@ -147,7 +149,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Menambah Anggota Ke Dalam Kelompok.",
 					showConfirmButton: false,

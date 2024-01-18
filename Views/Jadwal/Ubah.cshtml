@@ -1,8 +1,4 @@
-﻿@{
-	Layout = "_Layout";
-}
-
-<div class="row justify-content-center mb-5">
+﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			@*@Context.Session.GetString("Peran")*@
@@ -68,6 +64,8 @@
 </div>
 
 <script>
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
 	loadDataJadwal()
 
 	function formatDate(inputDate) {
@@ -143,7 +141,8 @@
 			jdl_waktupelaksanaan: waktumulai + " - " + waktuakhir,
 			jdl_agenda: kegiatan,
 			jdl_tempat: tempat,
-			jdl_status: "Aktif",
+			jdl_idpkkmb: idpkkmb,
+			jdl_status: "Aktif"
 		};
 
 
@@ -154,9 +153,8 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
-					title: "Ubah Jadwal Berhasil",
+					title: "Berhasil Mengubah Jadwal",
 					showConfirmButton: false,
 					timer: 2000
 				}).then(() => {

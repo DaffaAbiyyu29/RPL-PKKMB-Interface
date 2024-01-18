@@ -14,6 +14,11 @@
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Tugas Mahasiswa Baru</strong>
+				<div class="form-floating float-end">
+					<select class="form-select" id="tahun" name="tahun" aria-label="" style="height: 60px;">
+					</select>
+					<label for="floatingSelect">Tahun</label>
+				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
 				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
@@ -39,7 +44,50 @@
 </div>
 
 <script>
-	loadTable()
+	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+
+	function TahunPkkmb() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllPkkmb"
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				DropDownTahunPkkmb(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function DropDownTahunPkkmb(data) {
+		var dropdown = $('#tahun');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled data-idpkkmb="">Pilih Tahun</option>'));
+
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text(item.pkm_tahunPkkmb);
+		});
+
+		dropdown.append(options);
+	}
+
+	$(document).ready(function () {
+		TahunPkkmb();
+
+		$('#tahun').change(function () {
+			var selectedYearId = $(this).find(':selected').attr('data-idpkkmb');
+			var selectedYear = $(this).find(':selected').text();
+			loadTable(selectedYearId);
+		});
+
+		loadTable(idpkkmb);
+	});
 
 	function formatDateForDisplay(dateString) {
 		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -47,12 +95,14 @@
 		return formattedDate;
 	}
 
-	function loadTable() {
+	function loadTable(id_pkkmb) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "getalltugas";
+		var url = hostname + "getalltugas?tgs_idpkkmb=" + id_pkkmb
 		var method = "GET";
 		var counter = 1;
 		var detailData = [];
+
+		$('#tabellist').DataTable().destroy();
 
 		$.ajax({
 			url: url,
