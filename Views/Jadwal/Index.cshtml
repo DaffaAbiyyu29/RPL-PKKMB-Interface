@@ -26,13 +26,21 @@
 </div>
 
 <div class="row justify-content-center mb-5">
-	<div class="col-lg semua">
+	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Jadwal PKKMB</strong>
+				<div class="row">
+					<div class="col-10">
+						<strong>Jadwal PKKMB</strong>
+					</div>
+					<div class="col-2">
+						<select class="form-select float-end" id="tahun" name="tahun" aria-label="">
+						</select>
+					</div>
+				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
+				<table class="table table-hover table-sm semua" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -47,16 +55,8 @@
 						</tr>
 					</thead>
 				</table>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg mb-4 senin">
-		<div class="card">
-			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Hari Ke - 1 : Senin</strong>
-			</h5>
-			<div class="card-body pt-1 scrollable-table">
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistsenin">
+
+				<table class="table table-hover table-sm senin" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistsenin">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -71,16 +71,8 @@
 						</tr>
 					</thead>
 				</table>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg mb-4 selasa">
-		<div class="card">
-			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Hari Ke - 2 : Selasa</strong>
-			</h5>
-			<div class="card-body pt-1 scrollable-table">
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistselasa">
+
+				<table class="table table-hover table-sm selasa" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistselasa">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -95,16 +87,8 @@
 						</tr>
 					</thead>
 				</table>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg mb-4 rabu">
-		<div class="card">
-			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Hari Ke - 3 : Rabu</strong>
-			</h5>
-			<div class="card-body pt-1 scrollable-table">
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistrabu">
+
+				<table class="table table-hover table-sm rabu" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistrabu">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -119,16 +103,8 @@
 						</tr>
 					</thead>
 				</table>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg mb-4 kamis">
-		<div class="card">
-			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Hari Ke - 4 : Kamis</strong>
-			</h5>
-			<div class="card-body pt-1 scrollable-table">
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistkamis">
+
+				<table class="table table-hover table-sm kamis" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistkamis">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -143,16 +119,8 @@
 						</tr>
 					</thead>
 				</table>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg mb-4 jumat">
-		<div class="card">
-			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Hari Ke - 5 : Jumat</strong>
-			</h5>
-			<div class="card-body pt-1 scrollable-table">
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistjumat">
+
+				<table class="table table-hover table-sm jumat" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellistjumat">
 					<thead>
 						<tr>
 							<th scope="col">No</th>
@@ -175,6 +143,37 @@
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
 
+	function TahunPkkmb() {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllPkkmb"
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				DropDownTahunPkkmb(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function DropDownTahunPkkmb(data) {
+		var dropdown = $('#tahun');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled data-idpkkmb="">Pilih Tahun</option>'));
+
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text('Tahun ' + item.pkm_tahunPkkmb);
+		});
+
+		dropdown.append(options);
+	}
+
 	$('.senin').hide();
 	$('.selasa').hide();
 	$('.rabu').hide();
@@ -184,10 +183,22 @@
 	//var tabel = '#tabellist';
 
 	$(document).ready(function () {
+		var hari = null;
+		TahunPkkmb();
+
+		$('#tahun').change(function () {
+			var selectedYearId = $(this).find(':selected').attr('data-idpkkmb');
+			var selectedYear = $(this).find(':selected').text();
+			idpkkmb = selectedYearId;
+			loadTable(hari);
+			console.log(selectedYear, hari)
+		});
+
 		loadTable('Semua');
 
 		$('[name="hari"]').change(function () {
 			var selectedHari = $(this).val();
+			hari = selectedHari;
 
 			// Sembunyikan semua tabel terlebih dahulu
 			$('.semua, .senin, .selasa, .rabu, .kamis, .jumat').hide();
@@ -218,6 +229,7 @@
 		var method = "GET";
 		var counter = 1;
 		var detailData = [];
+		console.log(url)
 
 		// Pilih tabel berdasarkan hari yang dipilih
 		var tabelId = '';
@@ -265,8 +277,13 @@
 					counter++;
 				});
 
-				// Hapus dan inisialisasi kembali DataTable untuk mencegah masalah ganda
-				$(tabelId).DataTable().destroy();
+				//$(tabelId).DataTable().destroy();
+				$('#tabellist').DataTable().destroy();
+				$('#tabellistsenin').DataTable().destroy();
+				$('#tabellistselasa').DataTable().destroy();
+				$('#tabellistrabu').DataTable().destroy();
+				$('#tabellistkamis').DataTable().destroy();
+				$('#tabellistjumat').DataTable().destroy();
 				$(tabelId).DataTable({
 					data: detailData,
 					language: {

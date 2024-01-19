@@ -33,8 +33,13 @@
 			Swal.fire({
 				icon: "warning",
 				title: "Minimal Tahun 2020",
-				showConfirmButton: false,
-				timer: 2000
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
 			})
 			this.value = '2020';
 		}
@@ -91,11 +96,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Mengubah Tahun PKKMB",
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = '../';
 				});
@@ -104,8 +113,13 @@
 				Swal.fire({
 					icon: "warning",
 					title: "Tahun " + input.pkm_tahunPkkmb + " Sudah Tersedia",
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				})
 				console.error("AJAX request error:", status, error);
 				console.log("Server response:", xhr.responseText);

@@ -113,11 +113,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Mengaktifkan PKKMB",
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					sessionStorage.setItem('id_pkkmb', pkm_idPkkmb)
 					sessionStorage.setItem('tahun_pkkmb', pkm_tahunPkkmb);
@@ -150,11 +154,15 @@
 			contentType: "application/json",
 			success: function (data) {
 				Swal.fire({
-					position: "top-end",
 					icon: "success",
 					title: "Berhasil Non Aktifkan PKKMB",
-					showConfirmButton: false,
-					timer: 2000
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload();
 					sessionStorage.removeItem('id_pkkmb')

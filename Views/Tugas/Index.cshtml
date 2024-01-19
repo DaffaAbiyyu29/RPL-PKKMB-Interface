@@ -13,11 +13,14 @@
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Tugas Mahasiswa Baru</strong>
-				<div class="form-floating float-end">
-					<select class="form-select" id="tahun" name="tahun" aria-label="" style="height: 60px;">
-					</select>
-					<label for="floatingSelect">Tahun</label>
+				<div class="row">
+					<div class="col-10">
+						<strong>Tigas Mahasiswa Baru</strong>
+					</div>
+					<div class="col-2">
+						<select class="form-select float-end" id="tahun" name="tahun" aria-label="">
+						</select>
+					</div>
 				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
@@ -71,7 +74,7 @@
 		dropdown.append($('<option selected disabled data-idpkkmb="">Pilih Tahun</option>'));
 
 		var options = $.map(data, function (item) {
-			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text(item.pkm_tahunPkkmb);
+			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text('Tahun ' + item.pkm_tahunPkkmb);
 		});
 
 		dropdown.append(options);

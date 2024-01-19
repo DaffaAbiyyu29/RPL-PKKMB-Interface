@@ -2,7 +2,15 @@
 	<div class="col-lg">
 		<div class="card">
 			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
-				<strong>Evaluasi Mahasiswa Baru</strong>
+				<div class="row">
+					<div class="col-10">
+						<strong>Evaluasi Mahasiswa</strong>
+					</div>
+					<div class="col-2">
+						<select class="form-select float-end" id="tahun" name="tahun" aria-label="">
+						</select>
+					</div>
+				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
 				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
@@ -26,14 +34,57 @@
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
 
-	loadTable();
-
-	function loadTable() {
+	function TahunPkkmb() {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllMahasiswa?mhs_idpkkmb=" + idpkkmb
+		var url = hostname + "GetAllPkkmb"
+		var method = "GET";
+
+		$.ajax({
+			url: url,
+			type: method,
+			dataType: "json",
+			success: function (response) {
+				DropDownTahunPkkmb(response.data);
+			},
+			error: function (xhr, status, error) {
+				console.log('Error fetching data:', error);
+				console.log(xhr.responseJSON);
+			}
+		});
+	}
+
+	function DropDownTahunPkkmb(data) {
+		var dropdown = $('#tahun');
+		dropdown.empty();
+		dropdown.append($('<option selected disabled data-idpkkmb="">Pilih Tahun</option>'));
+
+		var options = $.map(data, function (item) {
+			return $('<option></option>').val(item.pkm_idPkkmb).attr('data-idpkkmb', item.pkm_idPkkmb).text('Tahun ' + item.pkm_tahunPkkmb);
+		});
+
+		dropdown.append(options);
+	}
+
+	$(document).ready(function () {
+		TahunPkkmb();
+
+		$('#tahun').change(function () {
+			var selectedYearId = $(this).find(':selected').attr('data-idpkkmb');
+			var selectedYear = $(this).find(':selected').text();
+			loadTable(selectedYearId);
+		});
+
+		loadTable(idpkkmb);
+	});
+
+	function loadTable(id_pkkmb) {
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GetAllMahasiswa?mhs_idpkkmb=" + id_pkkmb
 		var method = "GET";
 		var counter = 1;
 		var detailData = [];
+
+		$('#tabellist').DataTable().clear().destroy();
 
 		$.ajax({
 			url: url,
@@ -49,6 +100,7 @@
 					loadNamaKelompok(val.mhs_idkelompok, function (namaKmk) {
 						namaKelompok.push([namaKmk]);
 						detailData.push([counter, val.mhs_nopendaftaran, val.mhs_namalengkap, namaKelompok, val.mhs_kritik, val.mhs_saran, val.mhs_insight])
+						console.log(detailData)
 						counter++;
 
 						if (counter - totalData == 1) {
