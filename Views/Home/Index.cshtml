@@ -3,7 +3,7 @@
 }
 
 
-<div class="container-fluid content p-5	">
+<div class="container-fluid content p-5">
 	<img id="gambarInteraktif" src="/assets/Images/logo/Logo-PKKMB-650.png" class="rounded" alt="...">
 </div>
 
@@ -111,7 +111,7 @@
 	<div class="loader" id="loader"></div>
 	<h5 class="fw-bold text-center my-3" style="font-family: 'Poppins', sans-serif; font-weight: bold; font-size:50px;">
 		<span style="color: #0059AB;">
-			AFTER MOVIE
+			AFTER MOVIE 2023
 		</span>
 	</h5>
 	<video class="container d-flex mb-5" id="video-bg" muted loop>
@@ -143,10 +143,10 @@
 
 <div class="contact-section">
 
-	<div style="text-align: center;">
-		<img src="/assets/Images/logo/Footer.png" style="display: inline-block;" />
+	@*	<div style="text-align: center;">
+	<img src="/assets/Images/logo/Footer.png" style="display: inline-block;" />
 	</div>
-
+	*@
 
 	@* <body class="custom-body">
 
@@ -160,32 +160,32 @@
 
 <script>
 
-		document.addEventListener('DOMContentLoaded', function () {
-			var floatingButton = document.querySelector('.floating-element-button');
+	document.addEventListener('DOMContentLoaded', function () {
+		var floatingButton = document.querySelector('.floating-element-button');
 
-			// Tambahkan kelas 'show' setelah DOM dimuat
-			floatingButton.classList.add('show');
+		// Tambahkan kelas 'show' setelah DOM dimuat
+		floatingButton.classList.add('show');
 
-			// Tambahkan event listener untuk mengarahkan ke halaman dari repositori Anda saat tombol di klik
-			floatingButton.addEventListener('click', function () {
-				// Gantilah nama file sesuai dengan file yang ingin Anda unduh
-				var fileName = 'Buku_Pedoman_Mahasiswa.pdf';
+		// Tambahkan event listener untuk mengarahkan ke halaman dari repositori Anda saat tombol di klik
+		floatingButton.addEventListener('click', function () {
+			// Gantilah nama file sesuai dengan file yang ingin Anda unduh
+			var fileName = 'Buku_Pedoman_Mahasiswa.pdf';
 
-				// Gantilah path sesuai dengan struktur folder di repositori lokal Anda
-				var repositoryPath = 'assets/';
+			// Gantilah path sesuai dengan struktur folder di repositori lokal Anda
+			var repositoryPath = 'assets/';
 
-				// Buat URL lengkap untuk file yang akan diunduh
-				var downloadUrl = repositoryPath + fileName;
+			// Buat URL lengkap untuk file yang akan diunduh
+			var downloadUrl = repositoryPath + fileName;
 
-				// Buat elemen <a> untuk mengunduh file
-				var downloadLink = document.createElement('a');
-				downloadLink.href = downloadUrl;
-				downloadLink.download = fileName;
+			// Buat elemen <a> untuk mengunduh file
+			var downloadLink = document.createElement('a');
+			downloadLink.href = downloadUrl;
+			downloadLink.download = fileName;
 
-				// Simulasikan klik pada elemen <a> untuk memulai unduhan
-				downloadLink.click();
-			});
+			// Simulasikan klik pada elemen <a> untuk memulai unduhan
+			downloadLink.click();
 		});
+	});
 
 
 

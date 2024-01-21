@@ -31,7 +31,6 @@
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">Id PKKMB</th>
 							<th scope="col">Tahun PKKMB</th>
 							<th scope="col">Status</th>
 							<th scope="col">Aksi</th>
@@ -74,7 +73,7 @@
 						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Pkkmb/UbahTahun/' + val.pkm_idPkkmb + '" data-toggle="tooltip" data-placement="top" title="Ubah Tahun"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a> '
 					}
 
-					detailData.push([counter, val.pkm_idPkkmb, val.pkm_tahunPkkmb, val.pkm_status, aksi])
+					detailData.push([counter, val.pkm_tahunPkkmb, val.pkm_status, aksi])
 					counter++;
 				});
 

@@ -1,5 +1,5 @@
 ﻿<style>
-	#tabellist2 td {
+	td {
 		background-color: #f2f2f2;
 		text-align: right !important
 	}
@@ -15,43 +15,24 @@
 	#tabellist2 tbody td:nth-child(n+2) {
 		padding: 35px;
 	}
-
-	.btn-active {
-		background-color: #0059AB;
-		color: #f2f2f2;
-	}
 </style>
 
 <div class="row justify-content-center mb-5">
 	<div class="col-lg">
 		<div class="card">
-			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059AB;">
+			<h5 class="card-header white-text py-4 mb-4" style="background-color: #0059ab;">
 				<div class="row">
 					<div class="col-10">
 						<strong>Evaluasi Mahasiswa</strong>
 					</div>
 					<div class="col-2">
-						<select class="form-select float-end" id="tahun" name="tahun" aria-label="">
+						<select class="form-select float-end" id="tahun" name="tahun" aria-td="">
 						</select>
 					</div>
 				</div>
 			</h5>
 			<div class="card-body pt-1 scrollable-table">
-				<a class="btn btn-lg" id="kritiksaran" onclick="kritiksaran()" href="#">Kritik & Saran</a>
-				<a class="btn btn-lg" id="grafik" onclick="grafik()" href="#">Grafik</a>
-				<hr />
-
-				<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist">
-					<thead>
-						<tr>
-							<th scope="col">No</th>
-							<th scope="col">Nama</th>
-							<th scope="col">Nama Kelompok</th>
-							<th scope="col">Kritik</th>
-							<th scope="col">Saran</th>
-						</tr>
-					</thead>
-				</table>
+				@*<table class="table table-hover table-sm" style="width:100%; border: 2px solid #dee2e6; border-radius: 10px; overflow: hidden;" id="tabellist2">*@
 				<table class="table table-border table-hover" style="border-radius: 10px; overflow: hidden;" id="tabellist2">
 					<thead>
 						<tr>
@@ -160,26 +141,6 @@
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
 
-	$('#tabellist2').hide()
-	$('#kritiksaran').addClass('btn-active');
-
-	function kritiksaran() {
-		loadTable(idpkkmb);
-		$('#tabellist').show()
-		$('#tabellist2').hide()
-		$('#kritiksaran').addClass('btn-active');
-		$('#grafik').removeClass('btn-active');
-	}
-
-	function grafik() {
-		loadTable2(idpkkmb);
-		$('#tabellist').DataTable().clear().destroy();
-		$('#tabellist').hide()
-		$('#tabellist2').show()
-		$('#kritiksaran').removeClass('btn-active');
-		$('#grafik').addClass('btn-active');
-	}
-
 	function TahunPkkmb() {
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "GetAllPkkmb"
@@ -217,66 +178,11 @@
 		$('#tahun').change(function () {
 			var selectedYearId = $(this).find(':selected').attr('data-idpkkmb');
 			var selectedYear = $(this).find(':selected').text();
-			idpkkmb = selectedYearId
-			loadTable(selectedYearId);
 			loadTable2(selectedYearId);
 		});
 
-		loadTable(idpkkmb);
 		loadTable2(idpkkmb);
 	});
-
-	function loadTable(id_pkkmb) {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetAllMahasiswa?mhs_idpkkmb=" + id_pkkmb
-		var method = "GET";
-		var counter = 1;
-		var detailData = [];
-
-		$('#tabellist').DataTable().clear().destroy();
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				var item = data.data;
-				var totalData = item.length;
-
-				$.each(item, function (key, val) {
-					var namaKelompok = [];
-
-					loadNamaKelompok(val.mhs_idkelompok, function (namaKmk) {
-						namaKelompok.push([namaKmk]);
-						detailData.push([counter, val.mhs_namalengkap, namaKelompok, val.mhs_kritik, val.mhs_saran])
-						counter++;
-
-						if (counter - totalData == 1) {
-							initializeDataTable(detailData);
-						}
-					});
-				});
-
-				function initializeDataTable(data) {
-					$('#tabellist').DataTable({
-						data: detailData,
-						language: {
-							search: "Cari :",
-							zeroRecords: "Data Tidak Ditemukan",
-							sLengthMenu: "Menampilkan _MENU_ data",
-							info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
-							infoEmpty: "Menampilkan 0 data",
-							infoFiltered: "(Difilter dari _MAX_ total data)",
-							paginate: {
-								previous: "Sebelumnya",
-								next: "Berikutnya"
-							}
-						}
-					});
-				}
-			}
-		});
-	}
 
 	function loadTable2(id_pkkmb) {
 		var hostname = 'https://localhost:7087/'
@@ -371,26 +277,6 @@
 						$('#aspek6_' + i).css('background-color', '#3fab2e');
 					}
 				}
-			},
-		});
-	}
-
-	function loadNamaKelompok(id, callback) {
-		var hostname = "https://localhost:7087/";
-		var url = hostname + "GetKelompok?kmk_idkelompok=" + id;
-		var method = "GET";
-
-		$.ajax({
-			url: url,
-			method: method,
-			contentType: "application/json",
-			success: function (data) {
-				var item = data.data;
-				namaKelompok = item.kmk_namakelompok;
-				callback(namaKelompok);
-			},
-			error: function (error) {
-				console.error("Error fetching data: ", error);
 			},
 		});
 	}

@@ -1,10 +1,95 @@
-﻿<div class="row justify-content-center mb-5">
+﻿<style>
+	.range input[type=range]::-webkit-slider-thumb {
+		appearance: none;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: #0059ab;
+		cursor: pointer;
+	}
+
+	.range input[type=range]::-moz-range-thumb {
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: #0059ab;
+		cursor: pointer;
+	}
+</style>
+
+<div class="row justify-content-center mb-5">
 	<div class="col-lg-8">
 		<div class="card">
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Evaluasi</strong>
 			</h5>
 			<div class="card-body px-lg-5 pt-1">
+				<div class="row mb-3">
+					<div class="col-6">
+						<label>Tingkat keberhasilan pelaksanaan PKKMB</label>
+					</div>
+					<div class="col-6">
+						<div class="range" data-mdb-range-init>
+							<input type="range" class="form-range" min="1" max="10" id="aspek1" value="1" />
+						</div>
+					</div>
+					<hr />
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label>Tingkat efektivitas PKKMB dalam membantu beradaptasi</label>
+					</div>
+					<div class="col-6">
+						<div class="range" data-mdb-range-init>
+							<input type="range" class="form-range" min="1" max="10" id="aspek2" value="1" />
+						</div>
+					</div>
+					<hr />
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label>Tingkat kepuasan terhadap materi</label>
+					</div>
+					<div class="col-6">
+						<div class="range" data-mdb-range-init>
+							<input type="range" class="form-range" min="1" max="10" id="aspek3" value="1" />
+						</div>
+					</div>
+					<hr />
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label>Tingkat kepuasan peraturan lokasi PKKMB</label>
+					</div>
+					<div class="col-6">
+						<div class="range" data-mdb-range-init>
+							<input type="range" class="form-range" min="1" max="10" id="aspek4" value="1" />
+						</div>
+					</div>
+					<hr />
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label>Peran fasilitator</label>
+					</div>
+					<div class="col-6">
+						<div class="range" data-mdb-range-init>
+							<input type="range" class="form-range" min="1" max="10" id="aspek5" value="1" />
+						</div>
+					</div>
+					<hr />
+				</div>
+				<div class="row mb-3">
+					<div class="col-6">
+						<label>Tingkat efektivitas PKKMB dalam memberikan ruang diskusi dan interaksi</label>
+					</div>
+					<div class="col-6">
+						<div class="range" data-mdb-range-init>
+							<input type="range" class="form-range" min="1" max="10" id="aspek6" value="1" />
+						</div>
+					</div>
+					<hr />
+				</div>
 				<div class="row">
 					<div class="col-md-6">
 						<!-- First Column -->
@@ -23,12 +108,6 @@
 								<textarea class="form-control" placeholder="" id="saran" data-target="validateField" name="saran" style="height: 100px"></textarea>
 								<label for="validateField">Saran</label>
 							</div>
-						</div>
-					</div>
-					<div class="input-group has-validation mb-4 umpanbalik">
-						<div class="form-floating">
-							<textarea class="form-control" placeholder="" id="umpanbalik" data-target="validateField" name="umpanbalik" style="height: 100px"></textarea>
-							<label for="validateField">Umpan Balik</label>
 						</div>
 					</div>
 				</div>
@@ -64,7 +143,12 @@
 		var nopendaftaran = '@ViewBag.UserId';
 		var kritik = document.getElementsByName("kritik")[0]
 		var saran = document.getElementsByName("saran")[0]
-		var umpanbalik = document.getElementsByName("umpanbalik")[0]
+		var aspek1 = document.getElementById("aspek1")
+		var aspek2 = document.getElementById("aspek2")
+		var aspek3 = document.getElementById("aspek3")
+		var aspek4 = document.getElementById("aspek4")
+		var aspek5 = document.getElementById("aspek5")
+		var aspek6 = document.getElementById("aspek6")
 
 		var hostname = "https://localhost:7087/"
 		var url = hostname + "datamahasiswa?mhs_nopendaftaran=" + nopendaftaran
@@ -78,7 +162,12 @@
 				var item = data.data
 				kritik.value = item.mhs_kritik
 				saran.value = item.mhs_saran
-				umpanbalik.value = item.mhs_insight
+				aspek1.value = item.mhs_aspek1
+				aspek2.value = item.mhs_aspek2
+				aspek3.value = item.mhs_aspek3
+				aspek4.value = item.mhs_aspek4
+				aspek5.value = item.mhs_aspek5
+				aspek6.value = item.mhs_aspek6
 			},
 		});
 	}
@@ -89,7 +178,12 @@
 		var nopendaftaran = '@ViewBag.UserId';
 		var kritik = document.getElementsByName("kritik")[0].value;
 		var saran = document.getElementsByName("saran")[0].value;
-		var umpanbalik = document.getElementsByName("umpanbalik")[0].value;
+		var aspek1 = document.getElementById("aspek1").value;
+		var aspek2 = document.getElementById("aspek2").value;
+		var aspek3 = document.getElementById("aspek3").value;
+		var aspek4 = document.getElementById("aspek4").value;
+		var aspek5 = document.getElementById("aspek5").value;
+		var aspek6 = document.getElementById("aspek6").value;
 
 		url = "https://localhost:7087/EvaluasiMahasiswa";
 		method = "PUT";
@@ -109,7 +203,12 @@
 			mhs_status: "",
 			mhs_saran: saran,
 			mhs_kritik: kritik,
-			mhs_insight: umpanbalik,
+			mhs_aspek1: aspek1,
+			mhs_aspek2: aspek2,
+			mhs_aspek3: aspek3,
+			mhs_aspek4: aspek4,
+			mhs_aspek5: aspek5,
+			mhs_aspek6: aspek6,
 			mhs_tglkirimevaluasi: getCurrentDateTime()
 		};
 		console.log(data)

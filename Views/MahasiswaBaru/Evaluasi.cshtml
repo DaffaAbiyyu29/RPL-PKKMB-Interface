@@ -14,7 +14,6 @@
 							<th scope="col">Kelompok</th>
 							<th scope="col">Kritik</th>
 							<th scope="col">Saran</th>
-							<th scope="col">Umpan Balik</th>
 							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
@@ -26,7 +25,6 @@
 							<td id="kelompok"></td>
 							<td id="kritik"></td>
 							<td id="saran"></td>
-							<td id="umpanbalik"></td>
 							<td><a style="background-color: #3a4584 !important;" class="btn btn-primary" asp-controller="mahasiswabaru" asp-action="kirimevaluasi"><i class="fa fa-pencil-alt" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Kirim Evaluasi"></i></a></td>
 						</tr>
 					</tbody>
@@ -58,11 +56,9 @@
 				getNamaKelompok(item.mhs_idkelompok)
 				var kritikElement = document.getElementById("kritik");
 				var saranElement = document.getElementById("saran");
-				var umpanbalikElement = document.getElementById("umpanbalik");
 
 				kritikElement.textContent = item.mhs_kritik;
 				saranElement.textContent = item.mhs_saran;
-				umpanbalikElement.textContent = item.mhs_insight;
 			},
 			error: function (error) {
 				console.error("Error loading data:", error);
