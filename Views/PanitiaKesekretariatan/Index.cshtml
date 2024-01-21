@@ -147,38 +147,57 @@
 
 	function nonAktifKsk(event) {
 		event.preventDefault();
+		if (validateArray()) {
+			var hostname = "https://localhost:7087/";
+			url = hostname + "nonAktifKsk";
+			method = "PUT";
 
-		var hostname = "https://localhost:7087/";
-		url = hostname + "nonAktifKsk";
-		method = "PUT";
+			var data = JSON.stringify(selectedNIMs);
 
-		var data = JSON.stringify(selectedNIMs);
+			$.ajax({
+				url: url,
+				method: method,
+				data: data,
+				contentType: "application/json",
+				success: function (data) {
+					Swal.fire({
+						icon: "success",
+						title: "Panitia Kesekretariatan Berhasil Dinonaktifkan.",
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
+					}).then(() => {
+						location.reload()
+					});
+				},
+				error: function (xhr, status) {
+					console.error("AJAX request error:", status);
+					console.log("Server response:", xhr.responseJSON);
+				},
+			});
+		}
+	}
 
-		$.ajax({
-			url: url,
-			method: method,
-			data: data,
-			contentType: "application/json",
-			success: function (data) {
-				Swal.fire({
-					icon: "success",
-					title: "Panitia Kesekretariatan Berhasil Dinonaktifkan.",
-					showConfirmButton: true,
-					showClass: {
-						popup: 'animate__animated animate__fadeInDown'
-					},
-					hideClass: {
-						popup: 'animate__animated animate__fadeOutUp'
-					}
-				}).then(() => {
-					location.reload()
-				});
-			},
-			error: function (xhr, status) {
-				console.error("AJAX request error:", status);
-				console.log("Server response:", xhr.responseJSON);
-			},
-		});
+	function validateArray() {
+		if (selectedNIMs.length === 0) {
+			Swal.fire({
+				icon: "warning",
+				title: "Silakan Pilih Data Kesekretariatan.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			});
+			return false; // Return false if validation fails
+		}
+		return true; // Return true if validation succeeds
 	}
 
 	function checkAll() {

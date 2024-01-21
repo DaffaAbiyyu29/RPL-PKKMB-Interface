@@ -69,6 +69,7 @@
 
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+	var tahunpkkmb = sessionStorage.getItem('tahun_pkkmb')
 
 	function validateFile(input) {
 		const fileSize = input.files[0].size / 1024 / 1024;
@@ -190,11 +191,25 @@
 		function generateUUID() {
 			var randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
 
-			var uuid = 'PKKMB_' + randomNumber;
+			var uuid = 'PKKMB_' + tahunpkkmb + '_' + randomNumber;
 
 			return uuid;
 		}
-		var uniqueFileName = generateUUID() + '_' + file.name;
+
+		if (namatugas.trim() === '' || waktuawal.trim() === '' || deadline.trim() === '' || deskripsi.trim() === '') {
+			Swal.fire({
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
 
 		if (file == null) {
 			url = "https://localhost:7087/UpdateTugas";
@@ -219,7 +234,7 @@
 				success: function (data) {
 					Swal.fire({
 						icon: "success",
-						title: "Berhasil Mengubah Tugas",
+						title: "Data Tugas Berhasil Diubah.",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'
@@ -240,6 +255,7 @@
 			var url = "https://localhost:7087/Tugas/Ubah?tgs_idtugas=" + idtugas + "&tgs_nim=KSK001&tgs_namatugas=" + namatugas + "&tgs_tglpemberiantugas=" + waktuawal + "&tgs_deadline=" + deadline + "&tgs_deskripsi=" + deskripsi + "&tgs_status=Aktif" + "&tgs_idpkkmb=" + idpkkmb;
 			method = "PUT";
 
+			var uniqueFileName = generateUUID() + '_' + file.name;
 			var data = new FormData();
 			data.append("file", file, uniqueFileName);
 
@@ -252,7 +268,7 @@
 				success: function (data) {
 					Swal.fire({
 						icon: "success",
-						title: "Berhasil Mengubah Tugas",
+						title: "Data Tugas Berhasil Diubah.",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'

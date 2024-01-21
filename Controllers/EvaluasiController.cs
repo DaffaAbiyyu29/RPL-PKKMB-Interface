@@ -40,11 +40,6 @@ namespace PKKMB_Interface.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-		public IActionResult Index2()
-		{
-			return View();
-		}
-
 		public IActionResult Tambah()
 		{
 			if (HttpContext.Request.Cookies["token"] != null)

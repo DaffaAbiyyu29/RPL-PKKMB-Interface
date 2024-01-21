@@ -132,6 +132,21 @@
 		var tempat = document.getElementsByName("tempat")[0].value;
 		var kegiatan = document.getElementsByName("kegiatan")[0].value;
 
+		if (tanggal.trim() === '' || waktumulai.trim() === '' || waktuakhir.trim() === '' || tempat.trim() === '' || kegiatan.trim() === '') {
+			Swal.fire({
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
+
 		url = "https://localhost:7087/UbahJadwal";
 		method = "PUT";
 		data = {
@@ -154,9 +169,14 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Mengubah Jadwal",
-					showConfirmButton: false,
-					timer: 2000
+					title: "Data Jadwal Berhasil Diubah.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = '../';
 				});

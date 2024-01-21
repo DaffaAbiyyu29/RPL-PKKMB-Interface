@@ -51,6 +51,21 @@
 		var idruangan = document.getElementsByName("rng_idruangan")[0].value; // Fix: use 'value' instead of 'Value'
 		var namaruangan = document.getElementsByName("rng_namaruangan")[0].value; // Fix: use 'value' instead of 'Value'
 
+		if (namaruangan.trim() == '') {
+			Swal.fire({
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
+
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "UpdateRuangan";
 		var method = "PUT";
@@ -72,9 +87,14 @@
 				if (data.status === 200) {
 					Swal.fire({
 						icon: "success",
-						title: "Berhasil Mengubah Ruangan",
-						showConfirmButton: false,
-						timer: 2000
+						title: "Data Ruangan Berhasil Diubah.",
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						window.location.href = '../';
 					});

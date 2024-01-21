@@ -198,12 +198,16 @@
 
 		if (nopendaftaran.trim() === '' || jenisjam.trim() === '' || jumlah.trim() === '' || deskripsi.trim() === '') {
 			Swal.fire({
-				position: "top-end",
 				icon: "error",
-				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -232,7 +236,7 @@
 				if (data.status === 200) {
 					Swal.fire({
 						icon: "success",
-						title: jenisjam + " Berhasil Ditambahkan",
+						title: 'Data ' + jenisjam + " Berhasil Ditambahkan.",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'

@@ -47,6 +47,7 @@
 
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+	var tahunpkkmb = sessionStorage.getItem('tahun_pkkmb')
 
 	var deadlineDate;
 	var currentDate = new Date();
@@ -124,7 +125,7 @@
 		function generateUUID() {
 			var randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
 
-			var uuid = 'PKKMB_' + randomNumber;
+			var uuid = 'PKKMB_' + tahunpkkmb + '_' + randomNumber;
 
 			return uuid;
 		}
@@ -158,7 +159,7 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Mengunggah Tugas",
+					title: "Data Tugas Berhasil Diunggah.",
 					showConfirmButton: true,
 					showClass: {
 						popup: 'animate__animated animate__fadeInDown'

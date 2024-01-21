@@ -26,7 +26,7 @@
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
-						<div class="form-floating mb-4 inf_tglpublikasi">
+						<div class="form-floating mb-4 inf_tglpublikasi hidden">
 							<input type="datetime-local" style="background-color:transparent;" class="form-control" id="inf_tglpublikasi" name="inf_tglpublikasi" placeholder="" disabled>
 							<label for="inf_tglpublikasi">Tanggal Publikasi</label>
 						</div>
@@ -72,8 +72,8 @@
 
 		if (inf_jenisinformasi.trim() == "" || inf_namainformasi.trim() == "" || inf_deskripsi.trim() == "") {
 			Swal.fire({
-				icon: "error",
-				title: "Lengkapi Semua Fields",
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
 				showConfirmButton: true,
 				showClass: {
 					popup: 'animate__animated animate__fadeInDown'
@@ -109,7 +109,7 @@
 				if (data.status === 200) {
 					Swal.fire({
 						icon: "success",
-						title: "Berhasil Menambah Informasi",
+						title: "Data Informasi Berhasil Ditambahkan.",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'

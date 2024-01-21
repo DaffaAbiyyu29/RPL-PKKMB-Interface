@@ -62,7 +62,7 @@
 
 						Swal.fire({
 							icon: "success",
-							title: "Berhasil Login Sebagai " + data.role,
+							title: "Berhasil Login Sebagai " + data.role + ".",
 							showConfirmButton: true,
 							showClass: {
 								popup: 'animate__animated animate__fadeInDown'
@@ -93,8 +93,8 @@
 					console.error("AJAX request error:", status);
 					console.log("Server response:", xhr.responseJSON);
 					Swal.fire({
-						icon: "error",
-						title: xhr.responseJSON.messages,
+						icon: "warning",
+						title: xhr.responseJSON.messages + ".",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'
@@ -107,8 +107,8 @@
 			});
 		} else {
 			Swal.fire({
-				icon: "error",
-				title: "Username dan Kata Sandi Harus Diisi!",
+				icon: "warning",
+				title: "Username dan Kata Sandi Harus Diisi.",
 				showConfirmButton: true,
 				showClass: {
 					popup: 'animate__animated animate__fadeInDown'

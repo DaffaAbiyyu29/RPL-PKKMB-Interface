@@ -64,7 +64,6 @@
 
 	function loadDataAnggota() {
 		var idkelompok = '@ViewBag.kmk_idkelompok';
-
 		var hostname = "https://localhost:7087/";
 		var url = hostname + "GetAnggotaKelompok?kmk_idkelompok=" + idkelompok;
 		var method = "GET";
@@ -139,9 +138,14 @@
 		if (selectedMhs.length == 0) {
 			Swal.fire({
 				icon: "warning",
-				title: "Tidak Ada Mahasiswa Yang Dipilih.",
-				showConfirmButton: false,
-				timer: 2000,
+				title: "Silakan Pilih Data Mahasiswa.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
 			});
 			return;
 		}
@@ -160,9 +164,14 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Menghapus Anggota Dari Kelompok.",
-					showConfirmButton: false,
-					timer: 2000,
+					title: "Data Anggota Berhasil Dihapus.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					location.reload();
 				});

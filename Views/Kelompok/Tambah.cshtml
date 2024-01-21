@@ -52,14 +52,18 @@
 		var fasilitator = document.getElementsByName("fasilitator")[0].value;
 		var ruangan = document.getElementsByName("ruangan")[0].value;
 
-		// Adjust the URL, method, and data based on the selected account type
 		if (namakelompok.trim() === '' || ruangan.trim() === '' || fasilitator.trim() === '') {
 			Swal.fire({
-				icon: "error",
-				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -82,20 +86,30 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Pembuatan Kelompok Berhasil",
-					showConfirmButton: false,
-					timer: 2000
+					title: "Data Kelompok Berhasil Ditambahkan.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = './';
 				});
 			},
 			error: function (xhr, status) {
 				Swal.fire({
-					icon: "error",
-					title: "Ruangan / Fasilitator Sudah Tersedia",
-					showConfirmButton: false,
-					timer: 2000
-				});
+					icon: "warning",
+					title: "Ruangan / Fasilitator Sudah Tersedia.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				})
 				console.error("AJAX request error:", status);
 				console.log("Server response:", xhr.responseJSON);
 			},

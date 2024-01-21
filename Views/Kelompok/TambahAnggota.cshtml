@@ -129,9 +129,14 @@
 		if (selectedMhs.length == 0) {
 			Swal.fire({
 				icon: "warning",
-				title: "Tidak Ada Mahasiswa Yang Dipilih.",
-				showConfirmButton: false,
-				timer: 2000,
+				title: "Silakan Pilih Data Mahasiswa.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
 			});
 			return;
 		}
@@ -150,9 +155,14 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Menambah Anggota Ke Dalam Kelompok.",
-					showConfirmButton: false,
-					timer: 2000,
+					title: "Data Anggota Berhasil Ditambahkan.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = '../DetailKelompok/@ViewBag.kmk_idkelompok';
 				});

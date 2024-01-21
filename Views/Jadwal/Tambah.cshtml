@@ -73,14 +73,18 @@
 		var tempat = document.getElementsByName("tempat")[0].value;
 		var kegiatan = document.getElementsByName("kegiatan")[0].value;
 
-		// Adjust the URL, method, and data based on the selected account type
 		if (tanggal.trim() === '' || waktumulai.trim() === '' || waktuakhir.trim() === '' || tempat.trim() === '' || kegiatan.trim() === '') {
 			Swal.fire({
-				icon: "error",
-				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -106,9 +110,14 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Pembuatan Jadwal Berhasil",
-					showConfirmButton: false,
-					timer: 2000
+					title: "Data Jadwal Berhasil Ditambahkan.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = './';
 				});

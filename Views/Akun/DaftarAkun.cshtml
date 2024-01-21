@@ -225,6 +225,7 @@
 		var role = document.getElementsByName("role")[0].value;
 		var katasandi = document.getElementsByName("katasandi")[0].value;
 		var katasandi2 = document.getElementsByName("katasandi2")[0].value;
+		var message = null
 
 		// Adjust the URL, method, and data based on the selected account type
 		var url = "";
@@ -234,14 +235,20 @@
 		if (selectedTipeAkun === 'Mahasiswa Baru') {
 			if (namalengkap.trim() === '' || jeniskelamin.trim() === 'Pilih Jenis Kelamin' || programstudi.trim() === 'Pilih Program Studi' || alamat.trim() === '' || notelepon.trim() === '' || email.trim() === '' || kategori.trim() === 'Pilih Kategori Mahasiswa' || katasandi.trim() === '' || katasandi2.trim() === '') {
 				Swal.fire({
-					icon: "error",
-					title: "Lengkapi Semua Fields",
-					showConfirmButton: false,
-					timer: 2000
-				});
+					icon: "warning",
+					title: "Lengkapi Semua Fields.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				})
 				return;
 			}
 
+			message = 'Data Akun Berhasil Ditambahkan.'
 			url = "https://localhost:7087/daftarmahasiswa";
 			method = "POST";
 			data = {
@@ -260,26 +267,33 @@
 				mhs_statuskelulusan: "",
 				mhs_saran: "",
 				mhs_kritik: "",
-				mhs_insight: "",
 				mhs_tglkirimevaluasi: "2023-12-30T09:22:52.731Z",
-				mhs_aspek1: "",
-				mhs_aspek2: "",
-				mhs_aspek3: "",
-				mhs_aspek4: "",
-				mhs_aspek5: "",
-				mhs_aspek6: "",
+				mhs_jamplus: 0,
+				mhs_jamminus: 0,
+				mhs_aspek1: 0,
+				mhs_aspek2: 0,
+				mhs_aspek3: 0,
+				mhs_aspek4: 0,
+				mhs_aspek5: 0,
+				mhs_aspek6: 0,
 			};
 		} else if (selectedTipeAkun === 'Panitia Kesekretariatan') {
 			if (namalengkap.trim() === '' || jeniskelamin.trim() === 'Pilih Jenis Kelamin' || programstudi.trim() === 'Pilih Program Studi' || alamat.trim() === '' || notelepon.trim() === '' || email.trim() === '' || role.trim() === 'Pilih Role' || katasandi.trim() === '' || katasandi2.trim() === '') {
 				Swal.fire({
-					icon: "error",
-					title: "Isi Semua Fields",
-					showConfirmButton: false,
-					timer: 2000
-				});
+					icon: "warning",
+					title: "Lengkapi Semua Fields",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				})
 				return;
 			}
 
+			message = 'Data Kesekretariatan Berhasil Ditambahkan.'
 			url = "https://localhost:7087/daftarksk";
 			method = "POST";
 			data = {
@@ -297,44 +311,62 @@
 			};
 		} else {
 			Swal.fire({
-				icon: "error",
-				title: "Pilih Tipe Akun",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Pilih Tipe Akun.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
 		if (notelepon.length < 12 || notelepon.length > 13) {
 			Swal.fire({
-				position: "top-end",
-				icon: "error",
-				title: "Nomor Telepon Harus 12 atau 13 Digit",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Nomor Telepon Harus 12 atau 13 Digit.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
 		var isEmailValid = validateEmailFormat(document.getElementsByName("email")[0]);
 		if (!isEmailValid) {
 			Swal.fire({
-				icon: "error",
-				title: "Format Email Tidak Sesuai",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Format Email Tidak Sesuai.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
 		if (katasandi != katasandi2) {
 			Swal.fire({
-				position: "top-end",
-				icon: "error",
-				title: "Kata Sandi Tidak Cocok",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Kata Sandi Tidak Cocok.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 		console.log(data)
@@ -346,9 +378,14 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Pendaftaran Berhasil",
-					showConfirmButton: false,
-					timer: 2000
+					title: message,
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = '..';
 				});

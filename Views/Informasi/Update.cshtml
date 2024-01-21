@@ -25,14 +25,15 @@
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
-						<div class="form-floating mb-4 inf_tglpublikasi">
+						<div class="form-floating mb-4 inf_tglpublikasi hidden">
 							<input type="datetime-local" style="background-color:transparent;" class="form-control" id="inf_tglpublikasi" name="inf_tglpublikasi" placeholder="" disabled>
 							<label for="inf_tglpublikasi">Tanggal Publikasi</label>
 						</div>
 
 						<div class="form-floating mb-4 inf_deskripsi">
-							<input type="text" class="form-control" id="inf_deskripsi" name="inf_deskripsi" placeholder="">
-							<label for="inf_deskripsi">Deskripsi</label>
+							<textarea class="form-control" placeholder="" id="inf_deskripsi" data-target="validateField" name="inf_deskripsi" style="height: 100px"></textarea>
+							<label for="validateFieldNamalengkap">Deskripsi</label>
+							<div class="invalid-feedback" data-target="validateLabel">* Masukkan Deskripsi.</div>
 						</div>
 					</div>
 				</div>
@@ -100,6 +101,20 @@
 		var inf_tglpublikasi = document.getElementById("inf_tglpublikasi").value;
 		var inf_deskripsi = document.getElementById("inf_deskripsi").value;
 
+		if (inf_jenisinformasi.trim() == "" || inf_namainformasi.trim() == "" || inf_deskripsi.trim() == "") {
+			Swal.fire({
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
 		var hostname = "https://localhost:7087";
 		var url = hostname + "/UpdateInformasi";
 		var method = "PUT";
@@ -125,9 +140,14 @@
 				if (data.status === 200) {
 					Swal.fire({
 						icon: "success",
-						title: "Berhasil Menambah Informasi",
-						showConfirmButton: false,
-						timer: 2000
+						title: "Data Informasi Berhasil Diubah.",
+						showConfirmButton: true,
+						showClass: {
+							popup: 'animate__animated animate__fadeInDown'
+						},
+						hideClass: {
+							popup: 'animate__animated animate__fadeOutUp'
+						}
 					}).then(() => {
 						window.location.href = '../';
 					});

@@ -30,11 +30,16 @@
 
 		if (rng_namaruangan.trim() == '') {
 			Swal.fire({
-				icon: "error",
-				title: "Lengkapi Semua Fields",
-				showConfirmButton: false,
-				timer: 2000
-			});
+				icon: "warning",
+				title: "Lengkapi Semua Fields.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
 			return;
 		}
 
@@ -58,9 +63,14 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Menambahkan Ruangan",
-					showConfirmButton: false,
-					timer: 2000
+					title: "Data Ruangan Berhasil Ditambahkan.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				}).then(() => {
 					window.location.href = './';
 				});

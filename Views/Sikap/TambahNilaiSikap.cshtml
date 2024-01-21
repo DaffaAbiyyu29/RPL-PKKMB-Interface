@@ -27,11 +27,9 @@
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
-						<div class="input-group has-validation mb-4 tanggal">
-							<div class="form-floating">
-								<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: transparent;" placeholder="" disabled>
-								<label for="validateField">Hari / Tanggal</label>
-							</div>
+						<div class="form-floating hidden">
+							<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" data-target="validateField" style="background-color: transparent;" placeholder="" disabled>
+							<label for="validateField">Hari / Tanggal</label>
 						</div>
 						<div class="input-group has-validation mb-4 nilaisikap">
 							<div class="form-floating is-invalid">
@@ -159,10 +157,10 @@
 		var nls_sikap = document.getElementsByName("nilaisikap")[0].value;
 		var nls_tanggal = document.getElementsByName("tanggal")[0].value;
 
-		if (nls_nopendaftaran.trim() === '' || nls_sikap.trim() === '' || nls_tanggal.trim() === '') {
+		if (nls_nopendaftaran.trim() === '' || nls_sikap.trim() === 'Pilih Kategori Nilai' || nls_tanggal.trim() === '') {
 			Swal.fire({
 				icon: "error",
-				title: "Lengkapi Semua Fields",
+				title: "Lengkapi Semua Fields.",
 				showConfirmButton: true,
 				showClass: {
 					popup: 'animate__animated animate__fadeInDown'
@@ -199,7 +197,7 @@
 				if (data.status === 200) {
 					Swal.fire({
 						icon: "success",
-						title: "Nilai Sikap  berhasil ditambahkan",
+						title: "Data Nilai Sikap Berhasil Ditambahkan.",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'

@@ -113,7 +113,7 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Mengaktifkan PKKMB",
+					title: "Data PKKMB Berhasil Diaktifkan.",
 					showConfirmButton: true,
 					showClass: {
 						popup: 'animate__animated animate__fadeInDown'
@@ -130,9 +130,14 @@
 			error: function (xhr, status, error) {
 				Swal.fire({
 					icon: "warning",
-					title: "Tahun " + input.pkm_tahunPkkmb + " Sudah Tersedia",
-					showConfirmButton: false,
-					timer: 2000
+					title: "Tahun " + input.pkm_tahunPkkmb + " Sudah Tersedia.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
 				})
 				console.error("AJAX request error:", status, error);
 				console.log("Server response:", xhr.responseText);
@@ -154,7 +159,7 @@
 			success: function (data) {
 				Swal.fire({
 					icon: "success",
-					title: "Berhasil Non Aktifkan PKKMB",
+					title: "Data PKKMB Berhasil DiNon-Aktifkan.",
 					showConfirmButton: true,
 					showClass: {
 						popup: 'animate__animated animate__fadeInDown'

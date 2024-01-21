@@ -28,7 +28,6 @@
 					<thead>
 						<tr>
 							<th scope="col">No</th>
-							<th scope="col">NIM</th>
 							<th scope="col">Nama Tugas</th>
 							<th scope="col">Tanggal Pemberian</th>
 							<th scope="col">Tugas</th>
@@ -124,7 +123,7 @@
 					} else if ("@ViewBag.UserRole" == "Mahasiswa") {
 						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/Tugas/PengumpulanTugas/' + val.tgs_idtugas + '" data-toggle="tooltip" data-placement="top" title="Lihat Tugas"><i class="fa fa-eye" aria-hidden="true"></i></a>'
 					}
-					detailData.push([counter, val.tgs_nim, val.tgs_namatugas, formatDateForDisplay(val.tgs_tglpemberiantugas), downloadtugas, formatDateForDisplay(val.tgs_deadline), val.tgs_deskripsi, aksi])
+					detailData.push([counter, val.tgs_namatugas, formatDateForDisplay(val.tgs_tglpemberiantugas), downloadtugas, formatDateForDisplay(val.tgs_deadline), val.tgs_deskripsi, aksi])
 					counter++;
 				});
 

@@ -20,7 +20,7 @@
 					</div>
 					<div class="col-md-6">
 						<!-- Second Column -->
-						<div class="form-floating mb-4 tanggal">
+						<div class="form-floating mb-4 tanggal hidden">
 							<input type="datetime-local" class="form-control" id="tanggal" name="tanggal" style="background-color: transparent;" placeholder="" disabled>
 							<label for="floatingInputGrid">Hari / Tanggal</label>
 						</div>
@@ -148,7 +148,7 @@
 				if (data.status === 200) {
 					Swal.fire({
 						icon: "success",
-						title: "Data berhasil diubah",
+						title: "Data Nilai Sikap Berhasil Diubah.",
 						showConfirmButton: true,
 						showClass: {
 							popup: 'animate__animated animate__fadeInDown'
