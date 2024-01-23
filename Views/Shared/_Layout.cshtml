@@ -163,7 +163,7 @@
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameMhs"></span> (<span id="showRoleMhs"></span>)</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
 							<a class="hovercolor" style="font-weight: bold;" href="../Akun/Ubah/@ViewBag.UserId">Ubah Akun</a>
-							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
+							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Keluar</b></a>
 						</div>
 					</li>
 						@*---------------------------------------------------------------------------------------------------------------------------------------*@
@@ -200,7 +200,7 @@
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernameKsk"></span> (<span id="showRoleKsk"></span>)</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
 							<a class="hovercolor" style="font-weight: bold;" href="../Akun/Ubah/@ViewBag.UserId">Ubah Akun</a>
-							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
+							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Keluar</b></a>
 						</div>
 					</li>
 							@*---------------------------------------------------------------------------------------------------------------------------------------*@
@@ -239,20 +239,18 @@
 					<li class="nav-item dropdown mr-3 picpkkmb">
 						<a class="nav-link dropdown-toggle" style="font-weight: bold;" id="navbarDropdownMenuLink-Informasi" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Hai,  <span id="showUsernamePic"></span> (<span id="showRolePic"></span>)</a>
 						<div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink-Informasi">
-							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Logout</b></a>
+							<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" style="padding: 8px 15px; background-color: #ed302f;" onclick="logout(event)"><b style="font-weight: bold;">Keluar</b></a>
 						</div>
 					</li>
 								@*---------------------------------------------------------------------------------------------------------------------------------------*@
 					<li class="nav-item mr-2 login">
-						<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" asp-controller="akun" asp-action="login" style="padding: 8px 15px; background-color: #0059AB;"><b style="font-weight: bold;">Login</b></a>
+						<a class="nav-link font-weight-bold waves-effect waves-light white-text rounded-3" asp-controller="akun" asp-action="login" style="padding: 8px 15px; background-color: #0059AB;"><b style="font-weight: bold;">Masuk</b></a>
 					</li>
 				</ul>
 			</div>
 		</nav>
 		<div class="container-fluid" style="padding-top: 50px;">
-			<!-- Adjust the value according to your needs -->
 			@RenderBody()
-
 		</div>
 		<div class="footer">
 

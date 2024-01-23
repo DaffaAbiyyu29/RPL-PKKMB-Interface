@@ -34,7 +34,8 @@
 			<div class="modal-body">
 				<p class="text-center">Format Pengumpulan File Hanya Mendukung .zip .rar .doc .txt</p>
 				<div class="input-group mb-4">
-					<input type="file" class="form-control" id="tugas" name="tugas" data-target="validateField" placeholder="" accept=".zip, .rar, .doc, .txt">
+					@*<input type="file" class="form-control" id="tugas" name="tugas" data-target="validateField" placeholder="" accept=".zip, .rar, .doc, .txt">*@
+					<input onchange="validateFile(this)" type="file" class="form-control" maxlength="100" id="tugas" name="tugas" data-target="validateField" placeholder="">
 				</div>
 			</div>
 			<div class="modal-footer">
@@ -57,6 +58,42 @@
 		loadDataTugas();
 		loadDataAnggota()
 	});
+
+	function validateFile(input) {
+		const fileSize = input.files[0].size / 1024 / 1024;
+
+		var ext = input.value.split(".");
+		ext = ext[ext.length - 1].toLowerCase();
+		var arrayExtensions = ["rar", "zip", "txt", "docx", "pptx", "pdf", "xlsx"];
+
+		if (arrayExtensions.lastIndexOf(ext) == -1) {
+			Swal.fire({
+				icon: "warning",
+				title: "Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xlsx",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			$(input).val('');
+		} else if (fileSize > 10) {
+			Swal.fire({
+				icon: "warning",
+				title: "Ukuran File Terlalu Besar. Maksimal 10 MB.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			$(input).val('');
+		}
+	}
 
 	function formatTanggal(dateString) {
 		const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -122,6 +159,21 @@
 		var tugasInput = document.getElementsByName("tugas")[0];
 		var file = tugasInput.files[0];
 
+		if (!file) {
+			Swal.fire({
+				icon: "warning",
+				title: "Harap Masukkan File.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
+
 		function generateUUID() {
 			var randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
 
@@ -130,10 +182,6 @@
 			return uuid;
 		}
 		var uniqueFileName = generateUUID() + '_' + file.name;
-
-		if (!file) {
-			location.reload()
-		}
 
 		var hostname = "https://localhost:7087/";
 		var method;
@@ -194,7 +242,6 @@
 			contentType: "application/json",
 			success: function (data) {
 				var item = data.data
-				console.log(data.status)
 				var formattedDate = formatTanggal(item.dts_waktupengumpulan);
 				var formattedTime = formatJam(item.dts_waktupengumpulan);
 				tugas = item.dts_filetugas;

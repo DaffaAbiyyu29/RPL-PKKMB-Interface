@@ -35,10 +35,7 @@
 							<th scope="col">Kelompok</th>
 							<th scope="col">Jam Plus</th>
 							<th scope="col">Jam Minus</th>
-							@if (@ViewBag.UserRole == "Fasilitator")
-							{
-								<th scope="col">Aksi</th>
-							}
+							<th scope="col">Aksi</th>
 						</tr>
 					</thead>
 				</table>
@@ -95,7 +92,13 @@
 
 	function loadTable(id_pkkmb) {
 		var hostname = "https://localhost:7087/";
-		var url = hostname + "getallmahasiswa?mhs_idpkkmb=" + id_pkkmb
+		var url = null
+		if ('@ViewBag.UserRole' == 'Mahasiswa') {
+			url = hostname + "datamahasiswa?mhs_nopendaftaran=@ViewBag.UserId"
+		} else {
+			url = hostname + "getallmahasiswa?mhs_idpkkmb=" + id_pkkmb
+		}
+
 		var method = "GET";
 		var counter = 1;
 		var detailData = []
@@ -110,24 +113,49 @@
 				var item = data.data;
 				var totalData = item.length;
 
-				$.each(item, function (key, val) {
-					var namaKelompok = [];
+				if ('@ViewBag.UserRole' == 'Mahasiswa') {
+					var namaKelompok = null;
 
-					loadNamaKelompok(val.mhs_idkelompok, function (namaKmk) {
-						namaKelompok.push([namaKmk]);
-						var aksi = '';
+					loadNamaKelompok(item.mhs_idkelompok, function (namaKmk) {
+						namaKelompok = namaKmk
+						console.log(namaKelompok)
+						var aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/DetailJam/' + item.mhs_nopendaftaran + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' + '</td>';
 
-						if ("@ViewBag.UserRole" == "Fasilitator") {
-							aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/DetailJam/' + val.mhs_nopendaftaran + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' + '</td>';
-						}
-						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, namaKelompok, val.mhs_jamplus, val.mhs_jamminus, aksi])
-						counter++;
+						detailData.push([counter, item.mhs_namalengkap, item.mhs_gender, item.mhs_programstudi, item.mhs_kategori, namaKelompok, item.mhs_jamplus, item.mhs_jamminus, aksi])
 
-						if (counter - totalData == 1) {
-							initializeDataTable(detailData);
-						}
+						$('#tabellist').DataTable({
+							data: detailData,
+							language: {
+								search: "Cari :",
+								zeroRecords: "Data Tidak Ditemukan",
+								sLengthMenu: "Menampilkan _MENU_ data",
+								info: "Menampilkan data ke - _START_ sampai _END_ dari _TOTAL_ data",
+								infoEmpty: "Menampilkan 0 data",
+								infoFiltered: "(Difilter dari _MAX_ total data)",
+								paginate: {
+									previous: "Sebelumnya",
+									next: "Berikutnya"
+								}
+							}
+						});
 					});
-				});
+				} else {
+					$.each(item, function (key, val) {
+						var namaKelompok = [];
+
+						loadNamaKelompok(val.mhs_idkelompok, function (namaKmk) {
+							namaKelompok.push([namaKmk]);
+							var aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/DetailJam/' + val.mhs_nopendaftaran + '"><i class="fa fa-eye" aria-hidden="true"></i></a>' + '</td>';
+
+							detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, namaKelompok, val.mhs_jamplus, val.mhs_jamminus, aksi])
+							counter++;
+
+							if (counter - totalData == 1) {
+								initializeDataTable(detailData);
+							}
+						});
+					});
+				}
 
 				function initializeDataTable(data) {
 					$('#tabellist').DataTable({

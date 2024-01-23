@@ -13,8 +13,11 @@
 							<th scope="col">Tanggal</th>
 							<th scope="col">Jenis Jam</th>
 							<th scope="col">Jumlah</th>
-							<th scope="col">Deskripsi</th>
-							<th scope="col">Aksi</th>
+							<th scope="col">Deskripsi</th
+							@if(ViewBag.UserRole == "Fasilitator")
+							{
+							<th scope="col">Aksi</th>	
+							}
 						</tr>
 					</thead>
 				</table>
@@ -44,7 +47,10 @@
 				namaMahasiswa()
 
 				$.each(item, function (key, val) {
-					var aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/UbahJam/' + val.dtj_idjam + '/' + val.dtj_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+					var aksi = null
+					if('@ViewBag.UserRole' == 'Fasilitator'){
+						aksi = '<a style="background-color: #3a4584 !important;" class="btn btn-primary" href="/JamPlusMinus/UbahJam/' + val.dtj_idjam + '/' + val.dtj_nopendaftaran + '"><i class="fa fa-pencil-alt" aria-hidden="true"></i></a>';
+					}
 					detailData.push([counter, formatDateForDisplay(val.dtj_tanggal), val.dtj_jenisjam, val.dtj_jumlah, val.dtj_deskripsi, aksi])
 					counter++;
 				});
