@@ -47,7 +47,7 @@
 
 						<div class="input-group has-validation mb-4 deadline">
 							<div class="form-floating">
-								<input type="datetime-local" class="form-control" maxlength="100" id="validateField" name="deadline" data-target="validateField" placeholder="">
+								<input type="datetime-local" class="form-control" maxlength="100" id="deadline" name="deadline" data-target="validateField" placeholder="">
 								<label for="validateField">Deadline</label>
 								<div class="invalid-feedback" data-target="validateLabel">* Masukkan Waktu Deadline.</div>
 							</div>
@@ -298,4 +298,21 @@
 			fileNameField.value = "";
 		}
 	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		var deadlineInput = document.getElementById("deadline");
+
+		var today = new Date().toISOString().split("Z")[0].split("T").join(" ");
+		deadlineInput.min = today.substring(0, 16);
+
+		deadlineInput.addEventListener("input", function () {
+			var inputDateTime = deadlineInput.value + ":00";
+			var now = new Date().toISOString().split("Z")[0].split("T").join(" ");
+
+			if (inputDateTime < now) {
+				alert("Waktu deadline tidak boleh sebelum waktu saat ini.");
+				deadlineInput.value = today.substring(0, 16);
+			}
+		});
+	});
 </script>

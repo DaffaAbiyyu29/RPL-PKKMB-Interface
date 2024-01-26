@@ -1,7 +1,6 @@
 ﻿<div class="row justify-content-center mb-5">
 	<div class="col-lg-5">
 		<div class="card">
-			@*@Context.Session.GetString("Peran")*@
 			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
 				<strong>Lupa Kata Sandi</strong>
 				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
@@ -18,8 +17,99 @@
 					<input type="email" class="form-control" maxlength="50" id="floatingInputGrid" name="email" placeholder="">
 					<label for="floatingInputGrid">Email</label>
 				</div>
-				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="login(event)">Kirim</button>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="GenerateKode(event)">Kirim</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	var token = null
+
+	function GenerateKode(event) {
+		event.preventDefault();
+
+		var email = document.getElementsByName("email")[0].value;
+
+		if (email.trim() == '') {
+			Swal.fire({
+				icon: "warning",
+				title: "Harap Isi Email Anda.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "GenerateKodeVerifikasiEmail?email=" + email;
+		var method = "POST";
+
+		$.ajax({
+			url: url,
+			method: method,
+			contentType: "application/json",
+			success: function (data) {
+				token = data.token
+				KirimEmail()
+			},
+			error: function (xhr, status, error) {
+				Swal.fire({
+					icon: "warning",
+					title: "Email Anda Tidak Terdaftar.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				})
+				return;
+			},
+		});
+	}
+
+	function KirimEmail() {
+		var email = document.getElementsByName("email")[0].value;
+
+		var hostname = "https://localhost:7087/";
+		var url = hostname + "SendEmail?email=" + email;
+		var method = "POST";
+
+		$.ajax({
+			url: url,
+			method: method,
+			headers: {
+				'Content-Type': 'application/json',
+				'token': token
+			},
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					icon: "success",
+					title: "Kode Verifikasi Berhasil Terkirim. Silakan Cek Email Anda.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				}).then(() => {
+					document.cookie = "VerifyEmail=" + token + ";path=/;secure;SameSite=None";
+					window.location.reload();
+				});
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+</script>

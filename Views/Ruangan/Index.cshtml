@@ -98,7 +98,7 @@
 		var counter = 1;
 		var detailData = []
 
-		$('#tabellist').DataTable().destroy();
+		jq('#tabellist').DataTable().destroy();
 
 		$.ajax({
 			url: url,
@@ -116,7 +116,7 @@
 					counter++;
 				});
 
-				$('#tabellist').DataTable({
+				jq('#tabellist').DataTable({
 					data: detailData,
 					language: {
 						search: "Cari :",

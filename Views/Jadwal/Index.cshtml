@@ -278,13 +278,13 @@
 				});
 
 				//$(tabelId).DataTable().destroy();
-				$('#tabellist').DataTable().destroy();
-				$('#tabellistsenin').DataTable().destroy();
-				$('#tabellistselasa').DataTable().destroy();
-				$('#tabellistrabu').DataTable().destroy();
-				$('#tabellistkamis').DataTable().destroy();
-				$('#tabellistjumat').DataTable().destroy();
-				$(tabelId).DataTable({
+				jq('#tabellist').DataTable().destroy();
+				jq('#tabellistsenin').DataTable().destroy();
+				jq('#tabellistselasa').DataTable().destroy();
+				jq('#tabellistrabu').DataTable().destroy();
+				jq('#tabellistkamis').DataTable().destroy();
+				jq('#tabellistjumat').DataTable().destroy();
+				jq(tabelId).DataTable({
 					data: detailData,
 					language: {
 						search: "Cari :",

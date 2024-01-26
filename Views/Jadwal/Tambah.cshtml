@@ -131,7 +131,25 @@
 </script>
 
 <script>
-	// Mengambil semua elemen dengan nama ID "validateField"
+	document.addEventListener("DOMContentLoaded", function () {
+		var tanggalInput = document.getElementById("tanggal");
+
+		tanggalInput.min = new Date().toISOString().split("T")[0];
+
+		tanggalInput.addEventListener("input", function () {
+			var inputDate = new Date(tanggalInput.value);
+			var today = new Date();
+
+			inputDate.setHours(0, 0, 0, 0);
+			today.setHours(0, 0, 0, 0);
+
+			if (inputDate < today) {
+				tanggalInput.value = "";
+				alert("Tanggal kegiatan tidak boleh hari kemarin.");
+			}
+		});
+	});
+
 	var inputFields = document.querySelectorAll('[data-target="validateField"]');
 	var validationMessage = document.querySelectorAll('[data-target="validateLabel"]');
 

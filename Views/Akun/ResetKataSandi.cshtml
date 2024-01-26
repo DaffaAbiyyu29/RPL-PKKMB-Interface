@@ -1,0 +1,98 @@
+﻿<div class="row justify-content-center mb-5">
+	<div class="col-lg-5">
+		<div class="card">
+			<h5 class="card-header text-center white-text py-4 mb-4" style="background-color: #0059AB;">
+				<strong>Reset Kata Sandi</strong>
+				<a class="btn" style="position: absolute; top: 11px; right: 10px; color: white;" asp-controller="akun" asp-action="login"><strong>X</strong></a>
+			</h5>
+			<div class="card-body px-lg-5 pt-1">
+				<div class="form-floating mb-4">
+					<p class="text-center">
+						Silakan masukkan kata sandi baru anda.
+					</p>
+					<hr />
+				</div>
+				<div class="form-floating mb-4">
+					<input type="password" class="form-control" maxlength="50" id="floatingInputGrid" name="password1" placeholder="">
+					<label for="floatingInputGrid">Kata Sandi</label>
+				</div>
+				<div class="form-floating mb-4">
+					<input type="password" class="form-control" maxlength="50" id="floatingInputGrid" name="password2" placeholder="">
+					<label for="floatingInputGrid">Ketik Ulang Kata Sandi</label>
+				</div>
+				<button class="btn btn-rounded btn-block my-3 mb-4 white-text font-weight-bold waves-effect z-depth-0" Style="background-color: #0059AB;" onclick="simpan(event)">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function simpan(event) {
+		event.preventDefault();
+
+		var hostname = "https://localhost:7087/";
+		var method = "PUT";
+		var url = null
+		var input = null
+		var data = null
+
+		var password1 = document.getElementsByName("password1")[0].value;
+		var password2 = document.getElementsByName("password2")[0].value
+
+		if (password1 != password2) {
+			Swal.fire({
+				icon: "warning",
+				title: "Kata Sandi Tidak Cocok.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
+
+		if ('@ViewBag.UserRole' == 'Mahasiswa') {
+			url = hostname + "ResetKataSandiMahasiswa?mhs_nopendaftaran=@ViewBag.UserId";
+			var mhs_password = password1
+			data = JSON.stringify(mhs_password);
+		} else if ('@ViewBag.UserRole' == 'KSK' || @ViewBag.UserRole == 'Fasilitator') {
+			url = hostname + "ResetKataSandiKesekretariatan?ksk_nim=@ViewBag.UserId";
+			var ksk_password = password1
+			data = JSON.stringify(ksk_password);
+		}
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			contentType: "application/json",
+			success: function (data) {
+				Swal.fire({
+					icon: "success",
+					title: "Kata Sandi Berhasil Diubah, Silakan Masuk Kembali.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				}).then(() => {
+					deleteCookie('VerifyEmail');
+					window.location.href = '../';
+				});
+			},
+			error: function (xhr, status, error) {
+				console.error("AJAX request error:", status, error);
+				console.log("Server response:", xhr.responseText);
+			},
+		});
+	}
+
+	function deleteCookie(name) {
+		document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+	}
+</script>
