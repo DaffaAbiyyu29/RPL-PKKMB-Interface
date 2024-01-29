@@ -26,6 +26,7 @@
 							{
 								<th scope="col">Aksi</th>
 							}
+							<th scope="col">Sertifikat</th>
 						</tr>
 					</thead>
 				</table>
@@ -45,8 +46,33 @@
 	</div>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="unggahSertifikatLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color:#0059ab;">
+				<h5 class="modal-title text-white" id="unggahSertifikatLabel">Unggah Sertifikat</h5>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p class="text-center">Format Pengumpulan File Hanya Mendukung .zip .rar .doc .txt</p>
+				<div class="input-group mb-4">
+					<input onchange="validateFile(this)" type="file" class="form-control" maxlength="100" id="sertifikat" name="sertifikat" data-target="validateField" placeholder="">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+				<button type="button" class="btn text-white" style="background-color:#0059ab;" onclick="unggahSertifikat(event)">Simpan</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
+	var tahunpkkmb = sessionStorage.getItem('tahun_pkkmb')
+	var mhs = null
 
 	function TahunPkkmb() {
 		var hostname = "https://localhost:7087/";
@@ -115,12 +141,28 @@
 				var item = data.data;
 
 				$.each(item, function (key, val) {
+					var fileName = val.mhs_sertifikat.split('\\').pop();
+
 					var aksi = '<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault' + counter + '" data-mhs-no="' + val.mhs_nopendaftaran + '">' +
 						'<label class="form-check-label" for="flexCheckDefault' + counter + '"></label>';
+					var sertifikat = null;
 					if ('@ViewBag.userRole' == 'PIC PKKMB') {
-						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, val.mhs_statuskelulusan, aksi])
+						if (!fileName.trim('')) {
+							sertifikat = '<button id="nomhs" style="background-color: #3a4584 !important;" class="btn btn-primary" type="button" data-mhs="' + val.mhs_nopendaftaran + '" onclick="showModal(\'' + val.mhs_nopendaftaran + '\')">' +
+								'<i class="fa fa-upload" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></i>' +
+								'</button>';
+						} else {
+							sertifikat = '<a href="#" style="background-color: #3a4584 !important;" class="btn btn-primary download-link" data-file="' + fileName + '"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unduh ' + fileName + '"></i></a>' +
+								'<button id="nomhs" style="background-color: #3a4584 !important;" class="btn btn-primary" type="button" data-mhs=' + val.mhs_nopendaftaran + ' onclick="showModal(\'' + val.mhs_nopendaftaran + '\')">' +
+								'<i class="fa fa-upload" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unggah Tugas"></i>' +
+								'</button>';
+						}
+
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, val.mhs_statuskelulusan, aksi, sertifikat])
 					} else {
-						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, val.mhs_statuskelulusan])
+						sertifikat = '<a href="#" style="background-color: #3a4584 !important;" class="btn btn-primary download-link" data-file="' + fileName + '"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Unduh ' + fileName + '"></i></a>';
+
+						detailData.push([counter, val.mhs_namalengkap, val.mhs_gender, val.mhs_programstudi, val.mhs_kategori, val.mhs_statuskelulusan, sertifikat])
 					}
 					counter++;
 				});
@@ -139,6 +181,12 @@
 							next: "Berikutnya"
 						}
 					}
+				});
+
+				$('.download-link').on('click', function (e) {
+					e.preventDefault();
+					var fileName = $(this).data('file');
+					downloadFile(fileName);
 				});
 
 				$('input[type="checkbox"]').change(function () {
@@ -227,6 +275,76 @@
 		});
 	}
 
+	function unggahSertifikat(event) {
+		event.preventDefault();
+
+		var nopendaftaran = $('#nomhs').data('mhs');
+		console.log(nopendaftaran)
+		var sertifikatInput = document.getElementsByName("sertifikat")[0];
+		var file = sertifikatInput.files[0];
+
+		if (!file) {
+			Swal.fire({
+				icon: "warning",
+				title: "Harap Masukkan File.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			return;
+		}
+
+		function generateUUID() {
+			var randomNumber = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+
+			var uuid = 'PKKMB_' + tahunpkkmb + '_' + randomNumber;
+
+			return uuid;
+		}
+		var uniqueFileName = generateUUID() + '_' + file.name;
+
+		var hostname = "https://localhost:7087/";
+		var method;
+		var url;
+
+		method = "PUT";
+		url = hostname + "UploadSertifikat?mhs_nopendaftaran=" + mhs
+
+		var data = new FormData();
+		data.append("file", file, uniqueFileName);
+
+		$.ajax({
+			url: url,
+			method: method,
+			data: data,
+			processData: false,
+			contentType: false,
+			success: function (data) {
+				Swal.fire({
+					icon: "success",
+					title: "Data Tugas Berhasil Diunggah.",
+					showConfirmButton: true,
+					showClass: {
+						popup: 'animate__animated animate__fadeInDown'
+					},
+					hideClass: {
+						popup: 'animate__animated animate__fadeOutUp'
+					}
+				}).then(() => {
+					location.reload();
+				});
+			},
+			error: function (xhr, status) {
+				console.error("AJAX request error:", status);
+				console.log("Server response:", xhr);
+			},
+		});
+	}
+
 	function checkAll() {
 		// Use prop('checked', true) to set the checked property of checkboxes
 		$('input[type="checkbox"]').prop('checked', true);
@@ -241,5 +359,74 @@
 		$('input[type="checkbox"]').prop('checked', false);
 		// Clear the selectedMhs array
 		selectedMhs = [];
+	}
+
+	function validateFile(input) {
+		const fileSize = input.files[0].size / 1024 / 1024;
+
+		var ext = input.value.split(".");
+		ext = ext[ext.length - 1].toLowerCase();
+		var arrayExtensions = ["rar", "zip", "txt", "docx", "pptx", "pdf", "xlsx"];
+
+		if (arrayExtensions.lastIndexOf(ext) == -1) {
+			Swal.fire({
+				icon: "warning",
+				title: "Format Salah. Hanya Format .rar .zip .txt .docx .pptx .pdf .xlsx",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			$(input).val('');
+		} else if (fileSize > 10) {
+			Swal.fire({
+				icon: "warning",
+				title: "Ukuran File Terlalu Besar. Maksimal 10 MB.",
+				showConfirmButton: true,
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+			$(input).val('');
+		}
+	}
+
+	function showModal(mhs_nopendaftaran) {
+		mhs = mhs_nopendaftaran
+		var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+		myModal.show();
+	}
+
+	function downloadFile(fileName) {
+		var url = "https://localhost:7087/DownloadSertifikat";
+
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(fileName),
+		}).then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.blob();
+		}).then(blob => {
+			var url = URL.createObjectURL(blob);
+			var a = document.createElement('a');
+			a.href = url;
+			a.download = fileName;
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}).catch(error => {
+			console.error('There was a problem with the fetch operation:', error);
+		});
 	}
 </script>
