@@ -141,7 +141,7 @@
 
 <script>
 	var idpkkmb = sessionStorage.getItem('id_pkkmb')
-
+	console.log(idpkkmb)
 	$('.nim').hide();
 	$('.nopendaftaran').hide();
 	$('.namalengkap').hide();
@@ -239,10 +239,10 @@
 					title: "Lengkapi Semua Fields.",
 					showConfirmButton: true,
 					showClass: {
-						popup: 'animate__animated animate__fadeInDown'
+						popup: 'animate_animated animate_fadeInDown'
 					},
 					hideClass: {
-						popup: 'animate__animated animate__fadeOutUp'
+						popup: 'animate_animated animate_fadeOutUp'
 					}
 				})
 				return;
@@ -276,6 +276,7 @@
 				mhs_aspek4: 0,
 				mhs_aspek5: 0,
 				mhs_aspek6: 0,
+				mhs_sertifikat: "",
 			};
 		} else if (selectedTipeAkun === 'Panitia Kesekretariatan') {
 			if (namalengkap.trim() === '' || jeniskelamin.trim() === 'Pilih Jenis Kelamin' || programstudi.trim() === 'Pilih Program Studi' || alamat.trim() === '' || notelepon.trim() === '' || email.trim() === '' || role.trim() === 'Pilih Role' || katasandi.trim() === '' || katasandi2.trim() === '') {
@@ -284,10 +285,10 @@
 					title: "Lengkapi Semua Fields",
 					showConfirmButton: true,
 					showClass: {
-						popup: 'animate__animated animate__fadeInDown'
+						popup: 'animate_animated animate_fadeInDown'
 					},
 					hideClass: {
-						popup: 'animate__animated animate__fadeOutUp'
+						popup: 'animate_animated animate_fadeOutUp'
 					}
 				})
 				return;
@@ -315,10 +316,10 @@
 				title: "Pilih Tipe Akun.",
 				showConfirmButton: true,
 				showClass: {
-					popup: 'animate__animated animate__fadeInDown'
+					popup: 'animate_animated animate_fadeInDown'
 				},
 				hideClass: {
-					popup: 'animate__animated animate__fadeOutUp'
+					popup: 'animate_animated animate_fadeOutUp'
 				}
 			})
 			return;
@@ -330,10 +331,10 @@
 				title: "Nomor Telepon Harus 12 atau 13 Digit.",
 				showConfirmButton: true,
 				showClass: {
-					popup: 'animate__animated animate__fadeInDown'
+					popup: 'animate_animated animate_fadeInDown'
 				},
 				hideClass: {
-					popup: 'animate__animated animate__fadeOutUp'
+					popup: 'animate_animated animate_fadeOutUp'
 				}
 			})
 			return;
@@ -346,10 +347,10 @@
 				title: "Format Email Tidak Sesuai.",
 				showConfirmButton: true,
 				showClass: {
-					popup: 'animate__animated animate__fadeInDown'
+					popup: 'animate_animated animate_fadeInDown'
 				},
 				hideClass: {
-					popup: 'animate__animated animate__fadeOutUp'
+					popup: 'animate_animated animate_fadeOutUp'
 				}
 			})
 			return;
@@ -361,10 +362,10 @@
 				title: "Kata Sandi Tidak Cocok.",
 				showConfirmButton: true,
 				showClass: {
-					popup: 'animate__animated animate__fadeInDown'
+					popup: 'animate_animated animate_fadeInDown'
 				},
 				hideClass: {
-					popup: 'animate__animated animate__fadeOutUp'
+					popup: 'animate_animated animate_fadeOutUp'
 				}
 			})
 			return;
@@ -381,10 +382,10 @@
 					title: message,
 					showConfirmButton: true,
 					showClass: {
-						popup: 'animate__animated animate__fadeInDown'
+						popup: 'animate_animated animate_fadeInDown'
 					},
 					hideClass: {
-						popup: 'animate__animated animate__fadeOutUp'
+						popup: 'animate_animated animate_fadeOutUp'
 					}
 				}).then(() => {
 					window.location.href = '..';
